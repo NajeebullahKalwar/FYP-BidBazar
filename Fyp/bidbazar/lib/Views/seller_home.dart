@@ -1,3 +1,8 @@
+import 'package:bidbazar/Views/buyer/cart.dart';
+import 'package:bidbazar/widgets/addproduct.dart';
+import 'package:bidbazar/widgets/category.dart';
+import 'package:bidbazar/Views/home.dart';
+import 'package:bidbazar/Views/buyer/message.dart';
 import 'package:bidbazar/controllers/auth_controllers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,88 +11,23 @@ class Seller extends StatelessWidget {
   Seller({super.key});
   static const String routeName = '/sellerScreen';
 
+  List<Widget> screens = [
+    Home(),
+    message(),
+    Category(),
+    // Library(),
+    // hotlist(),
+  ];
+  AuthenticateController controller = Get.put(AuthenticateController());
+
   @override
   Widget build(BuildContext context) {
-    AuthenticateController controller = Get.put(AuthenticateController());
-
     return Scaffold(
-      body: Container(
-        color: Colors.grey[100],
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 35),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: CircleAvatar(
-                    child: Icon(
-                      Icons.grid_view_rounded,
-                      color: Colors.amber[900],
-                    ),
-                    backgroundColor: Colors.white,
-                    radius: 20,
-                  ),
-                ),
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    children: [
-                      Text(
-                        "Hello najeeb",
-                        style: TextStyle(fontSize: 13, color: Colors.black45),
-                      ),
-                      SizedBox(
-                        height: 2,
-                      ),
-                      Text(
-                        "Clifton block-6",
-                        style: TextStyle(fontSize: 16, color: Colors.black87),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage(
-                      'assets/profile.jpeg',
-                    ),
-                    radius: 20,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  flex: 4,
-                  child: SearchBar(
-                    leading: Icon(Icons.search_rounded),
-                    padding: MaterialStatePropertyAll(
-                      EdgeInsets.symmetric(horizontal: 15, vertical: 0),
-                    ),
-                    elevation: MaterialStatePropertyAll(0),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius:
-                            BorderRadius.all(Radius.elliptical(15, 20))),
-                    child: Icon(Icons.filter_list, size: 30),
-                  ),
-                ),
-              ],
-            ),
-          ],
+      backgroundColor: Colors.white,
+      body: Obx(
+        () => IndexedStack(
+          children: screens,
+          index: controller.screenIndex.value,
         ),
       ),
       bottomNavigationBar: Obx(
@@ -117,17 +57,77 @@ class Seller extends StatelessWidget {
               label: 'Message',
             ),
             BottomNavigationBarItem(
+              icon: Icon(Icons.category_rounded),
+              label: 'Category',
+            ),
+            BottomNavigationBarItem(
               icon: Icon(Icons.person),
               label: 'Profile',
             ),
-            BottomNavigationBarItem(
-              icon: GestureDetector(
-                child: Icon(Icons.exit_to_app),
-                onTap: () => Get.offNamed('loginScreen'),
+          ],
+        ),
+      ),
+      // appBar: AppBar(
+      //   elevation: 0.0,
+      //   backgroundColor: Colors.white,
+      //   automaticallyImplyLeading: true,
+      //   foregroundColor: Colors.black,
+      //   centerTitle: true,
+      //   title: Text("Bidbazar"),
+      // ),
+      drawer: Drawer(
+        width: 250,
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: [
+            Container(
+              height: 250,
+              width: 200,
+              child: Center(
+                child: CircleAvatar(
+                  backgroundImage: AssetImage(
+                    'assets/profile.jpeg',
+                  ),
+                  radius: 50,
+                ),
               ),
-              label: 'Exit',
+            ),
+            Divider(
+              height: 1,
+              thickness: 1,
+            ),
+            ListTile(
+              leading: Icon(Icons.favorite),
+              title: Text('Item 1'),
+              selected: true,
+              onTap: () => 0,
+            ),
+            ListTile(
+              leading: Icon(Icons.delete),
+              title: Text('Item 2'),
+              selected: false,
+              onTap: () => 1,
             ),
           ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        // isExtended: true,
+
+        enableFeedback: true,
+        backgroundColor: Colors.orange[800],
+        onPressed: () {
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => addProduct(),
+          //     ));
+          Get.toNamed("addProduct");
+        },
+        child: Icon(
+          Icons.add,
+          size: 42,
         ),
       ),
     );

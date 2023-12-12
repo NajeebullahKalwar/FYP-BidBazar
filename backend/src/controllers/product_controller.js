@@ -5,6 +5,10 @@ const productController = {
     createProduct:async function(req,res){
         try{
             const productData = req.body;//data send    
+            console.log(productData);
+            // const jsonData = JSON.stringify(productData);
+            
+
             const newProduct = new productModel(productData);             
             await newProduct.save();//data save to database
 
@@ -24,7 +28,7 @@ const productController = {
         }
     },
   
-    getAllProductsById:async function(req,res){
+    getAllProductsById:async function(req,res){// for category
         try{
             const id=   req.params.id;
             
@@ -37,6 +41,30 @@ const productController = {
          return res.json({success:false,message:`Product not found!  ${e}`});
     
         }
+    },
+
+    
+    getUserProduct:async function(req,res){ // for user
+        try{
+            const user=req.params.user;
+                      
+            const foundProduct =  await productModel.find(
+                {user:user}
+                );
+                // console.log("product "+foundProduct);
+            if(foundProduct==""){
+                
+                return res.json({success:false,data:[],message:"There is no item in your cart" });
+            }else
+
+                return res.json({success:true,message:"Products found",data:foundProduct });
+
+        
+        }catch(ex){
+            return res.json({success:false,message:ex.message });
+
+        }
+
     }
     
 

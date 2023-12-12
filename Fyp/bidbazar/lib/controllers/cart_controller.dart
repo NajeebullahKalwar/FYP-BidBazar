@@ -64,4 +64,19 @@ class cartController extends GetxController with StateMixin {
       rethrow;
     }
   }
+
+  void removeItemfromCart(String productId) async {
+    try {
+      var cartItems =
+          await cart.removeFromCartItem(productId, user.userdata.first.sId!);
+
+      cartlist.assignAll(cartItems);
+
+      cartTotalAmount();
+
+      Get.snackbar("Add to cart", "Cart item delete successfully");
+    } on DioException catch (ex) {
+      rethrow;
+    }
+  }
 }

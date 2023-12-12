@@ -1,6 +1,6 @@
 import 'package:bidbazar/Views/buyer/cart.dart';
 import 'package:bidbazar/widgets/category.dart';
-import 'package:bidbazar/Views/buyer/home.dart';
+import 'package:bidbazar/Views/home.dart';
 import 'package:bidbazar/Views/buyer/message.dart';
 import 'package:bidbazar/controllers/auth_controllers.dart';
 import 'package:flutter/material.dart';

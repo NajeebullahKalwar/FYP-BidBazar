@@ -1,0 +1,152 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+class addProduct extends StatelessWidget {
+  addProduct({super.key});
+
+  static const String routeName = '/addProduct';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          iconTheme: IconThemeData(color: Colors.black87),
+          title: Text(
+            "product.name.toString()",
+            style: TextStyle(color: Colors.black87),
+          ),
+          centerTitle: true,
+          elevation: 0,
+        ),
+        body: Container(
+          child: ListView(
+            children: [
+              Hero(
+                tag: "product.sId.toString()",
+                child: Text("Hero"),
+              ),
+              Divider(
+                height: 5,
+                thickness: 10,
+              ),
+              Card(
+                elevation: 5,
+                margin: EdgeInsets.all(10),
+                child: ListTile(
+                  titleTextStyle: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.w700),
+                  title: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 5),
+                    child: Text(
+                      "product.name!.toUpperCase()",
+                    ),
+                  ),
+                  subtitle: Row(
+                    children: [
+                      Text("Rs "),
+                      Text(
+                        "product.price.toString()",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                  trailing: Icon(
+                    Icons.favorite_outline_rounded,
+                    size: 30,
+                  ),
+                ),
+              ),
+              Card(
+                elevation: 5,
+                margin: EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      child: Text(
+                        "Specification",
+                        style: TextStyle(
+                          fontSize: 20,
+                          wordSpacing: 2,
+                          leadingDistribution:
+                              TextLeadingDistribution.proportional,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      thickness: 2,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "product.specs.toString()",
+                        style: TextStyle(
+                          fontSize: 15,
+                          wordSpacing: 2,
+                          leadingDistribution:
+                              TextLeadingDistribution.proportional,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        persistentFooterButtons: [
+          Row(
+            children: [
+              // Container(
+              //   width: 45,
+              //   height: 45,
+              //   color: Colors.amber[900],
+              //   child: Center(
+              //     child: Text(
+              //       "1",
+              //       style: TextStyle(
+              //           fontSize: 20,
+              //           fontWeight: FontWeight.w700,
+              //           color: Colors.white),
+              //     ),
+              //   ),
+              // ),
+              // const SizedBox(
+              //   width: 4,
+              // ),
+
+              Expanded(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: Size(Get.width * 0.9, Get.height * 0.1 / 2),
+                      backgroundColor: Colors.amber[900]),
+                  onPressed: () {
+                    Get.snackbar("Product", "Product added successfully ");
+                  },
+                  child: Text(
+                    "Add Product",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ]
+        // : null,
+        );
+  }
+}

@@ -9,12 +9,18 @@ const Map<String, dynamic> DEFAULT_HEARDERS = {
   'content-Type': 'application/json'
 }; //headers are metadata of api req/res.
 
+const Map<String, dynamic> form_urlenconded = {
+  'content-Type': 'application/x-www-form-urlencoded'
+};
+const Map<String, dynamic> form = {'content-Type': 'multipart/form-data'};
+
 class Api {
   final Dio dio = Dio();
 
   Api() {
     dio.options.baseUrl = BASE_URL;
     dio.options.headers = DEFAULT_HEARDERS;
+
     dio.interceptors.add(PrettyDioLogger(
       requestBody: true,
       requestHeader: true,
