@@ -28,134 +28,133 @@ class Cart extends GetView<cartController> {
         Expanded(
           flex: 9,
           child: controller.obx(
-            (state) => ListView.builder(
-              itemCount: controller.cartlist.length,
-              itemBuilder: (context, index) {
-                // print(
-                //   "${index} " + controller.amount.toString(),
-                // );
-                return Card(
-                  child: ListTile(
-                    visualDensity: VisualDensity(vertical: 4),
-                    contentPadding: EdgeInsets.all(5),
-                    // dense: true,
-                    // autofocus: true,
-                    title: Text(
-                      // maxLines: 3,
-                      controller.cartlist[index].product!.name.toString() +
-                          " \n" +
-                          "Rs - " +
-                          controller.cartlist[index].product!.price.toString(),
-                    ),
-                    subtitle: Text(
-                      maxLines: 1,
-                      controller.cartlist[index].product!.specs.toString(),
-                      style: TextStyle(),
-                    ),
-                    leading: Container(
-                      width: Get.width * 0.24,
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(10),
-                            bottom: Radius.circular(15)),
-                        child: CachedNetworkImage(
-                          // fit: BoxFit.scaleDown,
-                          fit: BoxFit.contain,
-
-                          // width: Get.width * .25,
-                          imageUrl: controller
-                              .cartlist[index].product!.images!.first
-                              .toString(),
+            (state) => Obx(
+              () => ListView.builder(
+                itemCount: controller.cartlist.length,
+                itemBuilder: (context, index) {
+                  // print(
+                  //   "${index} " + controller.amount.toString(),
+                  // );
+                  return Dismissible(
+                    direction: DismissDirection.endToStart,
+                    background: Background(),
+                    dismissThresholds: {
+                      DismissDirection.endToStart: 0.8,
+                    },
+                    secondaryBackground: Background(),
+                    key: UniqueKey(),
+                    onDismissed: (direction) {
+                      if (direction == DismissDirection.endToStart) {
+                        controller.removeItemfromCart(
+                            controller.cartlist[index].product!.sId!);
+                      }
+                      Get.appUpdate();
+                    },
+                    child: Card(
+                      child: ListTile(
+                        visualDensity: VisualDensity(vertical: 4),
+                        contentPadding: EdgeInsets.all(5),
+                        // dense: true,
+                        // autofocus: true,
+                        title: Text(
+                          // maxLines: 3,
+                          controller.cartlist[index].product!.name.toString() +
+                              " \n" +
+                              "Rs - " +
+                              controller.cartlist[index].product!.price
+                                  .toString(),
                         ),
-                        // "https://i.postimg.cc/nzdgXrFC/anh-nhat-Pd-ALQmf-Eqv-E-unsplash.jpg"
+                        subtitle: Text(
+                          maxLines: 1,
+                          controller.cartlist[index].product!.specs.toString(),
+                          style: TextStyle(),
+                        ),
+                        leading: Container(
+                          width: Get.width * 0.24,
+                          child: ClipRRect(
+                            borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(10),
+                                bottom: Radius.circular(15)),
+                            child: CachedNetworkImage(
+                              // fit: BoxFit.scaleDown,
+                              fit: BoxFit.contain,
+
+                              // width: Get.width * .25,
+                              imageUrl: controller
+                                  .cartlist[index].product!.images!.first
+                                  .toString(),
+                            ),
+                            // "https://i.postimg.cc/nzdgXrFC/anh-nhat-Pd-ALQmf-Eqv-E-unsplash.jpg"
+                          ),
+                        ),
+                        trailing: Container(
+                          width: Get.width * .22,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                            width: 0.1,
+                          )),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: InkWell(
+                                  // borderRadius: BorderRadius.circular(100),
+
+                                  child: Icon(Icons.remove,
+                                      color: Colors.orange[800]),
+                                  onTap: () {
+                                    controller.qty.value =
+                                        controller.cartlist[index].quantity!;
+                                    if (controller.qty.value > 1) {
+                                      controller.qty.value -= 1;
+                                      controller.addToCart(
+                                          controller.cartlist[index].product!,
+                                          controller.qty.value);
+                                    }
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                width: 3,
+                              ),
+                              Text(
+                                style: TextStyle(fontSize: 16),
+                                controller.cartlist[index].quantity.toString(),
+                              ),
+                              SizedBox(
+                                width: 3,
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: Icon(Icons.add,
+                                      color: Colors.orange[800]),
+                                  onTap: () {
+                                    controller.qty.value =
+                                        controller.cartlist[index].quantity!;
+                                    controller.qty.value += 1;
+
+                                    controller.addToCart(
+                                        controller.cartlist[index].product!,
+                                        controller.qty.value);
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                    trailing: Container(
-                      width: Get.width * .22,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                        width: 0.1,
-                      )),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: InkWell(
-                              // borderRadius: BorderRadius.circular(100),
-
-                              child:
-                                  Icon(Icons.remove, color: Colors.orange[800]),
-                              onTap: () {
-                                controller.qty.value =
-                                    controller.cartlist[index].quantity!;
-                                if (controller.qty.value > 1) {
-                                  controller.qty.value -= 1;
-                                  controller.addToCart(
-                                      controller.cartlist[index].product!,
-                                      controller.qty.value);
-                                }
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: 3,
-                          ),
-                          Obx(
-                            () => Text(
-                              style: TextStyle(fontSize: 16),
-                              controller.cartlist[index].quantity.toString(),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 3,
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(100),
-                              child: Icon(Icons.add, color: Colors.orange[800]),
-                              onTap: () {
-                                controller.qty.value =
-                                    controller.cartlist[index].quantity!;
-                                controller.qty.value += 1;
-
-                                controller.addToCart(
-                                    controller.cartlist[index].product!,
-                                    controller.qty.value);
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
             // onLoading: CircularProgressIndicator(),
             onEmpty: Text("Cart data not found "),
             onError: (error) => Text("${error}"),
           ),
         ),
-
-// InputQty(
-//                         qtyFormProps: QtyFormProps(enableTyping: false),
-//                         decoration: QtyDecorationProps(
-//                           btnColor: const Color.fromARGB(255, 255, 111, 0),
-//                         ),
-//                         maxVal: double.maxFinite,
-//                         initVal: controller.cartlist[index].quantity!.toInt(),
-//                         minVal: 1,
-//                         steps: 1,
-//                         onQtyChanged: (val) {
-//                           print("dec" + val.toString());
-//                           int value = num(val) ?? 1;
-
-//                           controller.addToCart(
-//                               controller.cartlist[index].product!, value);
-//                         },
-//                       ),
-
         Expanded(
           flex: 1,
           child: Card(
@@ -215,9 +214,11 @@ class Cart extends GetView<cartController> {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      Text(
-                        "- ${controller.cartlist.length} Items",
-                        style: TextStyle(fontSize: 15),
+                      Obx(
+                        () => Text(
+                          "- ${controller.cartlist.length} Items",
+                          style: TextStyle(fontSize: 15),
+                        ),
                       ),
                     ],
                   ),
@@ -226,18 +227,36 @@ class Cart extends GetView<cartController> {
             ),
           ),
         ),
-
-        // BottomAppBar(
-        //   height: Get.height * 0.1 / 2.0,
-        //   // color: Colors.amber[900],
-        //   elevation: 10,
-        //   padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
-        //   child: buildTotalBar(context),
-        // ),
-        // Expanded(
-        //   child: buildTotalBar(context),
-        // ),
       ],
+    );
+  }
+
+  Widget Background() {
+    return Container(
+      color: Colors.red,
+      child: Align(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
+            Text(
+              " Delete",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+              textAlign: TextAlign.right,
+            ),
+            SizedBox(
+              width: 20,
+            ),
+          ],
+        ),
+        alignment: Alignment.centerRight,
+      ),
     );
   }
 
@@ -254,6 +273,35 @@ class Cart extends GetView<cartController> {
   }
 }
 
+
+ // BottomAppBar(
+        //   height: Get.height * 0.1 / 2.0,
+        //   // color: Colors.amber[900],
+        //   elevation: 10,
+        //   padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+        //   child: buildTotalBar(context),
+        // ),
+        // Expanded(
+        //   child: buildTotalBar(context),
+        // ),
+
+// InputQty(
+//                         qtyFormProps: QtyFormProps(enableTyping: false),
+//                         decoration: QtyDecorationProps(
+//                           btnColor: const Color.fromARGB(255, 255, 111, 0),
+//                         ),
+//                         maxVal: double.maxFinite,
+//                         initVal: controller.cartlist[index].quantity!.toInt(),
+//                         minVal: 1,
+//                         steps: 1,
+//                         onQtyChanged: (val) {
+//                           print("dec" + val.toString());
+//                           int value = num(val) ?? 1;
+
+//                           controller.addToCart(
+//                               controller.cartlist[index].product!, value);
+//                         },
+//                       ),
 
 // Widget buildTotalBar(double totalamount) {
 //   // final isDarkMode = Theme.of(context).brightness == Brightness.dark;

@@ -1,4 +1,7 @@
+import 'package:bidbazar/controllers/auth_controllers.dart';
+import 'package:bidbazar/controllers/cart_controller.dart';
 import 'package:bidbazar/controllers/product_controller.dart';
+import 'package:bidbazar/data/models/product_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +11,11 @@ class productView extends GetView<product_controller> {
   productView({super.key});
 
   product_controller controller = Get.put(product_controller());
+  cartController cart = Get.put(cartController());
+  // AuthenticateController user = Get.put(AuthenticateController());
+
+  // String userType =
+  //       user.userdata.first.usertype.toString() == "Buyer" ? "Buyer" : "Seller";
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +32,16 @@ class productView extends GetView<product_controller> {
           mainAxisSpacing: 30.0,
         ),
         itemBuilder: (context, index) {
-          final product = controller.productList[index];
+          productModel product = controller.productList[index];
 
           return CupertinoButton(
             onPressed: () {
-              Get.toNamed(
-                "productDetailScreen",
-                arguments: product,
-              );
+              controller.usertypes == "Buyer"
+                  ? Get.toNamed(
+                      "productDetailScreen",
+                      arguments: controller.productList[index],
+                    )
+                  : print("Seller");
             },
             child: Container(
               // width: size.width * .4,
@@ -113,10 +123,21 @@ class productView extends GetView<product_controller> {
                                   maxLines: 1,
                                 ),
                               ),
-                              Icon(
-                                Icons.shopping_cart,
-                                color: Colors.grey[500],
-                              )
+                              InkWell(
+                                onTap: () {
+                                  //Please ensure that the item is in your cart before adding it. => not implemented
+
+                                  cart.addToCart(product, 1);
+                                  Get.snackbar("Add to cart",
+                                      "Product added to your cart");
+                                },
+                                child: controller.usertypes == "Buyer"
+                                    ? Icon(
+                                        Icons.shopping_cart,
+                                        color: Colors.grey[500],
+                                      )
+                                    : SizedBox.shrink(),
+                              ),
                             ],
                           ),
                         ],

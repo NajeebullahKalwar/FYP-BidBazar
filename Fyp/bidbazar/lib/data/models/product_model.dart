@@ -1,5 +1,6 @@
 class productModel {
   String? sId;
+  String? user;
   String? name;
   String? specs;
   int? price;
@@ -8,6 +9,7 @@ class productModel {
 
   productModel(
       {this.sId,
+      this.user,
       this.name,
       this.specs,
       this.price,
@@ -16,6 +18,7 @@ class productModel {
 
   productModel.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
+    user = json['user'];
     name = json['name'];
     specs = json['specs'];
     price = json['price'];
@@ -26,6 +29,7 @@ class productModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.sId;
+    data['user'] = this.user;
     data['name'] = this.name;
     data['specs'] = this.specs;
     data['price'] = this.price;

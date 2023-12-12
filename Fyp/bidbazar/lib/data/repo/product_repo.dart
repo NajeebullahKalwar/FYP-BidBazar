@@ -8,12 +8,35 @@ class productRepo {
   Api api = Api();
 
   Future<productModel> createProduct({
-    required String title,
-    String? description,
+    required String UserId,
+    required String name,
+    required String specs,
+    required int price,
+    required List<String> image,
+    required String category,
   }) async {
     try {
-      Response response =
-          await api.sendRequest.post("/product", data: jsonEncode({}));
+      // FormData formData = FormData.fromMap({
+      //   'user': UserId,
+      //   'name': name,
+      //   'specs': specs,
+      //   'price': price,
+      //   'images': jsonEncode(image),
+      //   'category': category,
+      // });
+
+      final data = {
+        "user": UserId,
+        "name": name,
+        "specs": specs,
+        "price": price,
+        "images": image,
+        "category": category,
+      };
+
+      // FormData formData = FormData.fromMap(data, ListFormat.multiCompatible);
+
+      Response response = await api.sendRequest.post("/product", data: data);
 
       final productResponse = ApiResponse.fromResponse(response);
 
@@ -41,6 +64,30 @@ class productRepo {
           .map((jsonObject) => productModel
               .fromJson(jsonObject)) //jsonObject.key Or jsonObject.value
           .toList(); //add all streams of json object
+    } catch (ex) {
+      rethrow;
+    }
+  }
+
+  Future<List<productModel>> fetchProductByUserId(String userId) async {
+    try {
+      print("id repo " + userId);
+
+      Response response =
+          await api.sendRequest.get("/product/userId/${userId}");
+
+      ApiResponse apiResponse = ApiResponse.fromResponse(response);
+
+      if (!apiResponse.success) {
+        throw apiResponse.message.toString();
+      }
+
+      if (apiResponse.data != null) {
+        return (apiResponse.data as List<dynamic>)
+            .map((json) => productModel.fromJson(json))
+            .toList();
+      } else
+        return [];
     } catch (ex) {
       rethrow;
     }

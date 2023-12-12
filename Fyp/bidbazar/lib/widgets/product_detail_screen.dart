@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:bidbazar/controllers/cart_controller.dart';
 import 'package:bidbazar/data/models/product_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -10,7 +11,9 @@ class ProductDetailScreen extends StatelessWidget {
   ProductDetailScreen({super.key});
 
   static const routeName = "/productDetailScreen";
-  final productModel product = Get.arguments;
+
+  cartController controller = Get.put(cartController());
+  productModel product = Get.arguments;
 
   @override
   Widget build(BuildContext context) {
@@ -39,16 +42,23 @@ class ProductDetailScreen extends StatelessWidget {
                   child: PageStorage(
                     bucket: PageStorageBucket(),
                     child: CarouselSlider.builder(
+                      // image slider widget
                       itemCount: product.images?.length,
                       itemBuilder: (context, index, realIndex) {
-                        return CachedNetworkImage(
-                          fit: BoxFit.cover,
-                          // width: Get.width * .9,
-                          imageUrl: product.images!.elementAt(index),
+                        return SizedBox(
+                          width: Get.width * 1,
+                          child: CachedNetworkImage(
+                            fit: BoxFit.contain,
+
+                            // width: Get.width * 1,
+                            imageUrl: product.images!.elementAt(index),
+                          ),
                         );
                       },
+
                       options: CarouselOptions(
                         aspectRatio: 16 / 10,
+                        // height: Get.height * 0.5,
                         enlargeCenterPage: true,
                         autoPlay: true,
                       ),
@@ -57,15 +67,18 @@ class ProductDetailScreen extends StatelessWidget {
                 ),
                 Divider(
                   height: 5,
-                  thickness: 2,
+                  thickness: 10,
                 ),
                 Card(
+                  elevation: 5,
                   margin: EdgeInsets.all(10),
                   child: ListTile(
+                    titleTextStyle: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.w700),
                     title: Padding(
                       padding: EdgeInsets.symmetric(vertical: 5),
                       child: Text(
-                        product.name.toString(),
+                        product.name!.toUpperCase(),
                       ),
                     ),
                     subtitle: Row(
@@ -80,30 +93,58 @@ class ProductDetailScreen extends StatelessWidget {
                         ),
                       ],
                     ),
+                    trailing: Icon(
+                      Icons.favorite_outline_rounded,
+                      size: 30,
+                    ),
                   ),
                 ),
                 Card(
+                  elevation: 5,
                   margin: EdgeInsets.all(10),
-                  child: ListTile(
-                    title: Text("Specification"),
-                    subtitle: Text(
-                      product.specs.toString(),
-                      style: TextStyle(
-                        fontSize: 14,
-                        wordSpacing: 2,
-                        leadingDistribution:
-                            TextLeadingDistribution.proportional,
-                        fontWeight: FontWeight.w700,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        child: Text(
+                          "Specification",
+                          style: TextStyle(
+                            fontSize: 20,
+                            wordSpacing: 2,
+                            leadingDistribution:
+                                TextLeadingDistribution.proportional,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                       ),
-                    ),
+                      Divider(
+                        thickness: 2,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          product.specs.toString(),
+                          style: TextStyle(
+                            fontSize: 15,
+                            wordSpacing: 2,
+                            leadingDistribution:
+                                TextLeadingDistribution.proportional,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      )
+                    ],
                   ),
-                )
+                ),
               ],
             ),
           ),
-          persistentFooterButtons:
-              // isUserBuyer && (firebaseAuth.currentUser!.uid != product.ownerId)?
-              [
+          persistentFooterButtons: [
             Row(
               children: [
                 // Container(
@@ -126,9 +167,20 @@ class ProductDetailScreen extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
+                        minimumSize:
+                            Size(Get.width * 0.9, Get.height * 0.1 / 2),
                         backgroundColor: Colors.amber[900]),
-                    onPressed: () {},
-                    child: Text("Add to Cart"),
+                    onPressed: () {
+                      controller.addToCart(product, 1);
+                      Get.snackbar("Add to cart", "Product added to your cart");
+                    },
+                    child: Text(
+                      "Add to Cart",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
                 ),
               ],

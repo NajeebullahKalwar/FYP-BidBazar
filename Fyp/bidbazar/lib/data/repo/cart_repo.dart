@@ -53,7 +53,7 @@ class cartRepo {
         throw apiResponse.message.toString();
       }
 
-      return (apiResponse.data as List<dynamic>)
+      return (apiResponse.data["items"] as List<dynamic>)
           .map((json) => cartModel.fromJson(json))
           .toList();
     } on DioException catch (ex) {

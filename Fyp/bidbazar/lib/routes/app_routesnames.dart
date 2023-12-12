@@ -4,6 +4,7 @@ import 'package:bidbazar/Views/admin_home.dart';
 import 'package:bidbazar/Views/buyer_home.dart';
 import 'package:bidbazar/Views/seller_home.dart';
 import 'package:bidbazar/Views/splash.dart';
+import 'package:bidbazar/widgets/addproduct.dart';
 import 'package:bidbazar/widgets/product_detail_screen.dart';
 
 class AppRoutes {
@@ -14,4 +15,5 @@ class AppRoutes {
   static const String buyer = Buyer.routeName;
   static const String admin = Admin.routeName;
   static const String productdetailscreen = ProductDetailScreen.routeName;
+  static const String addproduct = addProduct.routeName;
 }

@@ -14,6 +14,9 @@ productRoute.get("/",productController.getAllProducts
 
 productRoute.get("/category/:id",productController.getAllProductsById
 );//default function shift to user_controller
+productRoute.get("/userId/:user",productController.getUserProduct);
+
+
 
 
 module.exports=productRoute;
