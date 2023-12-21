@@ -36,12 +36,13 @@ class productView extends GetView<product_controller> {
 
           return CupertinoButton(
             onPressed: () {
-              controller.usertypes == "Buyer"
-                  ? Get.toNamed(
-                      "productDetailScreen",
-                      arguments: controller.productList[index],
-                    )
-                  : print("Seller");
+              // controller.usertypes == "Buyer"
+              //     ?
+              Get.toNamed(
+                "productDetailScreen",
+                arguments: controller.productList[index],
+              );
+              // : print("Seller");
             },
             child: Container(
               // width: size.width * .4,
@@ -76,10 +77,10 @@ class productView extends GetView<product_controller> {
                       // height: size.height * 1,
                     ),
                   ),
-                  Divider(
-                    height: 1,
-                    thickness: 3,
-                  ),
+                  // Divider(
+                  //   height: 1,
+                  //   thickness: 3,
+                  // ),
                   // ListTile(
                   //   // leading: ,
 

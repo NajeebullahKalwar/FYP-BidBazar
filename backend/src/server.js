@@ -62,8 +62,8 @@ app.use("/api/images", express.static('upload/images'), imageRoute );
 
 app.listen(port,hostname,()=>{
 
-    console.log("server is up http://localhost:4000");
-    console.log("server is up http://192.168.146.1:4000");
+    // console.log("server is up http://localhost:4000");
+    console.log("server is up http://192.168.137.1:4000");
 
 });
 

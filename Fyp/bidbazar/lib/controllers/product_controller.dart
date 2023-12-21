@@ -8,6 +8,10 @@ import 'package:get/get.dart';
 class product_controller extends GetxController with StateMixin {
   RxList<productModel> productList = (List<productModel>.of([])).obs;
   final product_repo = productRepo();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
+  final TextEditingController specController = TextEditingController();
+
   ImageController imagecontroller = Get.put(ImageController());
 
   AuthenticateController user = Get.put(AuthenticateController());
@@ -59,7 +63,13 @@ class product_controller extends GetxController with StateMixin {
     }
   }
 
-  Future addProduct() async {
+  Future addProduct({
+    required String name,
+    required String specs,
+    required String price,
+    required List<String> images,
+    required String category,
+  }) async {
     try {
       change(productList, status: RxStatus.loading());
 
@@ -69,18 +79,25 @@ class product_controller extends GetxController with StateMixin {
       // print(stringList);
 
       var product = await product_repo.createProduct(
-          UserId: "655bc3739287689f923902f5",
-          name: "Google Pixel 8",
-          specs: "24MP camera 4000mah battery ",
-          price: 380000,
-          image: imagecontroller.uploadImageList,
-          // image: ["https://i.postimg.cc/G267pKHS/front.png"],
-          category: "6556628c382b1a3cca976166");
+        UserId: user.userdata.first.sId!,
+        name: name,
+        specs: specs,
+        price: 380000,
+        image: images,
+        // image: ["https://i.postimg.cc/G267pKHS/front.png"],
+        category: category,
+      );
 
       productList.add(product);
       change(productList, status: RxStatus.success());
     } catch (ex) {
       change(productList, status: RxStatus.error(ex.toString()));
     }
+  }
+
+  void clearfields() {
+    nameController.clear();
+    priceController.clear();
+    specController.clear();
   }
 }

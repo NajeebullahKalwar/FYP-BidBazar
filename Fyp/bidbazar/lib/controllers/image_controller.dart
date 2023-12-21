@@ -11,10 +11,16 @@ import 'package:image_picker/image_picker.dart';
 
 class ImageController extends GetxController with StateMixin {
   ImageRepository imageRepo = ImageRepository();
-  List<String> imageList = [];
+
+  List<String> imageList = RxList(<String>[].obs);
   List<String> uploadImageList = [];
 
+  // RxList<String> uploadImageList = RxList(<String>[].obs);
+  final productKey = GlobalKey<FormState>();
+
   Future getImage() async {
+    change(imageList, status: RxStatus.loading());
+
     List<XFile> pickedImage;
     final picker = ImagePicker();
 
@@ -34,17 +40,16 @@ class ImageController extends GetxController with StateMixin {
       imageList.add(filePath);
     }
 
+    change(imageList, status: RxStatus.success());
+  }
+
+  Future upload() async {
     var image = await imageRepo.uploadImage(imageList);
 
     List<String> img = List<String>.from(image);
 
-    // await imageRepo.uploadImage(imageList).then((value) => print(value));
-
     uploadImageList.addAll(img);
-
-    // uploadImageList.addAll(image);
-
-    // _upload(pickedImage);
+    print("done images");
   }
 
   // void _upload(List<XFile> file) async {

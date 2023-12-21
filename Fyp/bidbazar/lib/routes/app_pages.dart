@@ -44,6 +44,8 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.addproduct,
+      transition: Transition.cupertino,
+      transitionDuration: Duration(milliseconds: 200),
       page: () => addProduct(),
     ),
   ];

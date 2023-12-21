@@ -113,6 +113,12 @@ class Buyer extends StatelessWidget {
               selected: false,
               onTap: () => 1,
             ),
+            ListTile(
+              leading: Icon(Icons.exit_to_app_rounded),
+              title: Text('Exit'),
+              selected: false,
+              onTap: () => Get.offAllNamed('loginScreen'),
+            ),
           ],
         ),
       ),

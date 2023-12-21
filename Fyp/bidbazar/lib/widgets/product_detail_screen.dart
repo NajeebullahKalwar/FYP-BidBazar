@@ -41,26 +41,25 @@ class ProductDetailScreen extends StatelessWidget {
                   tag: product.sId.toString(),
                   child: PageStorage(
                     bucket: PageStorageBucket(),
-                    child: CarouselSlider.builder(
-                      // image slider widget
-                      itemCount: product.images?.length,
-                      itemBuilder: (context, index, realIndex) {
-                        return SizedBox(
-                          width: Get.width * 1,
-                          child: CachedNetworkImage(
-                            fit: BoxFit.contain,
-
-                            // width: Get.width * 1,
+                    child: Container(
+                      height: Get.height * 0.3 / 1.1,
+                      child: CarouselSlider.builder(
+                        // image slider widget
+                        itemCount: product.images?.length,
+                        itemBuilder: (context, index, realIndex) {
+                          return CachedNetworkImage(
+                            fit: BoxFit.cover,
                             imageUrl: product.images!.elementAt(index),
-                          ),
-                        );
-                      },
+                          );
+                        },
 
-                      options: CarouselOptions(
-                        aspectRatio: 16 / 10,
-                        // height: Get.height * 0.5,
-                        enlargeCenterPage: true,
-                        autoPlay: true,
+                        options: CarouselOptions(
+                          // aspectRatio: 16 / 9,
+
+                          // enlargeCenterPage: true,
+                          // enlargeFactor: 1,
+                          autoPlay: true,
+                        ),
                       ),
                     ),
                   ),
