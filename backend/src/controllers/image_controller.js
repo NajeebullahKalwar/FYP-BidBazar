@@ -11,11 +11,11 @@ const image = {
                 
                 // console.log(req.files);
 
-                const imageUrls = req.files.map(element => `http://192.168.137.1:4000/api/images/${element.filename}`);
+                const imageUrls = req.files.map(element => `/api/images/${element.filename}`);// ex http://192.168.137.1:4000/api/images/image123545.png
+                // http://192.168.137.1:4000
+                // console.log("new data");
 
-                console.log("new data");
-
-                console.log(imageUrls);
+                // console.log(imageUrls);
 
 
 

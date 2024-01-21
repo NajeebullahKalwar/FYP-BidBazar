@@ -19,13 +19,10 @@ const cartSchema =  mongoose.Schema({//nested object
         ref:'User',
         required:true
     },
-    
     items:{
     type:[cartItemSchema],
     default:[],
     },
-    
-
 }); 
 
 

@@ -4,6 +4,7 @@ class productModel {
   String? name;
   String? specs;
   int? price;
+  bool? wishlist;
   List<String>? images;
   String? category;
 
@@ -13,6 +14,7 @@ class productModel {
       this.name,
       this.specs,
       this.price,
+      this.wishlist,
       this.images,
       this.category});
 
@@ -22,6 +24,7 @@ class productModel {
     name = json['name'];
     specs = json['specs'];
     price = json['price'];
+    wishlist = json['wishlist'];
     images = json['images'].cast<String>();
     category = json['category'];
   }
@@ -33,6 +36,7 @@ class productModel {
     data['name'] = this.name;
     data['specs'] = this.specs;
     data['price'] = this.price;
+    data['wishlist'] = this.wishlist;
     data['images'] = this.images;
     data['category'] = this.category;
     return data;

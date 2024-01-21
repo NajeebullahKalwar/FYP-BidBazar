@@ -35,115 +35,120 @@ class Cart extends GetView<cartController> {
                   // print(
                   //   "${index} " + controller.amount.toString(),
                   // );
-                  return Dismissible(
-                    direction: DismissDirection.endToStart,
-                    background: Background(),
-                    dismissThresholds: {
-                      DismissDirection.endToStart: 0.8,
-                    },
-                    secondaryBackground: Background(),
-                    key: UniqueKey(),
-                    onDismissed: (direction) {
-                      if (direction == DismissDirection.endToStart) {
-                        controller.removeItemfromCart(
-                            controller.cartlist[index].product!.sId!);
-                      }
-                      Get.appUpdate();
-                    },
-                    child: Card(
-                      child: ListTile(
-                        visualDensity: VisualDensity(vertical: 4),
-                        contentPadding: EdgeInsets.all(5),
-                        // dense: true,
-                        // autofocus: true,
-                        title: Text(
-                          // maxLines: 3,
-                          controller.cartlist[index].product!.name.toString() +
-                              " \n" +
-                              "Rs - " +
-                              controller.cartlist[index].product!.price
-                                  .toString(),
-                        ),
-                        subtitle: Text(
-                          maxLines: 1,
-                          controller.cartlist[index].product!.specs.toString(),
-                          style: TextStyle(),
-                        ),
-                        leading: Container(
-                          width: Get.width * 0.24,
-                          child: ClipRRect(
-                            borderRadius: const BorderRadius.vertical(
-                                top: Radius.circular(10),
-                                bottom: Radius.circular(15)),
-                            child: CachedNetworkImage(
-                              // fit: BoxFit.scaleDown,
-                              fit: BoxFit.contain,
+                  return Card(
+                    child: ListTile(
+                      visualDensity: VisualDensity(vertical: 4),
+                      contentPadding: EdgeInsets.all(5),
+                      // dense: true,
+                      // autofocus: true,
+                      title: Text(
+                        // maxLines: 3,
+                        controller.cartlist[index].product!.name.toString() +
+                            " \n" +
+                            "Rs - " +
+                            controller.cartlist[index].product!.price
+                                .toString(),
+                      ),
+                      subtitle: Text(
+                        maxLines: 1,
+                        controller.cartlist[index].product!.specs.toString(),
+                        style: TextStyle(),
+                      ),
+                      leading: Container(
+                        width: Get.width * 0.24,
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(10),
+                              bottom: Radius.circular(15)),
+                          child: CachedNetworkImage(
+                            // fit: BoxFit.scaleDown,
+                            fit: BoxFit.contain,
 
-                              // width: Get.width * .25,
-                              imageUrl: controller
-                                  .cartlist[index].product!.images!.first
-                                  .toString(),
-                            ),
-                            // "https://i.postimg.cc/nzdgXrFC/anh-nhat-Pd-ALQmf-Eqv-E-unsplash.jpg"
+                            // width: Get.width * .25,
+                            imageUrl: "http://192.168.1.149:4000" +
+                                controller
+                                    .cartlist[index].product!.images!.first
+                                    .toString(),
                           ),
+                          // "https://i.postimg.cc/nzdgXrFC/anh-nhat-Pd-ALQmf-Eqv-E-unsplash.jpg"
                         ),
-                        trailing: Container(
-                          width: Get.width * .22,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                            width: 0.1,
-                          )),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: InkWell(
-                                  // borderRadius: BorderRadius.circular(100),
+                      ),
+                      trailing: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Container(
+                            width: Get.width * .22,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                              width: 0.1,
+                            )),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 2,
+                                  child: InkWell(
+                                    // borderRadius: BorderRadius.circular(100),
 
-                                  child: Icon(Icons.remove,
-                                      color: Colors.orange[800]),
-                                  onTap: () {
-                                    controller.qty.value =
-                                        controller.cartlist[index].quantity!;
-                                    if (controller.qty.value > 1) {
-                                      controller.qty.value -= 1;
+                                    child: Icon(Icons.remove,
+                                        color: Colors.orange[800]),
+                                    onTap: () {
+                                      controller.qty.value =
+                                          controller.cartlist[index].quantity!;
+                                      if (controller.qty.value > 1) {
+                                        controller.qty.value -= 1;
+                                        controller.addToCart(
+                                            controller.cartlist[index].product!,
+                                            controller.qty.value);
+                                      }
+                                    },
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 3,
+                                ),
+                                Text(
+                                  style: TextStyle(fontSize: 16),
+                                  controller.cartlist[index].quantity
+                                      .toString(),
+                                ),
+                                SizedBox(
+                                  width: 3,
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: Icon(Icons.add,
+                                        color: Colors.orange[800]),
+                                    onTap: () {
+                                      controller.qty.value =
+                                          controller.cartlist[index].quantity!;
+                                      controller.qty.value += 1;
+
                                       controller.addToCart(
                                           controller.cartlist[index].product!,
                                           controller.qty.value);
-                                    }
-                                  },
+                                    },
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 3,
-                              ),
-                              Text(
-                                style: TextStyle(fontSize: 16),
-                                controller.cartlist[index].quantity.toString(),
-                              ),
-                              SizedBox(
-                                width: 3,
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: Icon(Icons.add,
-                                      color: Colors.orange[800]),
-                                  onTap: () {
-                                    controller.qty.value =
-                                        controller.cartlist[index].quantity!;
-                                    controller.qty.value += 1;
-
-                                    controller.addToCart(
-                                        controller.cartlist[index].product!,
-                                        controller.qty.value);
-                                  },
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
+                          // Divider(
+                          //   height: 3,
+                          // ),
+                          SizedBox(
+                              // width: Get.width * .1,
+                              height: Get.height * 0.05,
+                              child: InkWell(
+                                onTap: () {
+                                  controller.removeItemfromCart(
+                                      controller.cartlist[index].product!.sId!);
+                                  controller.cartlist.removeAt(index);
+                                },
+                                child: Icon(Icons.delete),
+                              ))
+                        ],
                       ),
                     ),
                   );

@@ -28,7 +28,7 @@ class AuthenticateController extends GetxController {
   // late final userModel usermodel;
   UserRepository userRepo = UserRepository();
   // List<userModel>  = [];
-  RxList<userModel> userdata = (List<userModel>.of([])).obs;
+  static RxList<userModel> userdata = (List<userModel>.of([])).obs;
 
   RxInt screenIndex = 0.obs;
 

@@ -7,26 +7,32 @@ import 'package:get/get.dart';
 
 class product_controller extends GetxController with StateMixin {
   RxList<productModel> productList = (List<productModel>.of([])).obs;
+  RxList<productModel> favouriteProducts = (List<productModel>.of([])).obs;
+
+  RxBool isWishListed = false.obs;
   final product_repo = productRepo();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController specController = TextEditingController();
 
   ImageController imagecontroller = Get.put(ImageController());
+  RxString startLabel = 0.toString().obs;
+  RxString endLabel = 100000.toString().obs;
 
   AuthenticateController user = Get.put(AuthenticateController());
-
+  // favouriteProduct();
   String usertypes = "";
   @override
   void onInit() async {
     // TODO: implement onInit
-    usertypes = await user.userdata.first.usertype!;
+    usertypes = await AuthenticateController.userdata.first.usertype!;
     print("najeeb " + usertypes);
     await usertypes == "Buyer" ? fetchProducts() : fetchProductByUser();
 
     // Future.delayed(Duration(milliseconds: 5000), () {
     //   addProduct();
     //   // Do something
+
     // });
     super.onInit();
   }
@@ -35,13 +41,11 @@ class product_controller extends GetxController with StateMixin {
     try {
       change(productList, status: RxStatus.loading());
 
-      // user.userdata.first.usertype=="Buyer"?
-
       var products = await product_repo.fetchProduct();
       productList.assignAll(products);
-      print("leght of ${productList.length} ");
-      print("last of ${productList.last} ");
-      // print("title of ${categoryList[0].sId} ");
+      // print("leght of ${productList.length} ");
+      // print("last of ${productList.last} ");
+      // // print("title of ${categoryList[0].sId} ");
 
       change(productList, status: RxStatus.success());
     } catch (ex) {
@@ -53,8 +57,8 @@ class product_controller extends GetxController with StateMixin {
     try {
       change(productList, status: RxStatus.loading());
       // user.usertypes
-      var products =
-          await product_repo.fetchProductByUserId(user.userdata.first.sId!);
+      var products = await product_repo
+          .fetchProductByUserId(AuthenticateController.userdata.first.sId!);
       productList.assignAll(products);
 
       change(productList, status: RxStatus.success());
@@ -73,13 +77,8 @@ class product_controller extends GetxController with StateMixin {
     try {
       change(productList, status: RxStatus.loading());
 
-      // await imagecontroller.getImage();
-
-      print("lisyt image");
-      // print(stringList);
-
       var product = await product_repo.createProduct(
-        UserId: user.userdata.first.sId!,
+        UserId: AuthenticateController.userdata.first.sId!,
         name: name,
         specs: specs,
         price: 380000,
@@ -93,6 +92,32 @@ class product_controller extends GetxController with StateMixin {
     } catch (ex) {
       change(productList, status: RxStatus.error(ex.toString()));
     }
+  }
+
+  Future removeProduct(String id, String userId, String productId) async {
+    try {
+      change(productList, status: RxStatus.loading());
+
+      await product_repo.RemoveProduct(id, userId, productId);
+
+      change(productList, status: RxStatus.success());
+    } catch (ex) {
+      change(productList, status: RxStatus.error(ex.toString()));
+    }
+  }
+
+  Future<bool?> wishlistProduct({
+    required String productId,
+  }) async {
+    try {
+      isWishListed.value = await product_repo.addProductToWishList(productId);
+      return isWishListed.value;
+      // change(productList, status: RxStatus.success());
+    } catch (ex) {
+      // throw ex;
+      change(productList, status: RxStatus.error(ex.toString()));
+    }
+    return null;
   }
 
   void clearfields() {

@@ -1,4 +1,5 @@
 import 'package:bidbazar/Views/buyer/cart.dart';
+import 'package:bidbazar/controllers/wishList_controller.dart';
 import 'package:bidbazar/routes/app_pages.dart';
 import 'package:bidbazar/routes/app_routesnames.dart';
 import 'package:bidbazar/widgets/addproduct.dart';
@@ -108,9 +109,14 @@ class Seller extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.favorite),
-              title: Text('Item 1'),
+              title: Text('wish list'),
               selected: true,
-              onTap: () => 0,
+              onTap: () {
+                WishListController wishListController =
+                    Get.put(WishListController());
+                wishListController.fetchWishListItems();
+                Get.toNamed("wishListScreen");
+              },
             ),
             ListTile(
               leading: Icon(Icons.delete),
