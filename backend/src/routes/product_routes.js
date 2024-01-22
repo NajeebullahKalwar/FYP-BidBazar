@@ -16,6 +16,10 @@ productRoute.get("/category/:id",productController.getAllProductsById
 );//default function shift to user_controller
 productRoute.get("/userId/:user",productController.getUserProduct);
 
+productRoute.post("/wishListProduct",productController.wishListProduct
+);
+productRoute.post("/RemoveProduct",productController.removeFromProducts
+);
 
 
 

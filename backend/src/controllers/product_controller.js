@@ -1,11 +1,12 @@
 const productModel = require("../models/product_model");
+const wishListModel = require("../models/wishList_model");
 
 const productController = {
 
     createProduct:async function(req,res){
         try{
             const productData = req.body;//data send    
-            console.log(productData);
+            // console.log(productData);
             // const jsonData = JSON.stringify(productData);
             
 
@@ -17,6 +18,53 @@ const productController = {
             return res.json({success:false,message:`Product creation an error occured  ${e}`});
         }
     },
+
+    removeFromProducts:async function(req,res){
+        try{
+            const {id,userId,productId}=req.body;
+            
+
+            await wishListModel.findOneAndDelete({user:userId,product:productId});
+            
+                await productModel.findOneAndDelete({_id:id}); 
+
+                //also remove from cart 
+                return res.json({success:true,message:"Product removed successfully",data:{}});
+        
+        }catch(ex){
+            return res.json({success:false,message:ex });
+        }
+
+    },
+
+        //This function is not in use
+    wishListProduct:async function(req,res){//add product to wishlist  function remove and add 
+        try{
+            const {id}=req.body;
+            // console.log(id);
+            
+            wishlist = await productModel.findOne(
+                {_id:id},        
+                {_id:0,user:0,name:0,specs:0,price:0,images:0,category:0 , __v:0}//excluding this data       
+                ) ;
+            // console.log(wishlist["wishlist"]);
+              await productModel.findOneAndUpdate(
+                {_id:id},
+                {wishlist:!wishlist["wishlist"]} , //dollar pull is array function ->pull value from array means delete values from array using function pull
+                
+                {new:true}
+                );
+
+                return res.json({success:true,message:"Product added to wishList ",data:!wishlist["wishlist"]});
+        
+        }catch(ex){
+            return res.json({success:false,message:ex });
+
+        }
+
+    },
+
+
     getAllProducts:async function(req,res){
 
         try{
@@ -42,6 +90,8 @@ const productController = {
     
         }
     },
+
+
 
     
     getUserProduct:async function(req,res){ // for user

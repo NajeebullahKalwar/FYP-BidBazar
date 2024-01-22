@@ -27,6 +27,10 @@ const productSchema=mongoose.Schema({
         type:Number,
         required:true,
     },
+    wishlist:{
+        type:Boolean,
+        default:false,        
+    },
     images:{
         type:Array,
         default:[]

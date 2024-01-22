@@ -1,4 +1,7 @@
 import 'package:bidbazar/Views/buyer/cart.dart';
+import 'package:bidbazar/controllers/wishList_controller.dart';
+import 'package:bidbazar/routes/app_pages.dart';
+import 'package:bidbazar/routes/app_routesnames.dart';
 import 'package:bidbazar/widgets/addproduct.dart';
 import 'package:bidbazar/widgets/category.dart';
 import 'package:bidbazar/Views/home.dart';
@@ -34,15 +37,17 @@ class Seller extends StatelessWidget {
         () => BottomNavigationBar(
           onTap: (value) {
             controller.screenIndex.value = value;
-            // print('naj $value');
           },
+          showUnselectedLabels: false,
           showSelectedLabels: true,
           selectedIconTheme: IconThemeData(color: Colors.amber[900]),
-          // selectedLabelStyle: TextStyle(
-          // ),
           selectedItemColor: Colors.amber[900],
           currentIndex: controller.screenIndex.value,
           selectedFontSize: 10,
+          // showUnselectedLabels: true,
+          type: BottomNavigationBarType.fixed,
+
+          // landscapeLayout: BottomNavigationBarLandscapeLayout.spread,
           unselectedIconTheme: IconThemeData(
             color: Colors.black54,
           ),
@@ -55,6 +60,11 @@ class Seller extends StatelessWidget {
             BottomNavigationBarItem(
               icon: Icon(Icons.message),
               label: 'Message',
+            ),
+            BottomNavigationBarItem(
+              activeIcon: SizedBox(),
+              icon: SizedBox(),
+              label: '',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.category_rounded),
@@ -99,9 +109,14 @@ class Seller extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.favorite),
-              title: Text('Item 1'),
+              title: Text('wish list'),
               selected: true,
-              onTap: () => 0,
+              onTap: () {
+                WishListController wishListController =
+                    Get.put(WishListController());
+                wishListController.fetchWishListItems();
+                Get.toNamed("wishListScreen");
+              },
             ),
             ListTile(
               leading: Icon(Icons.delete),
@@ -109,20 +124,31 @@ class Seller extends StatelessWidget {
               selected: false,
               onTap: () => 1,
             ),
+            ListTile(
+              leading: Icon(Icons.exit_to_app_rounded),
+              title: Text('Exit'),
+              selected: false,
+              onTap: () {
+                Get.offAllNamed('loginScreen');
+              },
+            ),
           ],
         ),
       ),
+      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        // isExtended: true,
-
+        heroTag: UniqueKey(),
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         enableFeedback: true,
         backgroundColor: Colors.orange[800],
+        // shape: CircleBorder(
+        //     side: BorderSide(
+        //         color: const Color.fromARGB(96, 255, 255, 255),
+        //         width: 5,
+        //         strokeAlign: 0)),
+
         onPressed: () {
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => addProduct(),
-          //     ));
           Get.toNamed("addProduct");
         },
         child: Icon(

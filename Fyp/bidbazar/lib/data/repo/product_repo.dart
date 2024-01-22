@@ -1,8 +1,12 @@
+// import 'dart:convert';
+
 import 'dart:convert';
 
 import 'package:bidbazar/core/api.dart';
 import 'package:bidbazar/data/models/product_model.dart';
 import 'package:dio/dio.dart';
+import 'package:get/route_manager.dart';
+// import 'package:get/get_navigation/get_navigation.dart';
 
 class productRepo {
   Api api = Api();
@@ -45,6 +49,40 @@ class productRepo {
       }
 
       return productModel.fromJson(productResponse.data);
+    } catch (ex) {
+      rethrow;
+    }
+  }
+
+  Future<bool> addProductToWishList(String productId) async {
+    try {
+      Response response = await api.sendRequest
+          .post("/product/wishListProduct", data: {"id": productId});
+
+      ApiResponse productResponse = ApiResponse.fromResponse(response);
+      // print(response.data);
+      if (!productResponse.success) {
+        throw productResponse.message.toString();
+      }
+
+      bool check = productResponse.data; // var data = response.data;
+      print("check " + check.toString());
+      return check;
+    } catch (ex) {
+      rethrow;
+    }
+  }
+
+  Future RemoveProduct(String id, String userId, String productId) async {
+    try {
+      Response response = await api.sendRequest.post("/product/RemoveProduct",
+          data: {"id": id, "userId": userId, "productId": productId});
+      ApiResponse productResponse = ApiResponse.fromResponse(response);
+
+      if (!productResponse.success) {
+        throw productResponse.message.toString();
+      }
+      Get.snackbar("Product", productResponse.message.toString());
     } catch (ex) {
       rethrow;
     }

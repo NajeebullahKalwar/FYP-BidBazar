@@ -13,10 +13,10 @@ import 'package:get/get.dart';
 class loginScreen extends StatelessWidget {
   loginScreen({super.key});
   static const String routeName = '/loginScreen';
+  AuthenticateController controller = Get.put(AuthenticateController());
 
   @override
   Widget build(BuildContext context) {
-    AuthenticateController controller = Get.put(AuthenticateController());
     // Get.create(() {
     //   controller;
     // }, permanent: true, tag: "auth");

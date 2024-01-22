@@ -15,6 +15,12 @@ class cartController extends GetxController with StateMixin {
   AuthenticateController user = Get.put(AuthenticateController());
 
   @override
+  void onClose() {
+    // TODO: implement onClose
+    super.onClose();
+  }
+
+  @override
   void onInit() async {
     // TODO: implement onInit
     super.onInit();
@@ -26,7 +32,8 @@ class cartController extends GetxController with StateMixin {
       change(cartlist, status: RxStatus.loading());
       // String id = user.userdata.first.sId.toString();
 
-      var cartItems = await cart.fetchCart(user.userdata.first.sId!);
+      var cartItems =
+          await cart.fetchCart(AuthenticateController.userdata.first.sId!);
       // print("cart all Items");
       // print(cartItems);
       cartlist.assignAll(cartItems);
@@ -56,7 +63,8 @@ class cartController extends GetxController with StateMixin {
       cartModel item = cartModel(
           product: product, quantity: Quantity); // object id will generate auto
 
-      var cartItems = await cart.addToCart(item, user.userdata.first.sId!);
+      var cartItems = await cart.addToCart(
+          item, AuthenticateController.userdata.first.sId!);
 
       cartlist.assignAll(cartItems);
       cartTotalAmount();
@@ -67,10 +75,10 @@ class cartController extends GetxController with StateMixin {
 
   void removeItemfromCart(String productId) async {
     try {
-      var cartItems =
-          await cart.removeFromCartItem(productId, user.userdata.first.sId!);
+      await cart.removeFromCartItem(
+          productId, AuthenticateController.userdata.first.sId!);
 
-      cartlist.assignAll(cartItems);
+      // cartlist.assignAll(cartItems);
 
       cartTotalAmount();
 

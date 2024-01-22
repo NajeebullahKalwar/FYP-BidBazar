@@ -14,6 +14,7 @@ const cartRoutes = require('./routes/cart_routes');
 const bidRoutes = require('./routes/bid_routes');
 const image = require('./controllers/image_controller');
 const imageRoute = require('./routes/image_route');
+const wishListRoutes = require('./routes/wishList_route');
 
 
 
@@ -37,7 +38,7 @@ app.use(morgan('dev'));
 app.use(cors());
 
 const port=4000;
-const hostname='192.168.137.1';
+const hostname='192.168.43.7';
 
 
 
@@ -57,13 +58,13 @@ app.use("/api/product",productRoute);
 app.use("/api/cart",cartRoutes);
 app.use("/api/bid",bidRoutes);
 app.use("/api/images", express.static('upload/images'), imageRoute );
-
+app.use("/api/wishList",wishListRoutes);
 
 
 app.listen(port,hostname,()=>{
 
-    console.log("server is up http://localhost:4000");
-    console.log("server is up http://192.168.146.1:4000");
+    // console.log("server is up http://localhost:4000");
+    console.log(`server is up http://${hostname}:4000`);
 
 });
 

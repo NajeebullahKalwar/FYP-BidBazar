@@ -1,8 +1,10 @@
 import 'package:bidbazar/Views/buyer/cart.dart';
+import 'package:bidbazar/controllers/wishList_controller.dart';
 import 'package:bidbazar/widgets/category.dart';
 import 'package:bidbazar/Views/home.dart';
 import 'package:bidbazar/Views/buyer/message.dart';
 import 'package:bidbazar/controllers/auth_controllers.dart';
+import 'package:bidbazar/widgets/wishList.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -103,15 +105,27 @@ class Buyer extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.favorite),
-              title: Text('Item 1'),
+              title: Text('wish list'),
               selected: true,
-              onTap: () => 0,
+              onTap: () {
+                WishListController wishListController =
+                    Get.put(WishListController());
+
+                wishListController.fetchWishListItems();
+                Get.toNamed("wishListScreen");
+              },
             ),
             ListTile(
               leading: Icon(Icons.delete),
               title: Text('Item 2'),
               selected: false,
               onTap: () => 1,
+            ),
+            ListTile(
+              leading: Icon(Icons.exit_to_app_rounded),
+              title: Text('Exit'),
+              selected: false,
+              onTap: () => Get.offAllNamed('loginScreen'),
             ),
           ],
         ),

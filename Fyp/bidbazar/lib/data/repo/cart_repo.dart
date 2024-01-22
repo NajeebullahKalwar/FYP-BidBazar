@@ -35,8 +35,7 @@ class cartRepo {
     }
   }
 
-  Future<List<cartModel>> removeFromCartItem(
-      String productId, String userId) async {
+  Future removeFromCartItem(String productId, String userId) async {
     Map<String, dynamic> data = {
       "product": productId,
       "user": userId,
@@ -53,9 +52,10 @@ class cartRepo {
         throw apiResponse.message.toString();
       }
 
-      return (apiResponse.data["items"] as List<dynamic>)
-          .map((json) => cartModel.fromJson(json))
-          .toList();
+      // return (apiResponse.data["items"] as List<dynamic>)
+      //     .map((json) => cartModel.fromJson(json))
+      //     .toList();
+      // return [];
     } on DioException catch (ex) {
       rethrow;
     }
