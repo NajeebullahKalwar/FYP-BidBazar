@@ -10,6 +10,7 @@ import 'package:bidbazar/widgets/buttonController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+//laksh
 void main() {
   // AppControllerBinding().dependencies();
   WidgetsFlutterBinding.ensureInitialized();

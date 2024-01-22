@@ -3,7 +3,7 @@
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-const String BASE_URL = "http://192.168.1.149:4000/api";
+const String BASE_URL = "http://192.168.43.7:4000/api";
 
 const Map<String, dynamic> DEFAULT_HEARDERS = {
   'content-Type': 'application/json'

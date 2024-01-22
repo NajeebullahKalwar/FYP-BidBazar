@@ -48,7 +48,7 @@ class gridItem extends StatelessWidget {
                     fit: BoxFit.cover,
                     // width: size.width * .9,
                     imageUrl:
-                        "http://192.168.1.149:4000${product.images!.elementAt(0).toString()}",
+                        "http://192.168.43.7:4000${product.images!.elementAt(0).toString()}",
                   ),
                   // "https://i.postimg.cc/nzdgXrFC/anh-nhat-Pd-ALQmf-Eqv-E-unsplash.jpg"
                 ),

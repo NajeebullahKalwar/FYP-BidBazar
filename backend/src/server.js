@@ -38,7 +38,7 @@ app.use(morgan('dev'));
 app.use(cors());
 
 const port=4000;
-const hostname='192.168.1.149';
+const hostname='192.168.43.7';
 
 
 

@@ -65,7 +65,7 @@ class Cart extends GetView<cartController> {
                             fit: BoxFit.contain,
 
                             // width: Get.width * .25,
-                            imageUrl: "http://192.168.1.149:4000" +
+                            imageUrl: "http://192.168.43.7:4000" +
                                 controller
                                     .cartlist[index].product!.images!.first
                                     .toString(),
