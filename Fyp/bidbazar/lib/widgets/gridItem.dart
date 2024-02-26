@@ -1,9 +1,7 @@
 import 'package:bidbazar/controllers/auth_controllers.dart';
 import 'package:bidbazar/controllers/cart_controller.dart';
 import 'package:bidbazar/controllers/product_controller.dart';
-import 'package:bidbazar/controllers/wishList_controller.dart';
 import 'package:bidbazar/data/models/product_model.dart';
-import 'package:bidbazar/widgets/wishList.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -48,7 +46,7 @@ class gridItem extends StatelessWidget {
                     fit: BoxFit.cover,
                     // width: size.width * .9,
                     imageUrl:
-                        "http://192.168.43.7:4000${product.images!.elementAt(0).toString()}",
+                        "http://192.168.0.164:4000${product.images!.elementAt(0).toString()}",
                   ),
                   // "https://i.postimg.cc/nzdgXrFC/anh-nhat-Pd-ALQmf-Eqv-E-unsplash.jpg"
                 ),

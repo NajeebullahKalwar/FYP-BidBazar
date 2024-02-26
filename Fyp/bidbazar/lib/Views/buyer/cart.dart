@@ -1,11 +1,9 @@
-import 'dart:math';
 
 import 'package:bidbazar/controllers/cart_controller.dart';
-import 'package:bidbazar/data/models/cart_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:input_quantity/input_quantity.dart';
+// import 'package:input_quantity/input_quantity.dart';
 
 class Cart extends GetView<cartController> {
   Cart({super.key});
@@ -65,7 +63,7 @@ class Cart extends GetView<cartController> {
                             fit: BoxFit.contain,
 
                             // width: Get.width * .25,
-                            imageUrl: "http://192.168.43.7:4000" +
+                            imageUrl: "http://192.168.0.164:4000" +
                                 controller
                                     .cartlist[index].product!.images!.first
                                     .toString(),

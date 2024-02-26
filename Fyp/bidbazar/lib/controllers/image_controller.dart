@@ -1,8 +1,8 @@
-import 'dart:convert';
-import 'dart:io';
+// import 'dart:convert';
+// import 'dart:io';
 
 import 'package:bidbazar/data/repo/image_repo.dart';
-import 'package:dio/src/form_data.dart';
+// import 'package:dio/src/form_data.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
@@ -29,27 +29,22 @@ class ImageController extends GetxController with StateMixin {
       // maxHeight: 500, // <- reduce the image size
       // maxWidth: 500,
     );
-
     // _image = pickedFile;
     List<XFile> images = [];
 
     images.addAll(pickedImage);
-
+    
     for (var xFile in images) {
       String filePath = xFile.path;
       imageList.add(filePath);
     }
-
     change(imageList, status: RxStatus.success());
   }
-
   Future upload() async {
     var image = await imageRepo.uploadImage(imageList);
-
     List<String> img = List<String>.from(image);
-
     uploadImageList.addAll(img);
-    print("done images");
+    // print("done images");
   }
 
   // void _upload(List<XFile> file) async {

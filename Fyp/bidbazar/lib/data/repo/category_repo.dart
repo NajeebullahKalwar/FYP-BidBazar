@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:bidbazar/core/api.dart';
 import 'package:bidbazar/data/models/category_model.dart';
-import 'package:bidbazar/data/models/user_model.dart';
+// import 'package:bidbazar/data/models/user_model.dart';
 import 'package:dio/dio.dart';
 
 class categoryRepo {

@@ -3,6 +3,7 @@ class productModel {
   String? user;
   String? name;
   String? specs;
+
   int? price;
   bool? wishlist;
   List<String>? images;

@@ -1,5 +1,4 @@
 import 'package:bidbazar/controllers/auth_controllers.dart';
-import 'package:bidbazar/controllers/product_controller.dart';
 import 'package:bidbazar/controllers/wishList_controller.dart';
 // import 'package:bidbazar/data/models/product_model.dart';
 import 'package:bidbazar/widgets/gridItem.dart';

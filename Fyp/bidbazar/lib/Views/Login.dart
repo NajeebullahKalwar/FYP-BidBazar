@@ -1,9 +1,6 @@
 // import 'dart:html';
 
-import 'package:bidbazar/Views/Signup.dart';
 import 'package:bidbazar/controllers/auth_controllers.dart';
-import 'package:bidbazar/widgets/buttonController.dart';
-import 'package:bidbazar/widgets/customRadioButton.dart';
 import 'package:bidbazar/widgets/customTextFormField.dart';
 import 'package:bidbazar/widgets/custombtn.dart';
 import 'package:flutter/material.dart';

@@ -15,6 +15,8 @@ const bidRoutes = require('./routes/bid_routes');
 const image = require('./controllers/image_controller');
 const imageRoute = require('./routes/image_route');
 const wishListRoutes = require('./routes/wishList_route');
+const IP = require('ip');
+const emailRoutes = require('./routes/email_routes');
 
 
 
@@ -38,9 +40,8 @@ app.use(morgan('dev'));
 app.use(cors());
 
 const port=4000;
-const hostname='192.168.43.7';
-
-
+// const hostname=process.env.IP || '192.168.185.172';
+const hostname=IP.address();
 
 mongoose.connect("mongodb://localhost:27017/bidbazar");
 
@@ -59,7 +60,7 @@ app.use("/api/cart",cartRoutes);
 app.use("/api/bid",bidRoutes);
 app.use("/api/images", express.static('upload/images'), imageRoute );
 app.use("/api/wishList",wishListRoutes);
-
+app.use("/api/email",emailRoutes);
 
 app.listen(port,hostname,()=>{
 
@@ -67,4 +68,5 @@ app.listen(port,hostname,()=>{
     console.log(`server is up http://${hostname}:4000`);
 
 });
+
 

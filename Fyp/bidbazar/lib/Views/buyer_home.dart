@@ -4,10 +4,11 @@ import 'package:bidbazar/widgets/category.dart';
 import 'package:bidbazar/Views/home.dart';
 import 'package:bidbazar/Views/buyer/message.dart';
 import 'package:bidbazar/controllers/auth_controllers.dart';
-import 'package:bidbazar/widgets/wishList.dart';
+// import 'package:bidbazar/widgets/wishList.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class Buyer extends StatelessWidget {
   Buyer({super.key});
   static const String routeName = '/buyerScreen';

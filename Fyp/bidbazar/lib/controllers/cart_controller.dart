@@ -1,10 +1,10 @@
 import 'package:bidbazar/controllers/auth_controllers.dart';
 import 'package:bidbazar/data/models/cart_model.dart';
 import 'package:bidbazar/data/models/product_model.dart';
-import 'package:bidbazar/data/models/user_model.dart';
+// import 'package:bidbazar/data/models/user_model.dart';
 import 'package:bidbazar/data/repo/cart_repo.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class cartController extends GetxController with StateMixin {
@@ -48,6 +48,7 @@ class cartController extends GetxController with StateMixin {
   cartTotalAmount() {
     amount.value = 0.0;
     cartlist.forEach(
+      // ignore: unnecessary_set_literal
       (element) => {
         // print("price " + cartlist.first.product!.price.toString()),
         amount.value +=
@@ -55,6 +56,7 @@ class cartController extends GetxController with StateMixin {
       },
     );
 
+    // ignore: prefer_interpolation_to_compose_strings
     print("price " + amount.value.toString());
   }
 
@@ -68,6 +70,7 @@ class cartController extends GetxController with StateMixin {
 
       cartlist.assignAll(cartItems);
       cartTotalAmount();
+      // ignore: unused_catch_clause
     } on DioException catch (ex) {
       rethrow;
     }
@@ -83,6 +86,7 @@ class cartController extends GetxController with StateMixin {
       cartTotalAmount();
 
       Get.snackbar("Add to cart", "Cart item delete successfully");
+      // ignore: unused_catch_clause
     } on DioException catch (ex) {
       rethrow;
     }

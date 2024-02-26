@@ -1,4 +1,3 @@
-import 'package:bidbazar/controllers/auth_controllers.dart';
 import 'package:bidbazar/controllers/category_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

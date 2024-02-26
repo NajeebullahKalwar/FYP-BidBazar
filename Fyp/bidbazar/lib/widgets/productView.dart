@@ -3,7 +3,6 @@ import 'package:bidbazar/controllers/cart_controller.dart';
 import 'package:bidbazar/controllers/product_controller.dart';
 import 'package:bidbazar/data/models/product_model.dart';
 import 'package:bidbazar/widgets/gridItem.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -40,6 +39,8 @@ class productView extends GetView<product_controller> {
 
           return CupertinoButton(
             onPressed: () {
+              print("working");
+              print(productList);
               Get.toNamed(
                 "productDetailScreen",
                 arguments: [
