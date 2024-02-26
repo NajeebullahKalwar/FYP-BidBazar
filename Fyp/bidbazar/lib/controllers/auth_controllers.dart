@@ -1,17 +1,21 @@
-import 'package:bidbazar/Views/Login.dart';
-import 'package:bidbazar/data/models/cart_model.dart';
-import 'package:bidbazar/data/models/category_model.dart';
+// import 'dart:convert';
+
+// import 'package:bidbazar/Views/Login.dart';
+// import 'package:bidbazar/data/models/cart_model.dart';
+// import 'package:bidbazar/data/models/category_model.dart';
 import 'package:bidbazar/data/models/user_model.dart';
-import 'package:bidbazar/data/repo/category_repo.dart';
+import 'package:bidbazar/data/repo/email_repo.dart';
+// import 'package:bidbazar/data/repo/category_repo.dart';
 import 'package:bidbazar/data/repo/user_repo.dart';
-import 'package:bidbazar/routes/app_pages.dart';
+// import 'package:bidbazar/routes/app_pages.dart';
 import 'package:bidbazar/widgets/buttonController.dart';
+import 'package:email_auth/email_auth.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthenticateController extends GetxController {
   final TextEditingController nameController = TextEditingController();
@@ -20,6 +24,7 @@ class AuthenticateController extends GetxController {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
   final TextEditingController cnicController = TextEditingController();
+  final TextEditingController otpController = TextEditingController();
 
   Rx<bool> isLoading = false.obs;
   Rx<bool> isObscure = true.obs;
@@ -34,6 +39,9 @@ class AuthenticateController extends GetxController {
 
   final loginFormKey = GlobalKey<FormState>();
   final signupFormKey = GlobalKey<FormState>();
+  final otpkey = GlobalKey<FormState>();
+  EmailRepo emailAuth= EmailRepo(); 
+
   ButtonController usertypes = Get.put(ButtonController());
 
   void toggleLoading() {
@@ -43,6 +51,16 @@ class AuthenticateController extends GetxController {
   void toggleVisibility() {
     // print("siguptype = " + usertypes.getUserName);
     isObscure == true ? isObscure.value = false : isObscure.value = true;
+  }
+
+  Future<userModel> findUserById(String Id) async {
+    try {
+      var user = await userRepo.findUserById(Id);
+      // var data = jsonDecode(user);
+      return user;
+    } catch (ex) {
+      throw ex;
+    }
   }
 
   Future login(String email, String password) async {
@@ -88,7 +106,89 @@ class AuthenticateController extends GetxController {
     }
   }
 
-  Future signup(
+  // EmailAuth emailAuth = EmailAuth(sessionName: "send otp");
+  
+  Future<String>  sendOTP() async {
+    var res = await emailAuth.sendOtp(
+        email: emailController.text.trim());
+      // otp=res.toString();
+    return res;
+  }
+
+  // Future<bool> verifyOTP({required String userOtp}) async {    
+  //   if (userOtp==otp) {
+  //     ErrorMessage.value="Otp verified";
+  //     print("Otp verified");
+  //     return true;
+  //   } else
+  //   print("userotp "+userOtp);
+  //     ErrorMessage.value="Invalid OTP";
+  //     print("Invalid OTP");
+  //   return false;
+  // }
+
+  Future dialoge() async{
+    
+    await Get.defaultDialog(
+      barrierDismissible:false ,
+        title: 'Email Verification',
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Form(
+              key: otpkey,
+              child: TextFormField(
+                // onChanged: (value) {
+                //   ErrorMessage.value=validateOtp(value!)??'';
+                // },
+                validator: (value) {
+                  return validateOtp(value!);
+                },
+                // key: otpkey,
+                textInputAction: TextInputAction.done,
+                controller: otpController,
+
+                // keyboardType: TextInputType.number,
+                maxLines: 1,
+                decoration: InputDecoration( 
+                  isDense: true,  
+                  contentPadding: EdgeInsets.all(10),
+                    labelText: ' Enter otp here',
+                    hintMaxLines: 1,
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.green, width: 4.0))),
+              ),
+            ),
+            SizedBox(
+              height: 30.0,
+            ),
+            ElevatedButton(
+
+              style: ElevatedButton.styleFrom(
+                
+                backgroundColor: Colors.orange[900]
+              ),
+              onPressed: () {
+                
+                if (otpkey.currentState!
+                                .validate()) {
+                
+                  Get.back();
+                }; 
+
+              },
+              child: Text(
+                'Verify',
+                style: TextStyle(color: Colors.white, fontSize: 16.0),
+              ),
+              // color: Colors.redAccent,
+            )
+          ],
+        ),
+        radius: 10.0);
+  }
+
+  Future signup  (
       {required String name,
       required String email,
       required String password,
@@ -96,14 +196,42 @@ class AuthenticateController extends GetxController {
       required String address,
       required String cnic}) async {
     toggleLoading();
+
+// Future<String>  sendOTP() async {
+    String OTP = await emailAuth.sendOtp(
+        email: emailController.text.trim());
+      // otp=res.toString();
+    // return res;
+  // }
+
+    // await sendOTP();
+    
+    await dialoge();
+
+    print("Entered OTP: ${otpController.text}");
+    print("Generated OTP: $OTP");
+    
+    // bool otpVerify = await verifyOTP(userOtp: otpController.text);
+
+    bool isOtpCorrect=otpController.text.trim()==OTP.trim()?true:false;
+    print("Generated OTP: $isOtpCorrect");
+    
     try {
+      if (isOtpCorrect) {
       String usertype =
           usertypes.getUserName == null ? 'Buyer' : usertypes.getUserName;
+      // ignore: unused_local_variable
       userModel? user = await userRepo.createAccount(
           name, email, phonenum, cnic, address, password, usertype);
       toggleLoading();
       clearfields();
       Get.offAndToNamed('loginScreen');
+      } else {
+      ErrorMessage.value="Invalid OTP";
+      clearfields();
+      Get.snackbar("Sign up", "Please Enter correct otp for verification");
+      toggleLoading();
+      }
     } catch (ex) {
       toggleLoading();
       ErrorMessage.value = ex.toString();
@@ -304,6 +432,7 @@ class AuthenticateController extends GetxController {
     phoneController.clear();
     addressController.clear();
     cnicController.clear();
+    otpController.clear();
   }
 
   String? validateEmail(String val) {
@@ -323,6 +452,17 @@ class AuthenticateController extends GetxController {
       return "Phones number is Invalid ";
     } else
       return null;
+  }
+
+  String? validateOtp(String val) {
+    if (val.isEmpty) {
+      return "OTP can not be empty";
+    }else if(val.length<6&&val.length>6){
+      return "OTP can not more then 6 and less";
+    }else{
+      return null;
+    }
+      
   }
 
   String? validatePassword(String val) {

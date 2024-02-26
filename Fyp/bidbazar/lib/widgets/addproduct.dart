@@ -1,4 +1,3 @@
-import 'package:bidbazar/controllers/auth_controllers.dart';
 import 'package:bidbazar/controllers/category_controller.dart';
 import 'package:bidbazar/controllers/image_controller.dart';
 import 'package:bidbazar/controllers/product_controller.dart';

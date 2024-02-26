@@ -9,6 +9,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
+// ignore: camel_case_types
 class wishListRepo {
   Api api = Api();
 
@@ -37,6 +38,7 @@ class wishListRepo {
       // return (apiResponse.data["items"] as List<dynamic>)
       //     .map((json) => wishListModel.fromJson(json))
       //     .toList();
+      // ignore: unused_catch_clause
     } on DioException catch (ex) {
       rethrow;
     }

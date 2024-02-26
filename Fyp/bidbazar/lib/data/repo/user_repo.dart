@@ -33,6 +33,19 @@ class UserRepository {
     }
   }
 
+  Future<userModel> findUserById(String Id) async {
+    try {
+      var user = await api.dio.post("/user/find", data: {
+        "id": Id,
+      });
+      ApiResponse apiResponse = ApiResponse.fromResponse(user);
+
+      return userModel.fromJson(apiResponse.data);
+    } catch (ex) {
+      throw ex;
+    }
+  }
+
   Future<userModel?> signIn(String email, String password) async {
     try {
       Response response = await api.sendRequest.post('/user/signIn',

@@ -1,8 +1,4 @@
-import 'package:bidbazar/Views/buyer/cart.dart';
 import 'package:bidbazar/controllers/wishList_controller.dart';
-import 'package:bidbazar/routes/app_pages.dart';
-import 'package:bidbazar/routes/app_routesnames.dart';
-import 'package:bidbazar/widgets/addproduct.dart';
 import 'package:bidbazar/widgets/category.dart';
 import 'package:bidbazar/Views/home.dart';
 import 'package:bidbazar/Views/buyer/message.dart';
@@ -39,6 +35,7 @@ class Seller extends StatelessWidget {
             controller.screenIndex.value = value;
           },
           showUnselectedLabels: false,
+          // backgroundColor: Colors.white12,
           showSelectedLabels: true,
           selectedIconTheme: IconThemeData(color: Colors.amber[900]),
           selectedItemColor: Colors.amber[900],

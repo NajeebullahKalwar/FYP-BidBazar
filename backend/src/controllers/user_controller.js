@@ -32,6 +32,25 @@ createAccount:async function(req,res){
 
 },
 
+userFindById:async function(req,res){
+
+    try{
+        const {id} = req.body;//data send  
+        console.log(id);  
+        const user =await UserModel.findOne({_id:id});
+        console.log(user);  
+         
+        if(user==null){
+        return res.json({success:false,message:`account not found an error occured  ${e}`});
+            
+        }else
+        return res.json({success:true,message:"account successfully find",data:user}); 
+    }catch(e){
+        return res.json({success:false,message:`account not found an error occured  ${e}`});
+    }
+
+},
+
 forgot:async function(req,res){
    
    

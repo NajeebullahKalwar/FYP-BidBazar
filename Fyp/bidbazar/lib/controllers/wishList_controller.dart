@@ -72,6 +72,7 @@ class WishListController extends GetxController with StateMixin {
       wishlist.add(item);
       print("wishlist item");
       print(wishlist);
+      // ignore: unused_catch_clause
     } on DioException catch (ex) {
       rethrow;
     }

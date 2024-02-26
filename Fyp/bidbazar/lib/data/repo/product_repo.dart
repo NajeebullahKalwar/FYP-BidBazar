@@ -1,6 +1,6 @@
 // import 'dart:convert';
 
-import 'dart:convert';
+// import 'dart:convert';
 
 import 'package:bidbazar/core/api.dart';
 import 'package:bidbazar/data/models/product_model.dart';

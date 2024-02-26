@@ -1,7 +1,6 @@
 // import 'package:bidbazar/Views/Login.dart';
 // import 'package:bidbazar/Views/Signup.dart';
 // import 'package:bidbazar/Views/splash.dart';
-import 'package:bidbazar/controllers/AppControllerBinding.dart';
 // import 'package:bidbazar/controllers/ControllerBinding.dart';
 import 'package:bidbazar/routes/app_pages.dart';
 import 'package:bidbazar/routes/app_routesnames.dart';
