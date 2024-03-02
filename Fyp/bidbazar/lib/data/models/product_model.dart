@@ -8,6 +8,7 @@ class productModel {
   bool? wishlist;
   List<String>? images;
   String? category;
+  int? qty;
 
   productModel(
       {this.sId,
@@ -17,7 +18,10 @@ class productModel {
       this.price,
       this.wishlist,
       this.images,
-      this.category});
+      this.category,
+      this.qty,
+      
+      });
 
   productModel.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -28,6 +32,8 @@ class productModel {
     wishlist = json['wishlist'];
     images = json['images'].cast<String>();
     category = json['category'];
+    qty = json['qty'];
+
   }
 
   Map<String, dynamic> toJson() {
@@ -40,6 +46,8 @@ class productModel {
     data['wishlist'] = this.wishlist;
     data['images'] = this.images;
     data['category'] = this.category;
+    data['qty'] = this.qty;
+
     return data;
   }
 }

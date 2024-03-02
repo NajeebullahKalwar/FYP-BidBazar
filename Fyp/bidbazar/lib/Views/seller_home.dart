@@ -1,4 +1,6 @@
+import 'package:bidbazar/controllers/bidController.dart';
 import 'package:bidbazar/controllers/wishList_controller.dart';
+import 'package:bidbazar/widgets/bidView.dart';
 import 'package:bidbazar/widgets/category.dart';
 import 'package:bidbazar/Views/home.dart';
 import 'package:bidbazar/Views/buyer/message.dart';
@@ -116,10 +118,15 @@ class Seller extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.delete),
-              title: Text('Item 2'),
+              leading: Icon(Icons.sell),
+              title: Text('Bid Accept'),
               selected: false,
-              onTap: () => 1,
+              onTap: () {
+                    BidController bidController=Get.put(BidController());
+
+                Navigator.push(context,MaterialPageRoute(builder: (context) => BidView(controller: bidController),),);
+                // bidController.dispose();
+              },
             ),
             ListTile(
               leading: Icon(Icons.exit_to_app_rounded),

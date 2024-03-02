@@ -46,7 +46,7 @@ const wishListController={
                 
                 // console.log(foundCart);
 
-            if(!foundCart){
+            if(foundCart==""){
                 return res.json({success:false,data:[],message:"There is no wishlist in your cart" });
             }
 

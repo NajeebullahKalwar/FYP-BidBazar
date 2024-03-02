@@ -7,7 +7,7 @@ const bidRoutes= require('express').Router();
 
 
 bidRoutes.post("/",bidController.createbid);
-bidRoutes.get("/:userId",bidController.fetchbid);
+bidRoutes.get("/fetchAllBidsForSeller/:seller",bidController.fetchbidsForSeller);
 bidRoutes.put("/updateStatus",bidController.updateBidStatus);
 
 

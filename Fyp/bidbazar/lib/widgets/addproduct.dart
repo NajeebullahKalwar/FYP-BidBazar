@@ -1,3 +1,5 @@
+// import 'dart:ffi';
+
 import 'package:bidbazar/controllers/category_controller.dart';
 import 'package:bidbazar/controllers/image_controller.dart';
 import 'package:bidbazar/controllers/product_controller.dart';
@@ -13,8 +15,10 @@ class addProduct extends GetView<ImageController> {
   product_controller productController = Get.put(product_controller());
   categoryController catController = Get.put(categoryController());
 
+
   @override
   Widget build(BuildContext context) {
+    
     return WillPopScope(
       onWillPop: () async {
         productController.clearfields();
@@ -188,27 +192,53 @@ class addProduct extends GetView<ImageController> {
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        Spacer(
+                         Spacer(
                           flex: 1,
                         ),
-                        Obx(
+                         Obx(
                           () => DropdownButton(
-                            enableFeedback: true,
-                            value: catController.category.value,
-                            items: catController.categoryItems,
-                            onChanged: (value) {
-                              catController.category.value = value!;
-                              // print(value);
-                              // catController.update();
-                            },
+                        enableFeedback: true,
+                        value: catController.category.value,
+                        items: catController.categoryItems,
+                        onChanged: (value) {
+                          catController.category.value = value!;
+                          // print(value);
+                          // catController.update();
+                        },
                           ),
                         ),
-                        Spacer(
+                       
+                       Spacer(
                           flex: 10,
                         ),
+                        
+
+                        
                       ],
                     ),
                   ),
+                   Card(
+                    elevation: 5,
+                    margin: EdgeInsets.all(10),
+                     child: Container(
+                            // width: 150,
+                             child: customTextFormField(
+                                  controller: productController.qtyController,
+                                  labelText: 'Product QTY',
+                                  prefixIconData: Icons.production_quantity_limits_outlined,
+                                  // hintText: 'Email Address',
+                                  keyboardType: TextInputType.number,
+                                  textInputAction: TextInputAction.next,
+                                  autofocus: false,
+                                  validator: (value) {
+                                    return value!.isEmpty
+                                        ? "Qty can not be empty"
+                                        : null;
+                                    // return controller.validateEmail(value!);
+                                  },
+                                ),
+                           ),
+                   ),
                 ],
               ),
             ),
@@ -237,8 +267,7 @@ class addProduct extends GetView<ImageController> {
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        minimumSize:
-                            Size(Get.width * 0.9, Get.height * 0.1 / 2),
+                        minimumSize: Size(Get.width * 0.9, Get.height * 0.1 / 2),
                         backgroundColor: Colors.amber[900]),
                     onPressed: () async {
                       if (controller.productKey.currentState!.validate()) {
@@ -252,9 +281,10 @@ class addProduct extends GetView<ImageController> {
                         await productController.addProduct(
                           name: productController.nameController.text,
                           specs: productController.specController.text,
-                          price: productController.priceController.text,
+                          price: int.parse(productController.priceController.text),
                           images: imgcontroller.uploadImageList,
                           category: catController.category.value,
+                          qty: 1
                         );
                         imgcontroller.imageList.clear();
                         imgcontroller.uploadImageList.clear();

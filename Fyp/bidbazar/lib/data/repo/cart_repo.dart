@@ -1,4 +1,5 @@
 import 'dart:convert';
+// import 'dart:html';
 
 import 'package:bidbazar/core/api.dart';
 import 'package:bidbazar/data/models/cart_model.dart';
@@ -12,7 +13,8 @@ class cartRepo {
   Future<List<cartModel>> addToCart(cartModel cart, String userId) async {
     Map<String, dynamic> data = cart.toJson();
     data["user"] = userId;
-
+    // print("newCart");
+    // print(data);
     try {
       Response response = await api.sendRequest.post(
         "/cart",
@@ -56,7 +58,7 @@ class cartRepo {
       //     .toList();
       // return [];
     } on DioException catch (ex) {
-      rethrow;
+      rethrow ;
     }
   }
 

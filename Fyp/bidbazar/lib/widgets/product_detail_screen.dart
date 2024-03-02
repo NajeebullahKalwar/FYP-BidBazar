@@ -5,6 +5,7 @@ import 'package:bidbazar/controllers/cart_controller.dart';
 // import 'package:bidbazar/controllers/product_controller.dart';
 import 'package:bidbazar/controllers/wishList_controller.dart';
 import 'package:bidbazar/data/models/product_model.dart';
+import 'package:bidbazar/widgets/customTextFormField.dart';
 // import 'package:bidbazar/data/models/wishListModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -17,19 +18,42 @@ class ProductDetailScreen extends StatelessWidget {
   ProductDetailScreen({super.key, this.type});
   String? type;
   static const routeName = "/productDetailScreen";
-
+  final bidFormKey = GlobalKey<FormState>();
+  final TextEditingController bidController = TextEditingController();
+  
   cartController controller = Get.put(cartController());
   productModel product = Get.arguments[0];
   String userType = Get.arguments[1];
-
+  RxList<DropdownMenuItem> bidMenu = (List<DropdownMenuItem>.of([])).obs;
+  RxInt bidPrice = 0.obs;
+  
   // WishListController wishlistController;
-
+ 
   // product_controller productController =
   // Get.arguments[2] ?? product_controller();
   // int? index = Get.arguments[3];
 
   @override
   Widget build(BuildContext context) {
+      // bidController.text= product.price.toString();
+     if(bidMenu.isEmpty){ 
+      bidPrice.value=product.price!;
+      
+      bidMenu.addAll(
+      [
+        DropdownMenuItem(child: Text("0% Down"), 
+        value: product.price!),
+        DropdownMenuItem(child: Text("5% Down"), 
+        value: (product.price!-product.price!*0.05).round()),
+        DropdownMenuItem(child: Text("10% Down"), 
+        value: (product.price!-product.price!*0.1).round() ),
+        DropdownMenuItem(child: Text("15% Down"), 
+        value: (product.price!-product.price!*0.15).round() ),
+        DropdownMenuItem(child: Text("20% Down"),
+         value: (product.price!-product.price!*0.2).round() )
+    ]);}
+    
+    final size=MediaQuery.of(context).size;
     // print("data");
     // productController.isWishListed.value = product.wishlist!;
     return WillPopScope(
@@ -61,7 +85,7 @@ class ProductDetailScreen extends StatelessWidget {
                         return CachedNetworkImage(
                           fit: BoxFit.cover,
                           imageUrl:
-                              "http://192.168.0.164:4000${product.images!.elementAt(index)}",
+                              "http://192.168.18.172:4000/api/images/${product.images!.elementAt(index)}",
                         );
                       },
 
@@ -126,6 +150,7 @@ class ProductDetailScreen extends StatelessWidget {
                           ),
                         )
                       : SizedBox.shrink(),
+
                   // trailing: Obx(
                   //   () => productController.isWishListed.value == false
                   //       ? Icon(
@@ -183,39 +208,51 @@ class ProductDetailScreen extends StatelessWidget {
                   ],
                 ),
               ),
+              
+              
+
             ],
           ),
         ),
+
+
+        // persistentFooterAlignment: AlignmentDirectional.centerStart,
         persistentFooterButtons: [
+
+          
+          SizedBox(
+            height: 1,
+          ),
           Row(
             children: [
-              // Container(
-              //   width: 45,
-              //   height: 45,
-              //   color: Colors.amber[900],
-              //   child: Center(
-              //     child: Text(
-              //       "1",
-              //       style: TextStyle(
-              //           fontSize: 20,
-              //           fontWeight: FontWeight.w700,
-              //           color: Colors.white),
-              //     ),
-              //   ),
-              // ),
-              // const SizedBox(
-              //   width: 4,
-              // ),
+             
               Expanded(
                 child: Row(
                   children: [
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         minimumSize:
-                            Size(Get.width * 0.8, Get.height * 0.1 / 2),
+                            Size(Get.width * 0.4, Get.height * 0.1 / 2),
                         backgroundColor: Colors.amber[900],
                       ),
                       onPressed: () {
+                        
+                        
+                                  // productModel Product=productModel(
+                                  //   category: product.category,
+                                  //   images: product.images,
+                                  //   name: product.name,
+                                  //   price: int.parse(bidController.text),
+                                  //   qty: product.qty??1,
+                                  //   sId: product.sId,
+                                  //   specs: product.specs,
+                                  //   user: product.user,
+                                  //   wishlist: product.wishlist,
+                               
+                                  // );  
+                                  // product ;
+                                  // Product.price=;
+
                         userType == "Buyer"
                             ? {
                                 controller.addToCart(product, 1),
@@ -223,6 +260,8 @@ class ProductDetailScreen extends StatelessWidget {
                                     "Add to cart", "Product added to your cart")
                               }
                             : null;
+
+                                
                       },
                       child: userType == "Buyer"
                           ? Text(
@@ -239,7 +278,117 @@ class ProductDetailScreen extends StatelessWidget {
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
+                      
                     ),
+                     SizedBox(
+                      width: Get.width * 0.009,
+                    ),
+                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize:
+                            Size(Get.width * 0.4, Get.height * 0.1 / 2),
+                        backgroundColor: Colors.amber[900],
+                      ),
+                      onPressed: () {
+                 
+                        Get.defaultDialog(
+                          confirm:  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize:
+                            Size(Get.width * 0.4, Get.height * 0.1 / 2),
+                        backgroundColor: Colors.amber[900],
+                      ),
+                      onPressed: () {
+                              if(bidFormKey.currentState!
+                                .validate()){
+                                  Get.back();
+                                  // Navigator.pop(context);
+                                }
+                      },
+                      child: Text(
+                              "Confirm",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            )
+                        
+                    ),
+                          title: 'BID',
+                          // middleText: 'BID',
+                          content:   SingleChildScrollView(
+                            
+                            child: Column(
+                              children: [
+                                 Obx(
+                                   () =>  DropdownButton(
+                                                         enableFeedback: true,
+                                                         value:bidPrice.value,
+                                                         items:bidMenu,
+                                                         onChanged: (value) {
+                                                          bidPrice.value=value;
+                                                          bidController.text=value.toString();
+                                                            // bidController.text=value.toString();
+                                                          //  bidController.text = value.toString();
+                                                           // print(value);
+                                                           // catController.update();
+                                                         },
+                                                           ),
+                                 ),
+                                Center(
+                                      child: Container(
+                                        width: size.width*0.8,
+                                        height: size.height*0.1,
+                                        child: Form(
+                                            key:bidFormKey,
+                                            child: customTextFormField(
+                                            controller: bidController,
+                                            labelText: 'Bid',
+                                            prefixIconData: Icons.price_change,
+                                                    // hintText: 'Email Address',
+                                            keyboardType: TextInputType.number,
+                                            textInputAction: TextInputAction.next,
+                                            autofocus: false,
+                                            validator: (value) {
+                                             if(value!.isEmpty){
+                                            return "Bid can not be Empty";
+                                            }else if((product.price!-product.price!*0.2)>int.parse(bidController.text)){
+                                            return "Bid can not lower then 20%";
+                                            }else if(int.parse(bidController.text)>product.price!){
+                                            return "Bid price can not higher then product price.";
+                                      
+                                            }else{
+                                              return null;
+                                            }
+                                            
+                                            
+                                             // return controller.validateEmail(value!);
+                                             },
+                                             ),
+                                          ),
+                                      ),
+                                    ),
+                          
+                                    
+                              ],
+                            ),
+                          ),
+                        );
+
+                                
+                      },
+                      child: userType == "Buyer"
+                          ? Text(
+                              "Bid",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            )
+                          : null,
+                      
+                    ),
+                   
                     SizedBox(
                       width: Get.width * 0.001,
                     ),
@@ -282,6 +431,7 @@ class ProductDetailScreen extends StatelessWidget {
               ),
             ],
           ),
+         
         ],
         // // : null,
         // floatingActionButton: FloatingActionButton.small(

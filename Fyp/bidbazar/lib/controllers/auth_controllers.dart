@@ -9,7 +9,7 @@ import 'package:bidbazar/data/repo/email_repo.dart';
 import 'package:bidbazar/data/repo/user_repo.dart';
 // import 'package:bidbazar/routes/app_pages.dart';
 import 'package:bidbazar/widgets/buttonController.dart';
-import 'package:email_auth/email_auth.dart';
+// import 'package:email_auth/email_auth.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

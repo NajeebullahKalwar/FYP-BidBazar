@@ -63,7 +63,7 @@ class Cart extends GetView<cartController> {
                             fit: BoxFit.contain,
 
                             // width: Get.width * .25,
-                            imageUrl: "http://192.168.0.164:4000" +
+                            imageUrl: "http://127.0.0.1:4000/api/images/" +
                                 controller
                                     .cartlist[index].product!.images!.first
                                     .toString(),
@@ -97,6 +97,10 @@ class Cart extends GetView<cartController> {
                                         controller.addToCart(
                                             controller.cartlist[index].product!,
                                             controller.qty.value);
+                                      }else{
+                                         controller.removeItemfromCart(
+                                         controller.cartlist[index].product!.sId!);
+                                         controller.cartlist.removeAt(index);
                                       }
                                     },
                                   ),
@@ -119,6 +123,7 @@ class Cart extends GetView<cartController> {
                                     child: Icon(Icons.add,
                                         color: Colors.orange[800]),
                                     onTap: () {
+                                      if(controller.qty.value<10){
                                       controller.qty.value =
                                           controller.cartlist[index].quantity!;
                                       controller.qty.value += 1;
@@ -126,6 +131,7 @@ class Cart extends GetView<cartController> {
                                       controller.addToCart(
                                           controller.cartlist[index].product!,
                                           controller.qty.value);
+                                      }
                                     },
                                   ),
                                 ),

@@ -104,7 +104,7 @@ const productController = {
                 // console.log("product "+foundProduct);
             if(foundProduct==""){
                 
-                return res.json({success:false,data:[],message:"There is no item in your cart" });
+                return res.json({success:false,data:[],message:"There is no product to display" });
             }else
 
                 return res.json({success:true,message:"Products found",data:foundProduct });

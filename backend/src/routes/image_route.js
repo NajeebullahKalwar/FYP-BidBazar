@@ -29,6 +29,7 @@ const upload=multer({
 
 imageRoute.post("/upload", upload.array('images'),image.imageUpload );
 
+imageRoute.delete('/delete',image.deleteImage );
 
 
 

@@ -34,12 +34,21 @@ class WishListController extends GetxController with StateMixin {
   @override
   void onClose() {
     // TODO: implement onClose
+       wishlist.clear();
     super.onClose();
+  }
+  // @override
+  void dispose() {
+    // TODO: implement dispose
+    user.dispose();
+    wishlist.clear();
+    super.dispose();
   }
 
   Future fetchWishListItems() async {
     try {
-      wishlist.clear();
+      
+       wishlist.clear();
       change(wishlist, status: RxStatus.loading());
       // String id = user.userdata.first.sId.toString();
       // print(wishlist);
@@ -47,6 +56,8 @@ class WishListController extends GetxController with StateMixin {
       var wishList = await wishlistrepo
           .fetchWishList(AuthenticateController.userdata.first.sId.toString());
       print(wishlist.isEmpty);
+      print("object working");
+
 
       wishlist.assignAll(wishList);
 

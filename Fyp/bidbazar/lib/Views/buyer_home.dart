@@ -109,9 +109,10 @@ class Buyer extends StatelessWidget {
               title: Text('wish list'),
               selected: true,
               onTap: () {
+
                 WishListController wishListController =
                     Get.put(WishListController());
-
+                  
                 wishListController.fetchWishListItems();
                 Get.toNamed("wishListScreen");
               },
@@ -126,7 +127,10 @@ class Buyer extends StatelessWidget {
               leading: Icon(Icons.exit_to_app_rounded),
               title: Text('Exit'),
               selected: false,
-              onTap: () => Get.offAllNamed('loginScreen'),
+              onTap: () {
+                
+                Get.offAllNamed('loginScreen');
+              },
             ),
           ],
         ),

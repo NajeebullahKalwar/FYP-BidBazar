@@ -33,7 +33,7 @@ class ImageRepository {
       if (!apiResponse.success) {
         throw apiResponse.message.toString();
       }
-      print("response of najeeb");
+      // print("response of najeeb");
       print(apiResponse.data);
 
       return apiResponse.data; //return object of user

@@ -1,3 +1,5 @@
+// import 'dart:ffi';
+
 import 'package:bidbazar/controllers/auth_controllers.dart';
 import 'package:bidbazar/controllers/image_controller.dart';
 import 'package:bidbazar/data/models/product_model.dart';
@@ -14,6 +16,8 @@ class product_controller extends GetxController with StateMixin {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController specController = TextEditingController();
+  final TextEditingController qtyController = TextEditingController();
+
 
   ImageController imagecontroller = Get.put(ImageController());
   RxString startLabel = 0.toString().obs;
@@ -26,7 +30,7 @@ class product_controller extends GetxController with StateMixin {
   void onInit() async {
     // TODO: implement onInit
     usertypes = await AuthenticateController.userdata.first.usertype!;
-    print("najeeb " + usertypes);
+    // print("najeeb " + usertypes);
     await usertypes == "Buyer" ? fetchProducts() : fetchProductByUser();
 
     // Future.delayed(Duration(milliseconds: 5000), () {
@@ -36,6 +40,20 @@ class product_controller extends GetxController with StateMixin {
     // });
     super.onInit();
   }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    nameController.dispose();
+    priceController.dispose();
+    specController.dispose();
+    qtyController.dispose();
+    productList.clear();
+    favouriteProducts.clear();
+    user.dispose();
+    imagecontroller.dispose();
+    super.dispose();
+  }
+  
 
   Future fetchProducts() async {
     try {
@@ -70,9 +88,11 @@ class product_controller extends GetxController with StateMixin {
   Future addProduct({
     required String name,
     required String specs,
-    required String price,
+    required int price,
     required List<String> images,
     required String category,
+    required int qty,
+
   }) async {
     try {
       change(productList, status: RxStatus.loading());
@@ -81,10 +101,11 @@ class product_controller extends GetxController with StateMixin {
         UserId: AuthenticateController.userdata.first.sId!,
         name: name,
         specs: specs,
-        price: 380000,
+        price: price,
         image: images,
         // image: ["https://i.postimg.cc/G267pKHS/front.png"],
         category: category,
+        qty: qty ,
       );
 
       productList.add(product);
@@ -94,11 +115,11 @@ class product_controller extends GetxController with StateMixin {
     }
   }
 
-  Future removeProduct(String id, String userId, String productId) async {
+  Future removeProduct(productModel product, String id, String userId, String productId) async {
     try {
       change(productList, status: RxStatus.loading());
 
-      await product_repo.RemoveProduct(id, userId, productId);
+      await product_repo.RemoveProduct(product, id, userId, productId);
 
       change(productList, status: RxStatus.success());
     } catch (ex) {

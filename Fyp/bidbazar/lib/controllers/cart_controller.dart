@@ -24,7 +24,8 @@ class cartController extends GetxController with StateMixin {
   void onInit() async {
     // TODO: implement onInit
     super.onInit();
-    fetchCartItems();
+      AuthenticateController.userdata.first.usertype=='Buyer'?
+    fetchCartItems():null;
   }
 
   Future fetchCartItems() async {
@@ -62,6 +63,8 @@ class cartController extends GetxController with StateMixin {
 
   void addToCart(productModel product, int Quantity) async {
     try {
+      print("newCart 1");
+      print(product.price);
       cartModel item = cartModel(
           product: product, quantity: Quantity); // object id will generate auto
 

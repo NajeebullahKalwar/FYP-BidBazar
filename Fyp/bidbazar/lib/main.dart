@@ -41,3 +41,18 @@ class bidbazar extends StatelessWidget {
     );
   }
 }
+
+
+//  return GetMaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       title: 'bidbazar',
+//       // initialBinding: AllControllerBinding(),
+//       initialRoute: AppRoutes.splash,
+//       getPages: AppPages.pages,
+//       theme: BidbazarTheme.lightTheme,
+//       darkTheme: BidbazarTheme.darkTheme,
+//       themeMode: ThemeMode.system,
+//     )
+
+
+
