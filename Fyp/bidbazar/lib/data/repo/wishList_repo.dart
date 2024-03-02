@@ -53,8 +53,12 @@ class wishListRepo {
       if (!apiResponse.success) {
         throw apiResponse.message.toString();
       }
+            print("object working");
 
-      if (apiResponse.data != null) {
+      // print(apiResponse.data);
+ 
+      if (apiResponse.data != null) { // remainig condition if product is delete then wishlist also delete
+
         return (apiResponse.data as List<dynamic>)
             .map((json) => wishListModel.fromJson(json as Map<String, dynamic>))
             .toList();

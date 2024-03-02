@@ -1,3 +1,4 @@
+import 'package:bidbazar/controllers/auth_controllers.dart';
 import 'package:bidbazar/data/models/product_model.dart';
 import 'package:bidbazar/widgets/gridItem.dart';
 import 'package:flutter/cupertino.dart';
@@ -41,7 +42,7 @@ class customSearch extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 5,
-                  child: SizedBox(),
+                  child:Text("Hi, "+AuthenticateController.userdata.first.fullname!.toUpperCase() , textScaleFactor: 0.7),
                 ),
                 Expanded(
                   flex: 1,

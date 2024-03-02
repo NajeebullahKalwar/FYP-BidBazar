@@ -50,8 +50,10 @@ class Home extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return NestedScrollView(
+
       headerSliverBuilder: (context, innerBoxIsScrolled) => [
         SliverAppBar(
+                  
           elevation: 0.0,
           backgroundColor: Colors.white,
           automaticallyImplyLeading: true,
@@ -64,7 +66,7 @@ class Home extends StatelessWidget {
                 1,
                 (index) => TextButton(
                     onPressed: () {
-                      print("working");
+                      
                       if (!search.text.isEmpty) {
                         var list =
                             getSearchProducts(); //get strams of search products
@@ -162,17 +164,22 @@ class Home extends StatelessWidget {
           ),
           expandedHeight: 200,
           pinned: true,
-        )
+        ),
+        
       ],
+      // floatHeaderSlivers: true,
       body: Container(
+                      
+
         decoration: BoxDecoration(
             color: Colors.grey[100],
             borderRadius: BorderRadius.vertical(top: Radius.circular(30.0))),
         // width: size.width * 1,
         // height: size.height * 1,
-        padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),
+        padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
         child: Column(
           children: [
+             
             // Padding(
             //   padding: EdgeInsets.symmetric(horizontal: 15),
             //   child:,
@@ -197,8 +204,9 @@ class Home extends StatelessWidget {
               flex: 1,
               child: Row(
                 children: [
+
                   Expanded(
-                    flex: 3,
+                    flex: 2,
                     child: Container(
                       child: InkWell(
                         child: ListTile(
@@ -434,12 +442,12 @@ class Home extends StatelessWidget {
               ),
             ),
             Expanded(
-                flex: 7,
+                flex: 20,
                 child:
                     AuthenticateController.userdata.first.usertype == "Seller"
                         ? productView(
                             productList: controller.productList,
-                            isProductDelete: true,
+                            isProductDelete: true,//show delete option
                           )
                         : productView(
                             cart: cart,

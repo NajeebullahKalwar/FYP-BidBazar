@@ -39,7 +39,11 @@ const productSchema=mongoose.Schema({
         type:mongoose.Schema.ObjectId,
         ref:"Category", //model name as reference pass
         required:true,
-    }
+    },
+    qty:{
+        type:Number,
+        required:false,
+    },
 
 });
 

@@ -18,6 +18,8 @@ class productRepo {
     required int price,
     required List<String> image,
     required String category,
+    required int qty,
+
   }) async {
     try {
       // FormData formData = FormData.fromMap({
@@ -36,6 +38,7 @@ class productRepo {
         "price": price,
         "images": image,
         "category": category,
+        "qty": qty,
       };
 
       // FormData formData = FormData.fromMap(data, ListFormat.multiCompatible);
@@ -73,10 +76,16 @@ class productRepo {
     }
   }
 
-  Future RemoveProduct(String id, String userId, String productId) async {
+  Future RemoveProduct(productModel product,String id, String userId, String productId) async {
     try {
+        print(product.images);
+       await api.sendRequest.delete("/images/delete",
+          data: {"images": product.images,});
+  
       Response response = await api.sendRequest.post("/product/RemoveProduct",
           data: {"id": id, "userId": userId, "productId": productId});
+
+
       ApiResponse productResponse = ApiResponse.fromResponse(response);
 
       if (!productResponse.success) {
@@ -117,7 +126,7 @@ class productRepo {
       ApiResponse apiResponse = ApiResponse.fromResponse(response);
 
       if (!apiResponse.success) {
-        throw apiResponse.message.toString();
+        throw apiResponse.message.toString();//server error throw
       }
 
       if (apiResponse.data != null) {

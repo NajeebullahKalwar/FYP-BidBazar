@@ -41,7 +41,7 @@ app.use(cors());
 
 const port=4000;
 // const hostname=process.env.IP || '192.168.185.172';
-const hostname=IP.address();
+const hostname=IP.address('Wi-Fi');
 
 mongoose.connect("mongodb://localhost:27017/bidbazar");
 

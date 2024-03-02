@@ -12,8 +12,10 @@ class loginScreen extends StatelessWidget {
   static const String routeName = '/loginScreen';
   AuthenticateController controller = Get.put(AuthenticateController());
 
+
   @override
   Widget build(BuildContext context) {
+// dynamic theme=Theme.of(context);
     // Get.create(() {
     //   controller;
     // }, permanent: true, tag: "auth");
@@ -95,7 +97,7 @@ class loginScreen extends StatelessWidget {
                         controller: controller.passwordController,
                         autofocus: false,
                         labelText: 'Password',
-                        hintText: "Ex: Laksh12#",
+                        hintText: "***",
                         obscureText: controller.isObscure
                             .value, //use obs to listen the changes made in isObscure
                         prefixIconData: Icons.vpn_key_rounded,

@@ -27,7 +27,7 @@ class productView extends GetView<product_controller> {
     return controller.obx(
       (state) => GridView.builder(
         itemCount: productList.length,
-        // padding: EdgeInsets.fromLTRB(10.0, 10, 10.0, 0),
+        // padding: EdgeInsets.fromLTRB(10.0, 0, 0, 0),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           childAspectRatio: size.width / size.height / .65,
           crossAxisCount: 2,
@@ -63,7 +63,7 @@ class productView extends GetView<product_controller> {
       ),
       // onLoading: ,
       onEmpty: Text("There is no product to display"),
-      onError: (error) => Text("${error}"),
+      onError: (error) => Center(child: Text("${error}")),
     );
   }
 }

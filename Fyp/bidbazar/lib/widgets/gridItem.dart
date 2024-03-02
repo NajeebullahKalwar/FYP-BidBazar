@@ -46,7 +46,7 @@ class gridItem extends StatelessWidget {
                     fit: BoxFit.cover,
                     // width: size.width * .9,
                     imageUrl:
-                        "http://192.168.0.164:4000${product.images!.elementAt(0).toString()}",
+                        "http://192.168.18.172:4000/api/images/${product.images!.elementAt(0).toString()}",
                   ),
                   // "https://i.postimg.cc/nzdgXrFC/anh-nhat-Pd-ALQmf-Eqv-E-unsplash.jpg"
                 ),
@@ -116,6 +116,7 @@ class gridItem extends StatelessWidget {
                           isProductDelete == true
                               ? {
                                   productController.removeProduct(
+                                       product,
                                       product.sId.toString(),
                                       AuthenticateController
                                           .userdata.first.sId!,
