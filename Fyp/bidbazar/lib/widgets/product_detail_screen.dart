@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:bidbazar/controllers/auth_controllers.dart';
+import 'package:bidbazar/controllers/bidController.dart';
 import 'package:bidbazar/controllers/cart_controller.dart';
 // import 'package:bidbazar/controllers/product_controller.dart';
 import 'package:bidbazar/controllers/wishList_controller.dart';
@@ -19,14 +20,14 @@ class ProductDetailScreen extends StatelessWidget {
   String? type;
   static const routeName = "/productDetailScreen";
   final bidFormKey = GlobalKey<FormState>();
-  final TextEditingController bidController = TextEditingController();
+  final TextEditingController bidPriceController = TextEditingController();
   
   cartController controller = Get.put(cartController());
   productModel product = Get.arguments[0];
   String userType = Get.arguments[1];
   RxList<DropdownMenuItem> bidMenu = (List<DropdownMenuItem>.of([])).obs;
   RxInt bidPrice = 0.obs;
-  
+  BidController bidController=BidController();
   // WishListController wishlistController;
  
   // product_controller productController =
@@ -36,9 +37,10 @@ class ProductDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
       // bidController.text= product.price.toString();
+      
+     
      if(bidMenu.isEmpty){ 
       bidPrice.value=product.price!;
-      
       bidMenu.addAll(
       [
         DropdownMenuItem(child: Text("0% Down"), 
@@ -301,7 +303,9 @@ class ProductDetailScreen extends StatelessWidget {
                       onPressed: () {
                               if(bidFormKey.currentState!
                                 .validate()){
-                                  Get.back();
+                                 bidController.addBid(product.sId!, product.user!, int.parse(bidPriceController.text.toString()) );
+                                //  bidPriceController.clear();
+                                 Get.back();
                                   // Navigator.pop(context);
                                 }
                       },
@@ -327,7 +331,7 @@ class ProductDetailScreen extends StatelessWidget {
                                                          items:bidMenu,
                                                          onChanged: (value) {
                                                           bidPrice.value=value;
-                                                          bidController.text=value.toString();
+                                                          bidPriceController.text=value.toString();
                                                             // bidController.text=value.toString();
                                                           //  bidController.text = value.toString();
                                                            // print(value);
@@ -342,7 +346,7 @@ class ProductDetailScreen extends StatelessWidget {
                                         child: Form(
                                             key:bidFormKey,
                                             child: customTextFormField(
-                                            controller: bidController,
+                                            controller: bidPriceController,
                                             labelText: 'Bid',
                                             prefixIconData: Icons.price_change,
                                                     // hintText: 'Email Address',
@@ -352,9 +356,9 @@ class ProductDetailScreen extends StatelessWidget {
                                             validator: (value) {
                                              if(value!.isEmpty){
                                             return "Bid can not be Empty";
-                                            }else if((product.price!-product.price!*0.2)>int.parse(bidController.text)){
+                                            }else if((product.price!-product.price!*0.2)>int.parse(bidPriceController.text)){
                                             return "Bid can not lower then 20%";
-                                            }else if(int.parse(bidController.text)>product.price!){
+                                            }else if(int.parse(bidPriceController.text)>product.price!){
                                             return "Bid price can not higher then product price.";
                                       
                                             }else{

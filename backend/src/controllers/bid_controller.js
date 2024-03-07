@@ -7,7 +7,8 @@ const bidController={
     createbid:async function(req,res) {
         try{
             const {product,seller,buyer,bidprice}=req.body;
-
+            console.log("bid price: "+bidprice);
+            
             const foundCart = await bidModel.findOne({seller:seller,buyer:buyer});
             // console.log(foundCart);
            
@@ -70,12 +71,12 @@ const bidController={
     
         },
 
-    fetchbid:async function(req,res) {
+        fetchbidsForBuyer:async function(req,res) {
             try{
-                const userId = req.params.userId;
+                const buyerId = req.params.buyerId;
                 
                 const foundbids = await bidModel.find({
-                    "user.id":userId
+                    "buyer":buyerId
                 });
 
                 return res.json({success:true,message:"bid found",data:foundbids});

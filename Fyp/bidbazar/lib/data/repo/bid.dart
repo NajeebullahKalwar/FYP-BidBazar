@@ -3,7 +3,8 @@ import 'dart:convert';
 
 import 'package:bidbazar/core/api.dart';
 import 'package:bidbazar/data/models/bid_model.dart';
-import 'package:bidbazar/data/models/cart_model.dart';
+// import 'package:bidbazar/data/models/cart_model.dart';
+// import 'package:bidbazar/data/models/product_model.dart';
 import 'package:dio/dio.dart';
 
 class BidRepo {
@@ -96,4 +97,35 @@ class BidRepo {
       rethrow;
     }
   }
+
+   Future<BidModel> createBid({required String productId, required String buyerId,required String sellerId,required int bidprice}) async {
+    // Map<String, dynamic> data = cart.toJson();
+    // data["user"] = userId;
+    // // print("newCart");
+    // // print(data);
+    try {
+      Response response = await api.sendRequest.post(
+        "/bid",
+        data: jsonEncode({
+          
+      "seller": sellerId,
+      "buyer": buyerId,
+      "product":productId,
+      "bidprice":bidprice
+
+        }),
+      );
+      ApiResponse apiResponse = ApiResponse.fromResponse(response);
+
+      if (!apiResponse.success) {
+        throw apiResponse.message.toString();
+      }
+
+      return BidModel.fromJson(apiResponse.data);
+    } on DioException catch (ex) {
+      rethrow;
+    }
+  }
+
+
 }
