@@ -25,8 +25,10 @@ class BidController extends GetxController with StateMixin {
   void onInit() async {
     // TODO: implement onInit
     super.onInit();
-      
-  await  fetchBidItems();
+   AuthenticateController.userdata.first.usertype=='Seller'?   
+  await  fetchBidItems():null;
+  // await  fetchBidItems();
+
   }
 
   Future fetchBidItems() async {
@@ -45,6 +47,24 @@ class BidController extends GetxController with StateMixin {
       change(biditems.value, status: RxStatus.error(ex.toString()));
     }
   }
+
+   Future addBid(String productId,String sellerId,int bidprice) async {
+    try {
+      change(biditems.value, status: RxStatus.loading());
+      // String id = user.userdata.first.sId.toString();
+
+      biditems.value =
+          await bid.createBid(productId: productId, buyerId: AuthenticateController.userdata.first.sId!, sellerId: sellerId, bidprice: bidprice) ;
+        if(!biditems.value.isBlank!){
+      change(biditems, status: RxStatus.error("There is no item to bid"));
+    }
+
+      change(biditems.value, status: RxStatus.success());
+    } on DioException catch (ex) {
+      change(biditems.value, status: RxStatus.error(ex.toString()));
+    }
+  }
+
 
 
 }

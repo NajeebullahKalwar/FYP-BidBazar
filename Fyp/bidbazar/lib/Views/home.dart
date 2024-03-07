@@ -14,22 +14,6 @@ import 'package:get/get.dart';
 class Home extends StatelessWidget {
   Home({super.key});
 
-  product_controller controller = Get.put(product_controller());
-  WishListController wishListController = Get.put(WishListController());
-
-  final SearchController search = SearchController();
-  RxList<productModel> searchProducts =
-      (<productModel>[].obs); // AuthenticateController
-  RxList<productModel> filterProducts = (<productModel>[].obs);
-  RangeValues values = RangeValues(0, 1000000);
-  RxMap<String, bool> categoryCheck = {
-    "Samsung": false,
-    "Apple": false,
-    "Xiaomi": false,
-    "Oppo": false,
-    "Qmobile": false,
-  }.obs;
-
   // void favourite() {
   //   // for (var element in controller.productList) {
 
@@ -43,6 +27,92 @@ class Home extends StatelessWidget {
       AuthenticateController.userdata.first.usertype == "Buyer"
           ? Get.put(cartController())
           : cartController();
+
+  RxMap<String, bool> categoryCheck = {
+    "Samsung": false,
+    "Apple": false,
+    "Xiaomi": false,
+    "Oppo": false,
+    "Qmobile": false,
+  }.obs;
+
+  product_controller controller = Get.put(product_controller());
+  RxList<productModel> filterProducts = (<productModel>[].obs);
+  final SearchController search = SearchController();
+  RxList<productModel> searchProducts =
+      (<productModel>[].obs); // AuthenticateController
+
+  RangeValues values = RangeValues(0, 1000000);
+  WishListController wishListController = Get.put(WishListController());
+
+  List<productModel> getSearchProducts() {
+    return controller.productList
+        .where(
+          (element) => element.name!.toLowerCase().contains(
+                search.text.toLowerCase(),
+              ),
+        )
+        .toList();
+  }
+
+  List<productModel> getCategoryProducts(String Category) {
+    return controller.productList
+        .where(
+          (element) => element.category!.contains(Category),
+        )
+        .toList();
+  }
+
+  void setListOfCategoryProduct() {
+    filterProducts.addAllIf(categoryCheck["Apple"],
+        getCategoryProducts("657a009a97fc47d6213e770e"));
+    filterProducts.addAllIf(
+      categoryCheck["Samsung"],
+      getCategoryProducts("6556628c382b1a3cca976166"),
+    );
+    filterProducts.addAllIf(
+      categoryCheck["Oppo"],
+      getCategoryProducts("655ce3088c13da238261e355"),
+    );
+    filterProducts.addAllIf(
+      categoryCheck["Xiaomi"],
+      getCategoryProducts("655cd3d88c13da238261e353"),
+    );
+    filterProducts.addAllIf(
+      categoryCheck["Qmobile"],
+      getCategoryProducts("655662a8382b1a3cca976169"),
+    );
+  }
+
+  List<productModel> filterByPrice(double start, double end) {
+    if (!filterProducts.isEmpty) {
+      print("filter run");
+      return filterProducts.where(
+        (element) {
+          if (element.price! > start && element.price! < end) {
+            return true;
+          } else {
+            return false;
+          }
+        },
+        // search.text.toLowerCase(),
+        // ),
+      ).toList();
+    } else {
+      return [];
+      // return controller.productList.where(
+      //   (element) {
+      //     if (element.price! > start && element.price! < end) {
+      //       return true;
+      //     } else {
+      //       return false;
+      //     }
+      //   },
+      //   // search.text.toLowerCase(),
+      //   // ),
+      // ).toList();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -458,74 +528,5 @@ class Home extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  List<productModel> getSearchProducts() {
-    return controller.productList
-        .where(
-          (element) => element.name!.toLowerCase().contains(
-                search.text.toLowerCase(),
-              ),
-        )
-        .toList();
-  }
-
-  List<productModel> getCategoryProducts(String Category) {
-    return controller.productList
-        .where(
-          (element) => element.category!.contains(Category),
-        )
-        .toList();
-  }
-
-  void setListOfCategoryProduct() {
-    filterProducts.addAllIf(categoryCheck["Apple"],
-        getCategoryProducts("657a009a97fc47d6213e770e"));
-    filterProducts.addAllIf(
-      categoryCheck["Samsung"],
-      getCategoryProducts("6556628c382b1a3cca976166"),
-    );
-    filterProducts.addAllIf(
-      categoryCheck["Oppo"],
-      getCategoryProducts("655ce3088c13da238261e355"),
-    );
-    filterProducts.addAllIf(
-      categoryCheck["Xiaomi"],
-      getCategoryProducts("655cd3d88c13da238261e353"),
-    );
-    filterProducts.addAllIf(
-      categoryCheck["Qmobile"],
-      getCategoryProducts("655662a8382b1a3cca976169"),
-    );
-  }
-
-  List<productModel> filterByPrice(double start, double end) {
-    if (!filterProducts.isEmpty) {
-      print("filter run");
-      return filterProducts.where(
-        (element) {
-          if (element.price! > start && element.price! < end) {
-            return true;
-          } else {
-            return false;
-          }
-        },
-        // search.text.toLowerCase(),
-        // ),
-      ).toList();
-    } else {
-      return [];
-      // return controller.productList.where(
-      //   (element) {
-      //     if (element.price! > start && element.price! < end) {
-      //       return true;
-      //     } else {
-      //       return false;
-      //     }
-      //   },
-      //   // search.text.toLowerCase(),
-      //   // ),
-      // ).toList();
-    }
   }
 }

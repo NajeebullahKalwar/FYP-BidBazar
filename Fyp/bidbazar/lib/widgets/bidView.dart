@@ -7,9 +7,9 @@ import 'package:get/get.dart';
 
 
 class BidView extends GetView<BidController> {
-   BidView({super.key,required this.controller });
+   BidView({super.key,required this.controller,});
 
-   BidController controller;
+  final BidController controller;
 
   // BidController controller=Get.put(BidController());
 

@@ -10,8 +10,10 @@ import 'package:get/get.dart';
 
 class Seller extends StatelessWidget {
   Seller({super.key});
+
   static const String routeName = '/sellerScreen';
 
+  AuthenticateController controller = Get.put(AuthenticateController());
   List<Widget> screens = [
     Home(),
     message(),
@@ -19,7 +21,6 @@ class Seller extends StatelessWidget {
     // Library(),
     // hotlist(),
   ];
-  AuthenticateController controller = Get.put(AuthenticateController());
 
   @override
   Widget build(BuildContext context) {
@@ -118,12 +119,11 @@ class Seller extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.sell),
-              title: Text('Bid Accept'),
+              leading: Icon(Icons.receipt),
+              title: Text('Recent Bids'),
               selected: false,
               onTap: () {
                     BidController bidController=Get.put(BidController());
-
                 Navigator.push(context,MaterialPageRoute(builder: (context) => BidView(controller: bidController),),);
                 // bidController.dispose();
               },
