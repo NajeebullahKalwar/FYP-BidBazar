@@ -1,3 +1,4 @@
+const bcryptjs = require("bcryptjs");
 
 //multiple function create update delete export
 
@@ -37,8 +38,10 @@ userFindById:async function(req,res){
     try{
         const {id} = req.body;//data send  
         console.log(id);  
-        const user =await UserModel.findOne({_id:id});
-        console.log(user);  
+        const user =await UserModel.findOne({_id:id}
+            
+            );
+        
          
         if(user==null){
         return res.json({success:false,message:`account not found an error occured  ${e}`});
@@ -112,15 +115,24 @@ SignIn:async function(req,res){
         try{
             const {email,password,usertype}=req.body;
 
-            const foundUser = await UserModel.findOne({email:email});
+            const foundUser = await UserModel.findOne({email:email,
+            
+            });
 
             if(!foundUser){
             return res.json({success:false,message:`User not found! `});
             }
+            //  const hashed = await bcryptjs.hash(password, 8);
+                // console.log(hashed);
 
-            passwordMatches= foundUser.password==password?true:false;
+            passwordMatches=
+            bcryptjs.compareSync(password,foundUser.password);
+            // passwordMatches= foundUser.password==password?true:false;
+            // console.log(passwordMatches);
+
             
             if(!passwordMatches){
+                console.log(passwordMatches);
                 return res.json({success:false,message:`Password not matches ! `});
                 }
             
@@ -128,7 +140,7 @@ SignIn:async function(req,res){
 
                 return res.json({success:true,message:`Successfully login! `,data:foundUser});
 
-        }catch{
+        }catch(e){
             return res.json({success:false,message:`An error occured to Login  ${e}`});
         }
 }

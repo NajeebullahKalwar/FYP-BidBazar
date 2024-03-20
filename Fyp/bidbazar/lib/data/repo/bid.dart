@@ -59,10 +59,10 @@ class BidRepo {
   // }
 
 // userId = 655bc3739287689f923902f5
-  Future<BidModel> fetchBidByUserID(String userId) async {
+  Future<List<BidModel>> fetchBidBySellerID(String SellerId) async {
     try {
 
-      Response response = await api.sendRequest.get("/bid/fetchAllBidsForSeller/${userId}");
+      Response response = await api.sendRequest.get("/bid/fetchAllBidsForSeller/${SellerId}");
 
       ApiResponse apiResponse = ApiResponse.fromResponse(response);
 
@@ -89,10 +89,31 @@ class BidRepo {
         // }
         // print();
         if(!apiResponse.success){
-          throw Exception("There is no item in your bid");
+          // throw Exception("There is no item in your bid");
+        return  [];
         }else
-        return BidModel.fromJson(apiResponse.data);
+        return (apiResponse.data as List<dynamic>).map((e) => BidModel.fromJson(e)).toList();
 
+    } catch (ex) {
+      rethrow;
+    }
+  }
+
+  Future<List<BidModel>> fetchBidByBuyerID(String BuyerId) async {
+    try {
+
+      Response response = await api.sendRequest.get("/bid/fetchAllBidsForBuyer/${BuyerId}");
+
+      ApiResponse apiResponse = ApiResponse.fromResponse(response);
+       
+       
+        if(!apiResponse.success){
+          return [];
+          // throw apiResponse.message.toString();
+        }else
+        return (apiResponse.data as List<dynamic>)
+          .map((json) => BidModel.fromJson(json))
+          .toList();
     } catch (ex) {
       rethrow;
     }
@@ -124,6 +145,28 @@ class BidRepo {
       return BidModel.fromJson(apiResponse.data);
     } on DioException catch (ex) {
       rethrow;
+    }
+  }
+
+   Future updateBidStatus({required String productId,required String buyerId,required String status}) async {
+    try {
+      Response response = await api.sendRequest.post(
+        "/bid/updateStatus",
+        data: jsonEncode({
+      "productId": productId,
+      "buyerId": buyerId,
+      "status": status,
+        }),
+      );
+      ApiResponse apiResponse = ApiResponse.fromResponse(response);
+
+       if (!apiResponse.success) {
+        throw apiResponse.message.toString();
+      }
+
+      
+    } on DioException catch (ex) {
+       rethrow;
     }
   }
 

@@ -47,16 +47,15 @@ const bidController={
             try{
                 const seller=req.params.seller;
                           
-                const foundBid =  await bidModel.findOne(
+                const foundBid =  await bidModel.find(
                     {seller:seller},
-                    {_id:0, seller:0}//excluding this data       
+                    // {_id:0, seller:0}//excluding this data       
 
-                    ).populate("items.product");
+                    ).populate("items.product").populate("seller");
               
-                console.log("bid");
-                console.log(foundBid);  
+                
                 if(!foundBid){
-                    console.log("bid");
+
                 console.log(foundBid);
                     return res.json({success:false,data:[],message:"There is no item in your bid" });
                 }else
@@ -77,8 +76,27 @@ const bidController={
                 
                 const foundbids = await bidModel.find({
                     "buyer":buyerId
-                });
+                },
+                // {_id:0,seller:0}
+                ).populate("items.product")
+                .populate("seller");
+            //    let bidItems=[];
+                // console.log(foundbids[0].items);
+                // foundbids[0].items
+                // if (foundbids && foundbids.length > 0) {
+                //     foundbids.forEach(element => {
+                //         element.items.forEach(innerElement => {
+                //             bidItems.push(innerElement);    
+                //         });
+                //     });
+                //     }
+                    // console.log(bidItems);
 
+                if(!foundbids){
+
+                    
+                        return res.json({success:false,data:[],message:"There is no item in your bid" });
+                    }else
                 return res.json({success:true,message:"bid found",data:foundbids});
 
                 
@@ -91,13 +109,24 @@ const bidController={
     updateBidStatus:async function(req,res) {
         try{
             
-            const {bidId,status}=req.body;  
+            const {productId,status,buyerId}=req.body;  
+            console.log("buyerid "+buyerId+" productId: "+ productId+" status: "+status);
+
             const updateBid = await bidModel.findOneAndUpdate(
-                {_id:bidId},//find
-                {status:status},//update
-                {new: true}
+                {
+                    buyer: buyerId,
+                    'items.product': productId
+                },
+                {
+                    $set: {
+                        'items.$.status': status
+                    }
+                },
+                
+                { new: true }
             );
             
+            console.log(updateBid);
             if(updateBid==null){
             return res.json({success:false,message:"bid not found."});
 
@@ -110,6 +139,8 @@ const bidController={
 
         }
 }
+
+
 };
 
 

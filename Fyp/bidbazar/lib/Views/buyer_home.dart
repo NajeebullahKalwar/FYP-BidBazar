@@ -1,3 +1,4 @@
+import 'package:bidbazar/Views/bidviewforbuyer.dart';
 import 'package:bidbazar/Views/buyer/cart.dart';
 import 'package:bidbazar/controllers/bidController.dart';
 import 'package:bidbazar/controllers/wishList_controller.dart';
@@ -6,6 +7,7 @@ import 'package:bidbazar/widgets/category.dart';
 import 'package:bidbazar/Views/home.dart';
 import 'package:bidbazar/Views/buyer/message.dart';
 import 'package:bidbazar/controllers/auth_controllers.dart';
+import 'package:flutter/cupertino.dart';
 // import 'package:bidbazar/widgets/wishList.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,6 +16,7 @@ import 'package:get/get.dart';
 class Buyer extends StatelessWidget {
   Buyer({super.key});
   static const String routeName = '/buyerScreen';
+  BidController bidController=Get.put(BidController());
 
   List<Widget> screens = [
     Home(),
@@ -108,8 +111,8 @@ class Buyer extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.favorite),
-              title: Text('wish list'),
-              selected: true,
+              title: Text('Wish List'),
+              // selected: true,
               onTap: () {
 
                 WishListController wishListController =
@@ -120,12 +123,26 @@ class Buyer extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.sell),
-              title: Text('Bid Accept'),
+              leading: Icon(CupertinoIcons.hammer_fill),
+              title: Text('Bid Log'),
               selected: false,
               onTap: () {
-                    BidController bidController=Get.put(BidController());
-                Navigator.push(context,MaterialPageRoute(builder: (context) => BidView(controller: bidController),),);
+                Navigator.push(context,MaterialPageRoute(builder: (context) => BidViewForBuyer(controller: bidController,),));
+                
+                // Navigator.push(context,MaterialPageRoute(builder: (context) => BidView(controller: bidController, approvedBid:false ),),);
+                // bidController.dispose();
+              },
+            ),
+              ListTile(
+              leading: Icon(CupertinoIcons.hammer_fill),
+              title: Text(' Approved Bid Log'),
+              selected: false,
+              onTap: () {
+
+                Navigator.push(context,MaterialPageRoute(builder: (context) => BidView(items: bidController.bidItemsList.value.first.items!, approvedBid: true , buyerId: bidController.bidItemsList.first.buyer! , ),));
+
+                // Navigator.push(context,MaterialPageRoute(builder: (context) => BidView(controller: bidController , approvedBid: true,
+                // ),),);
                 // bidController.dispose();
               },
             ),

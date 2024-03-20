@@ -150,7 +150,7 @@ class AuthenticateController extends GetxController {
 
                 // keyboardType: TextInputType.number,
                 maxLines: 1,
-                decoration: InputDecoration( 
+                decoration: InputDecoration(
                   isDense: true,  
                   contentPadding: EdgeInsets.all(10),
                     labelText: ' Enter otp here',
