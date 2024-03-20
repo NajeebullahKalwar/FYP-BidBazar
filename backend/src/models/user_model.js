@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const uuid = require('uuid');
+const bcryptjs = require("bcryptjs");
 
 
 ///for id generate auto we have install package 
@@ -38,6 +39,7 @@ var userSchema = new mongoose.Schema({
     password:{
         type:String,
         required:true,
+
     },
     usertype:{
         type:String,
@@ -47,6 +49,7 @@ var userSchema = new mongoose.Schema({
 
 userSchema.pre("save",function(next){//save ke time kiya hoga
         this.id=uuid.v1();        
+        this.password=bcryptjs.hashSync(this.password,8);
         next();
 });
 
@@ -55,6 +58,7 @@ userSchema.pre(['update','findOneAndUpdate','updateOne'],function(next){
 const update= this.getUpdate();
     delete update._id;
     delete update.id;
+    // delete this.password;
     next();
 });
 

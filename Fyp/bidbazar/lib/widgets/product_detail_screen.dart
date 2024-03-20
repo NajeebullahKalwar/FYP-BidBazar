@@ -87,7 +87,7 @@ class ProductDetailScreen extends StatelessWidget {
                         return CachedNetworkImage(
                           fit: BoxFit.cover,
                           imageUrl:
-                              "http://192.168.18.172:4000/api/images/${product.images!.elementAt(index)}",
+                              "http://192.168.0.164:4000/api/images/${product.images!.elementAt(index)}",
                         );
                       },
 

@@ -11,6 +11,8 @@ import 'package:get/get.dart';
 class BidController extends GetxController with StateMixin {
   // RxList<BidModel> bidlist = (List<BidModel>.of([])).obs;
   Rx<BidModel> biditems=BidModel().obs;
+  RxList<BidModel> bidItemsList=<BidModel>[].obs;
+  var value;
   BidRepo bid = BidRepo();
 
   @override
@@ -25,26 +27,37 @@ class BidController extends GetxController with StateMixin {
   void onInit() async {
     // TODO: implement onInit
     super.onInit();
-   AuthenticateController.userdata.first.usertype=='Seller'?   
-  await  fetchBidItems():null;
-  // await  fetchBidItems();
+  //  AuthenticateController.userdata.first.usertype=='Seller'?   
+  // await  fetchBidItems():null;
+  await  fetchBidItems();
 
   }
 
   Future fetchBidItems() async {
     try {
-      change(biditems.value, status: RxStatus.loading());
+      change(bidItemsList, status: RxStatus.loading());
       // String id = user.userdata.first.sId.toString();
 
-      biditems.value =
-          await bid.fetchBidByUserID(AuthenticateController.userdata.first.sId!);
-        if(!biditems.value.isBlank!){
-      change(biditems, status: RxStatus.error("There is no item to bid"));
-    }
+    AuthenticateController.userdata.first.usertype=='Seller'?  value =
+          await bid.fetchBidBySellerID(AuthenticateController.userdata.first.sId!):
 
-      change(biditems.value, status: RxStatus.success());
+          value=await bid.fetchBidByBuyerID(AuthenticateController.userdata.first.sId!);
+        
+
+        AuthenticateController.userdata.first.usertype=='Seller'?
+        bidItemsList.add(value[0]):bidItemsList.addAll(value);
+
+        // print("checking items ");
+        // print(biditems.value.items?.isEmpty);
+        // if(biditems.value.items!.isEmpty){
+          // print('working 123');
+          //  change(biditems, status: RxStatus.error("there is no item to display"), );
+      // change(biditems.value, status: RxStatus.error("There is no item to bid"));
+    // }
+
+      change(bidItemsList, status: RxStatus.success());
     } on DioException catch (ex) {
-      change(biditems.value, status: RxStatus.error(ex.toString()));
+      change(bidItemsList, status: RxStatus.error(ex.toString()));
     }
   }
 
@@ -63,6 +76,10 @@ class BidController extends GetxController with StateMixin {
     } on DioException catch (ex) {
       change(biditems.value, status: RxStatus.error(ex.toString()));
     }
+  }
+
+    Future updateBidStatus({required String buyerId,required String productId,required String status}) async {
+          await bid.updateBidStatus(buyerId:buyerId , productId: productId, status: status) ;
   }
 
 

@@ -14,6 +14,8 @@ class Seller extends StatelessWidget {
   static const String routeName = '/sellerScreen';
 
   AuthenticateController controller = Get.put(AuthenticateController());
+  BidController bidController=Get.put(BidController());
+  
   List<Widget> screens = [
     Home(),
     message(),
@@ -123,8 +125,10 @@ class Seller extends StatelessWidget {
               title: Text('Recent Bids'),
               selected: false,
               onTap: () {
-                    BidController bidController=Get.put(BidController());
-                Navigator.push(context,MaterialPageRoute(builder: (context) => BidView(controller: bidController),),);
+                print("working recent bid :");
+                Navigator.push(context,MaterialPageRoute(builder: (context) => BidView(items: bidController.bidItemsList.value.first.items!, approvedBid: false , buyerId: bidController.bidItemsList.first.buyer!),));
+
+                // Navigator.push(context,MaterialPageRoute(builder: (context) => BidView(controller: bidController, approvedBid: false),),);
                 // bidController.dispose();
               },
             ),

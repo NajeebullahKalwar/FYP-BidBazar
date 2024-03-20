@@ -1,10 +1,16 @@
 import 'package:bidbazar/data/models/product_model.dart';
+import 'package:bidbazar/data/models/user_model.dart';
 
 class BidModel {
-  BidModel({this.buyer, this.items});
+  BidModel({
+  this.seller,
+     this.buyer, this.items});
 
   BidModel.fromJson(Map<String, dynamic> json) {
     buyer = json['buyer'];
+    // print(json['seller'] is userModel);
+    seller =userModel.fromJson(json['seller']);
+    
     if (json['items'] != null) {
       items = <Items>[];
       json['items'].forEach((v) {
@@ -13,13 +19,15 @@ class BidModel {
       });
     }
   }
-
+  userModel? seller;
   String? buyer;
   List<Items>? items;
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['buyer'] = this.buyer;
+    data['seller'] = this.seller;
+
     if (this.items != null) {
       data['items'] = this.items!.map((v) => v.toJson()).toList();
     }

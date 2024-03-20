@@ -44,7 +44,8 @@ class loginScreen extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 25.0,
                           fontWeight: FontWeight.w700,
-                          color: Colors.orange[800]),
+                          color: Colors.orange[800]
+                          ),
                     ),
                     const SizedBox(
                       height: 25.0,

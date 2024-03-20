@@ -24,20 +24,15 @@ class bidbazar extends StatelessWidget {
   Widget build(BuildContext context) {
     Get.put(ButtonController());
 
-    return GetMaterialApp(
+      return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'bidbazar',
       // initialBinding: AllControllerBinding(),
       initialRoute: AppRoutes.splash,
       getPages: AppPages.pages,
-      theme: ThemeData(
-        pageTransitionsTheme: PageTransitionsTheme(
-          builders: {
-            TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-          },
-        ),
-      ),
+      // theme: BidbazarTheme.lightTheme,
+      // darkTheme: BidbazarTheme.lightTheme,
+      themeMode: ThemeMode.system,
     );
   }
 }
@@ -54,5 +49,22 @@ class bidbazar extends StatelessWidget {
 //       themeMode: ThemeMode.system,
 //     )
 
+
+// GetMaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       title: 'bidbazar',
+//       // initialBinding: AllControllerBinding(),
+//       initialRoute: AppRoutes.splash,
+//       getPages: AppPages.pages,
+//       theme: ThemeData(
+//         pageTransitionsTheme: PageTransitionsTheme(
+//           builders: {
+//             TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+//             TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+//           },
+        
+//         ),
+//       ),
+//     );
 
 

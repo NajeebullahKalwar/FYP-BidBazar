@@ -63,7 +63,7 @@ class Cart extends GetView<cartController> {
                             fit: BoxFit.contain,
 
                             // width: Get.width * .25,
-                            imageUrl: "http://127.0.0.1:4000/api/images/" +
+                            imageUrl: "http://192.168.0.164:4000/api/images/" +
                                 controller
                                     .cartlist[index].product!.images!.first
                                     .toString(),
@@ -269,17 +269,17 @@ class Cart extends GetView<cartController> {
     );
   }
 
-  int? num(dynamic value) {
-    if (value is int) {
-      print("integer" + value.toString());
-      return value;
-    }
-    if (value is double) {
-      print("double" + value.toString());
+//   int? num(dynamic value) {
+//     if (value is int) {
+//       print("integer" + value.toString());
+//       return value;
+//     }
+//     if (value is double) {
+//       print("double" + value.toString());
 
-      return value.toInt();
-    }
-  }
+//       return value.toInt();
+//     }
+//   }
 }
 
 
