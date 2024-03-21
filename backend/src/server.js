@@ -65,8 +65,8 @@ app.use("/api/email",emailRoutes);
 
 app.listen(port,()=>{
 
-    // console.log("server is up http://localhost:4000");
-    console.log(`server is up http://${hostname}:${port}`);
+    console.log("server is up http://localhost:4000");
+    // console.log(`server is up http://${hostname}:${port}`);
 
 });
 
