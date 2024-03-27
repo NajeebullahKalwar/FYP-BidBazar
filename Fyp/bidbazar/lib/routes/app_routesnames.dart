@@ -19,7 +19,7 @@ class AppRoutes {
   static const String admin = Admin.routeName;
   static const String productdetailscreen = ProductDetailScreen.routeName;
   static const String addproduct = addProduct.routeName;
-  static const String search = customSearch.routeName;
+  static const String search = CustomSearch.routeName;
   static const String wishlist = WishList.routeName;
   static const String filter = FilterProduct.routeName;
 }

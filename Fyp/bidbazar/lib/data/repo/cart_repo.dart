@@ -31,7 +31,7 @@ class cartRepo {
       return (apiResponse.data["items"] as List<dynamic>)
           .map((json) => cartModel.fromJson(json))
           .toList();
-    } on DioException catch (ex) {
+    } on DioException catch (_) {
       rethrow;
     }
   }
@@ -57,7 +57,7 @@ class cartRepo {
       //     .map((json) => cartModel.fromJson(json))
       //     .toList();
       // return [];
-    } on DioException catch (ex) {
+    } on DioException catch (_) {
       rethrow ;
     }
   }

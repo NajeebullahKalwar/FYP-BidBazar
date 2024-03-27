@@ -52,11 +52,11 @@ class WishList extends GetView<WishListController> {
                   mainAxisSpacing: 30.0,
                 ),
                 itemBuilder: (context, index) {
-                  print("state update");
+                  // print("state update");
 
                   // productModel product = productModel.fromJson(
                   // controller.wishlist[index].product as Map<String, dynamic>);
-                  print(index);
+                  // print(index);
                   return CupertinoButton(
                     onPressed: () {
                       Get.toNamed(

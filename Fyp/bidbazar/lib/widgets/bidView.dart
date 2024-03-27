@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 
 
 
+
 class BidView extends GetView<BidController> {
    BidView({super.key,required this.items ,required this.buyerId, required this.approvedBid});
 
@@ -18,14 +19,13 @@ class BidView extends GetView<BidController> {
   // BidController controller=Get.put(BidController());
   String status='';
   RxList<Items>   bisList=<Items>[].obs;
-  @override
+
 
   void approvedBids(){
 
     items!.forEach((element) {
       if(element.status=="bid approved and closed"){
-      bisList.value.add(element);
-
+      bisList.add(element);
       }
     });
   }
@@ -38,7 +38,7 @@ class BidView extends GetView<BidController> {
     return Scaffold(
       appBar: AppBar(
       
-        title: Text("BID LOG"),
+        title:approvedBid?Text("Approved Bids") :Text("BID LOG"),
         centerTitle: true,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black87,
@@ -96,7 +96,7 @@ class BidView extends GetView<BidController> {
                                         fit: BoxFit.contain,
                     
                                         // width: Get.width * .25,
-                                        imageUrl: "http://192.168.0.164:4000/api/images/"+item.product!.images!.first,
+                                        imageUrl: "http://192.168.143.172:4000/api/images/"+item.product!.images!.first,
                                             // controller
                                                 // .cartlist[index].product!.images!.first
                                                 // .toString(),

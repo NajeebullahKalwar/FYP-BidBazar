@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:ui';
 
 import 'package:bidbazar/controllers/auth_controllers.dart';
@@ -10,24 +12,28 @@ import 'package:bidbazar/widgets/customTextFormField.dart';
 // import 'package:bidbazar/data/models/wishListModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // ignore: must_be_immutable
 class ProductDetailScreen extends StatelessWidget {
   ProductDetailScreen({super.key, this.type});
-  String? type;
+
   static const routeName = "/productDetailScreen";
+
+  BidController bidController=BidController();
   final bidFormKey = GlobalKey<FormState>();
-  final TextEditingController bidPriceController = TextEditingController();
-  
-  cartController controller = Get.put(cartController());
-  productModel product = Get.arguments[0];
-  String userType = Get.arguments[1];
   RxList<DropdownMenuItem> bidMenu = (List<DropdownMenuItem>.of([])).obs;
   RxInt bidPrice = 0.obs;
-  BidController bidController=BidController();
+  final TextEditingController bidPriceController = TextEditingController();
+  cartController controller = Get.put(cartController());
+  productModel product = Get.arguments[0];
+  String? type;
+  String userType = Get.arguments[1];
+
   // WishListController wishlistController;
  
   // product_controller productController =
@@ -70,6 +76,52 @@ class ProductDetailScreen extends StatelessWidget {
           iconTheme: IconThemeData(color: Colors.black87),
           centerTitle: true,
           elevation: 0,
+          actions: [userType == "Buyer"
+                      ?
+            SizedBox(
+              width: 40,
+              height: 40,
+              child: SpeedDial(
+                
+                elevation: 0,
+                backgroundColor: Colors.white,
+                direction: SpeedDialDirection.down,
+                        //  animatedIcon: AnimatedIcons.view_list,
+                            overlayColor: Colors.black,
+                         overlayOpacity: 0.5,
+                             children: [
+                          SpeedDialChild(
+                            child: const Icon(Icons.call ,), label: 'Phone' ,onTap: () async{
+                            AuthenticateController controller =
+                                AuthenticateController();
+                            var user = await controller
+                                .findUserById("655a7e77876d92cd633d5968");
+                            final Uri phone = Uri.parse('tel:+92${user.mobile}');
+                                if(await canLaunchUrl(phone)){
+                           await launchUrl(phone);
+                            
+                          }  
+                           else {
+                            Get.snackbar("Could not launch ", user.mobile.toString());
+                            // throw 'Could not launch $whatsapp';
+                          }
+                          },),
+                        SpeedDialChild(child: Icon(Icons.call), label: 'Whatsapp', onTap: ()async {
+                           AuthenticateController controller =   AuthenticateController();
+                            var user = await controller
+                                .findUserById("655a7e77876d92cd633d5968");
+                            final Uri whatsapp =
+                                Uri.parse('http://wa.me/${user.mobile}');
+                           await launchUrl(whatsapp);
+                            
+                            // throw 'Could not launch $whatsapp';
+                        },),
+                                    ],
+                           child: const Icon(Icons.more_vert_outlined,size: 30, color: Colors.black,),
+                        ),
+            ):const SizedBox.shrink(),
+            const SizedBox(width: 10,)
+          ],
         ),
         body: Container(
           child: ListView(
@@ -87,7 +139,7 @@ class ProductDetailScreen extends StatelessWidget {
                         return CachedNetworkImage(
                           fit: BoxFit.cover,
                           imageUrl:
-                              "http://192.168.0.164:4000/api/images/${product.images!.elementAt(index)}",
+                              "http://192.168.143.172:4000/api/images/${product.images!.elementAt(index)}",
                         );
                       },
 
@@ -130,42 +182,80 @@ class ProductDetailScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  trailing: userType == "Buyer"
-                      ? InkWell(
-                          onTap: () async {
-                            AuthenticateController controller =
-                                AuthenticateController();
-                            // final Uri whatsapp = Uri.parse('tel:+92')
-                            var user = await controller
-                                .findUserById("655a7e77876d92cd633d5968");
-                            final Uri whatsapp =
-                                Uri.parse('http://wa.me/${user.mobile}');
-                            launchUrl(whatsapp);
-                            print(user.mobile);
-                            print(product.user);
-                          },
-                          child: Icon(
-                            Icons.call_outlined,
-                            size: 30,
-                            // color: Colors.amber[900],
-                            fill: 1,
-                          ),
-                        )
-                      : SizedBox.shrink(),
-
-                  // trailing: Obx(
-                  //   () => productController.isWishListed.value == false
-                  //       ? Icon(
-                  //           Icons.favorite_outline_rounded,
-                  //           size: 30,
-                  //         )
-                  //       : Icon(
-                  //           Icons.favorite_outlined,
-                  //           size: 30,
-                  //           color: Colors.amber[900],
-                  //           fill: 1,
-                  //         ),
-                  // ),
+                //   trailing: userType == "Buyer"
+                //       ? InkWell(
+                //           onTap: () async {
+                //             AuthenticateController controller =
+                //                 AuthenticateController();
+                //             var user = await controller
+                //                 .findUserById("655a7e77876d92cd633d5968");
+                //             final Uri whatsapp =
+                //                 Uri.parse('http://wa.me/${user.mobile}');
+                //             final Uri phone = Uri.parse('tel:+92${user.mobile}');
+                //            showModalBottomSheet(
+                //             context: context,
+                //             builder: (context) {
+                //             return Row(
+                //               mainAxisAlignment: MainAxisAlignment.center,
+                //               children: [
+                //                 Text("Phone "),
+                //               IconButton(onPressed: ()async {
+                //                if(await canLaunchUrl(phone)){
+                //            await launchUrl(phone);                       
+                //           }  
+                //            else {
+                //             Get.snackbar("Could not launch ", user.mobile.toString());
+                //             // throw 'Could not launch $whatsapp';
+                //           }
+                //               }, icon: Icon(Icons.call),                             
+                //                     ),        
+                //                      Text("whatsapp "),
+                //               IconButton(onPressed: ()async {                               
+                //                 // if (await  canLaunchUrl(whatsapp)) {      
+                //             await launchUrl(whatsapp);
+                //             // launchUrlString(whatsapp.toString());
+                //           // } 
+                //           //  else {
+                //             // Get.snackbar("Could not launch ", user.mobile.toString());
+                //             // throw 'Could not launch $whatsapp';
+                //           // }                          
+                //               }, icon:Icon(Icons.call) )
+                //             ]);
+                //           },);
+                //           // if (await canLaunchUrl(whatsapp)) {      
+                //           //   await launchUrl(whatsapp);
+                //           // }else if(await canLaunchUrl(phone)){
+                //           //  await launchUrl(phone);
+                //           // }  
+                //           //  else {
+                //           //   Get.snackbar("Could not launch ", user.mobile.toString());
+                //           //     // throw 'Could not launch $whatsapp';
+                //           // }
+                //             print(user.mobile);
+                //             print(product.user);
+                //           },
+                //           child: Icon(
+                //             Icons.call_outlined,
+                //             size: 30,
+                //             // color: Colors.amber[900],
+                //             fill: 1,
+                //           ),
+                //         )
+                //       :
+                //       SizedBox.shrink(),
+                //   // trailing: Obx(
+                //   //   () => productController.isWishListed.value == false
+                //   //       ? Icon(
+                //   //           Icons.favorite_outline_rounded,
+                //   //           size: 30,
+                //   //         )
+                //   //       : Icon(
+                //   //           Icons.favorite_outlined,
+                //   //           size: 30,
+                //   //           color: Colors.amber[900],
+                //   //           fill: 1,
+                //   //         ),
+                //   // ),
                 ),
               ),
               Card(
@@ -285,6 +375,8 @@ class ProductDetailScreen extends StatelessWidget {
                      SizedBox(
                       width: Get.width * 0.009,
                     ),
+                     userType == "Buyer"
+                          ?
                      ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         minimumSize:
@@ -381,17 +473,16 @@ class ProductDetailScreen extends StatelessWidget {
 
                                 
                       },
-                      child: userType == "Buyer"
-                          ? Text(
+                      child: Text(
                               "Bid",
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
                               ),
                             )
-                          : null,
+                          ,
                       
-                    ),
+                    ):SizedBox.fromSize(size:Size(Get.width*0.4,30)),
                    
                     SizedBox(
                       width: Get.width * 0.001,

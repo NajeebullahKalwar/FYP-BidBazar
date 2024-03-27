@@ -8,9 +8,11 @@ import 'package:bidbazar/widgets/productView.dart';
 import 'package:bidbazar/widgets/search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+// import 'package:flutter/services.dart';
+// import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class Home extends StatelessWidget {
   Home({super.key});
 
@@ -117,17 +119,70 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // favourite();
-    final size = MediaQuery.of(context).size;
+    // final size = MediaQuery.of(context).size;
 
     return NestedScrollView(
-
+      
       headerSliverBuilder: (context, innerBoxIsScrolled) => [
         SliverAppBar(
-                  
+
+          // forceElevated: true,
+          // excludeHeaderSemantics: true,
+          // iconTheme: IconThemeData(color: Colors.white),
+          // snap: true,
+          // forceMaterialTransparency: false,
+        
+          iconTheme: IconThemeData(color:innerBoxIsScrolled?const Color.fromARGB(255, 0, 0, 0) :Color.fromARGB(255, 255, 255, 255)),
+          flexibleSpace: FlexibleSpaceBar(
+            centerTitle:true ,
+            
+            // title: Text('Hi Laksh ajeet',style: TextStyle(color: Colors.white)),
+            stretchModes: [
+              StretchMode.fadeTitle,
+              // StretchMode.blurBackground,
+              // StretchMode.zoomBackground
+
+            ],
+            background:Stack(
+              children: [
+                Container(
+                  // height: 150,
+                  // width: double.infinity,
+                  color: Colors.orange,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 60,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  height: 200,
+                  bottom: 0,
+                  // right: 0,
+                  width: Get.width*1,
+                  child: Image.asset(
+                    'assets/sale.jpg',
+                    fit:BoxFit.fitWidth ,
+                    // height: 400,
+                  ),
+                ),
+              ],
+            ),
+            
+          ),
           elevation: 0.0,
           backgroundColor: Colors.white,
           automaticallyImplyLeading: true,
-          foregroundColor: Colors.black,
+          foregroundColor:innerBoxIsScrolled? Colors.black:Colors.white,
           centerTitle: true,
           title: SearchAnchor(
             // viewHintText: ,
@@ -147,7 +202,8 @@ class Home extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => customSearch(
+                              builder: (context) => CustomSearch(
+                                isScrolledColor: innerBoxIsScrolled,
                                 onlySearch: false,
                                 searchProducts: searchProducts,
                                 userType: controller.usertypes,
@@ -171,7 +227,8 @@ class Home extends StatelessWidget {
             builder: (context, search) {
               return SizedBox(
                 height: Get.height * 0.1 / 2.5,
-                child: customSearch(
+                child: CustomSearch(
+                  isScrolledColor:innerBoxIsScrolled ,
                   onlySearch: true,
                   OnTap: () {
                     search.openView();
@@ -205,7 +262,8 @@ class Home extends StatelessWidget {
               // showSearch(context: context, delegate)
               return List.generate(
                 //search list
-                searchProducts.length ?? 0,
+                // searchProducts.length ?? 0,
+                searchProducts.length,
                 (index) {
                   productModel product = searchProducts[index];
                   return Obx(
@@ -235,15 +293,30 @@ class Home extends StatelessWidget {
           expandedHeight: 200,
           pinned: true,
         ),
-        
+
+       SliverToBoxAdapter(
+            child: Container(
+          color: Colors.orange[800],
+              width: 100,
+              height: 20,
+              child: Center(
+                child: Text('Welcom to over bidbazar App' ,style: TextStyle(color: Colors.white)),
+              ),
+            ),
+
+          ), 
+
+
       ],
+      
       // floatHeaderSlivers: true,
       body: Container(
                       
 
         decoration: BoxDecoration(
             color: Colors.grey[100],
-            borderRadius: BorderRadius.vertical(top: Radius.circular(30.0))),
+            // borderRadius: BorderRadius.vertical(top: Radius.circular(30.0))
+            ),
         // width: size.width * 1,
         // height: size.height * 1,
         padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
@@ -276,10 +349,11 @@ class Home extends StatelessWidget {
                 children: [
 
                   Expanded(
-                    flex: 2,
+                    flex: 3,
                     child: Container(
                       child: InkWell(
                         child: ListTile(
+                          dense: true,
                             leading: Icon(
                               Icons.filter_list,
                               color: Colors.amber[900],
@@ -512,7 +586,7 @@ class Home extends StatelessWidget {
               ),
             ),
             Expanded(
-                flex: 20,
+                flex: 15,
                 child:
                     AuthenticateController.userdata.first.usertype == "Seller"
                         ? productView(

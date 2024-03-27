@@ -8,6 +8,7 @@ import 'package:bidbazar/controllers/auth_controllers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class Seller extends StatelessWidget {
   Seller({super.key});
 
@@ -18,7 +19,6 @@ class Seller extends StatelessWidget {
   
   List<Widget> screens = [
     Home(),
-    message(),
     Category(),
     // Library(),
     // hotlist(),
@@ -59,10 +59,7 @@ class Seller extends StatelessWidget {
               icon: Icon(Icons.home),
               label: 'Home',
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.message),
-              label: 'Message',
-            ),
+           
             BottomNavigationBarItem(
               activeIcon: SizedBox(),
               icon: SizedBox(),
@@ -72,10 +69,7 @@ class Seller extends StatelessWidget {
               icon: Icon(Icons.category_rounded),
               label: 'Category',
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
-            ),
+          
           ],
         ),
       ),
@@ -112,7 +106,7 @@ class Seller extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.favorite),
               title: Text('wish list'),
-              selected: true,
+              // selected: true,
               onTap: () {
                 WishListController wishListController =
                     Get.put(WishListController());

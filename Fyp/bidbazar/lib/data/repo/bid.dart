@@ -59,10 +59,10 @@ class BidRepo {
   // }
 
 // userId = 655bc3739287689f923902f5
-  Future<List<BidModel>> fetchBidBySellerID(String SellerId) async {
+  Future<List<BidModel>> fetchBidBySellerID(String sellerId) async {
     try {
 
-      Response response = await api.sendRequest.get("/bid/fetchAllBidsForSeller/${SellerId}");
+      Response response = await api.sendRequest.get("/bid/fetchAllBidsForSeller/$sellerId");
 
       ApiResponse apiResponse = ApiResponse.fromResponse(response);
 
@@ -143,7 +143,7 @@ class BidRepo {
       }
 
       return BidModel.fromJson(apiResponse.data);
-    } on DioException catch (ex) {
+    } on DioException catch (_) {
       rethrow;
     }
   }
@@ -165,7 +165,7 @@ class BidRepo {
       }
 
       
-    } on DioException catch (ex) {
+    } on DioException catch (_) {
        rethrow;
     }
   }

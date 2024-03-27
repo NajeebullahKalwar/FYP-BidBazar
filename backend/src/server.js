@@ -41,10 +41,10 @@ app.use(cors());
 
 const port=4000;
 // const hostname=process.env.IP || '192.168.185.172';
-// const hostname=IP.address('Wi-Fi');
+const hostname=IP.address('Wi-Fi');
 
-// mongoose.connect("mongodb://localhost:27017/bidbazar");
-mongoose.connect("mongodb+srv://bidbazarusers:HFShL1EE9X8qcV58@cluster0.6tyzwic.mongodb.net/?retryWrites=true&w=majority");
+mongoose.connect("mongodb://localhost:27017/bidbazar");
+// mongoose.connect("mongodb+srv://bidbazarusers:HFShL1EE9X8qcV58@cluster0.6tyzwic.mongodb.net/?retryWrites=true&w=majority");
 
 app.get("/",(req,res)=>{
 // console.log("najeebullah");
@@ -63,10 +63,10 @@ app.use("/api/images", express.static('upload/images'), imageRoute );
 app.use("/api/wishList",wishListRoutes);
 app.use("/api/email",emailRoutes);
 
-app.listen(port,()=>{
+app.listen(port,hostname,()=>{
 
-    console.log("server is up http://localhost:4000");
-    // console.log(`server is up http://${hostname}:${port}`);
+    // console.log("server is up http://localhost:4000");
+    console.log(`server is up http://${hostname}:${port}`);
 
 });
 

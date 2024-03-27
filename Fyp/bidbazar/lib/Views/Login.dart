@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class loginScreen extends StatelessWidget {
   loginScreen({super.key});
   static const String routeName = '/loginScreen';

@@ -37,7 +37,7 @@ class BidController extends GetxController with StateMixin {
     try {
       change(bidItemsList, status: RxStatus.loading());
       // String id = user.userdata.first.sId.toString();
-
+      bidItemsList.clear();
     AuthenticateController.userdata.first.usertype=='Seller'?  value =
           await bid.fetchBidBySellerID(AuthenticateController.userdata.first.sId!):
 

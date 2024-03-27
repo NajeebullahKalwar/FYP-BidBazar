@@ -86,7 +86,7 @@ class signUp extends StatelessWidget {
                           textInputAction: TextInputAction.next,
                           autofocus: false,
                           validator: (value) =>
-                              controller.validateEmail(value!),
+                              controller.validateEmail(value!.trim()),
                         ),
                         const SizedBox(
                           height: 10.0,
@@ -99,7 +99,7 @@ class signUp extends StatelessWidget {
                           textInputAction: TextInputAction.next,
                           prefixIconData: Icons.phone,
                           validator: (value) {
-                            return controller.validatePhone(value!);
+                            return controller.validatePhone(value!.trim());
                           },
                         ),
                         const SizedBox(
@@ -113,10 +113,7 @@ class signUp extends StatelessWidget {
                           textInputAction: TextInputAction.next,
                           prefixIconData: Icons.badge,
                           validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter your Cnic number';
-                            }
-                            return null;
+                           return controller.validateCNIC(value!.trim());
                           },
                         ),
                         const SizedBox(

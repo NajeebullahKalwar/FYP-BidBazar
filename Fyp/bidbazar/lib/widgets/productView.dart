@@ -31,16 +31,16 @@ class productView extends GetView<product_controller> {
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           childAspectRatio: size.width / size.height / .65,
           crossAxisCount: 2,
-          crossAxisSpacing: 5.0,
-          mainAxisSpacing: 30.0,
+          crossAxisSpacing: 0,
+          mainAxisSpacing: 0,
         ),
         itemBuilder: (context, index) {
           productModel product = productList[index];
 
           return CupertinoButton(
             onPressed: () {
-              print("working");
-              print(productList);
+              // print("working");
+              // print(productList);
               Get.toNamed(
                 "productDetailScreen",
                 arguments: [

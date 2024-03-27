@@ -5,9 +5,8 @@ import 'package:bidbazar/controllers/wishList_controller.dart';
 import 'package:bidbazar/widgets/bidView.dart';
 import 'package:bidbazar/widgets/category.dart';
 import 'package:bidbazar/Views/home.dart';
-import 'package:bidbazar/Views/buyer/message.dart';
 import 'package:bidbazar/controllers/auth_controllers.dart';
-import 'package:flutter/cupertino.dart';
+// import 'package:flutter/cupertino.dart';
 // import 'package:bidbazar/widgets/wishList.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,7 +19,7 @@ class Buyer extends StatelessWidget {
 
   List<Widget> screens = [
     Home(),
-    message(),
+    // message(),
     Category(),
     Cart(),
     // Library(),
@@ -34,6 +33,7 @@ class Buyer extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Obx(
         () => IndexedStack(
+          // ignore: sort_child_properties_last
           children: screens,
           index: controller.screenIndex.value,
         ),
@@ -51,19 +51,19 @@ class Buyer extends StatelessWidget {
           selectedItemColor: Colors.amber[900],
           currentIndex: controller.screenIndex.value,
           selectedFontSize: 10,
-          unselectedIconTheme: IconThemeData(
+          unselectedIconTheme: const IconThemeData(
             color: Colors.black54,
           ),
           iconSize: 27,
-          items: [
+          items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.message),
-              label: 'Message',
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(Icons.message),
+            //   label: 'Message',
+            // ),
             BottomNavigationBarItem(
               icon: Icon(Icons.category_rounded),
               label: 'Category',
@@ -72,10 +72,10 @@ class Buyer extends StatelessWidget {
               icon: Icon(Icons.shopping_cart),
               label: 'Add to cart',
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(Icons.person),
+            //   label: 'Profile',
+            // ),
           ],
         ),
       ),
@@ -93,7 +93,7 @@ class Buyer extends StatelessWidget {
           // Important: Remove any padding from the ListView.
           padding: EdgeInsets.zero,
           children: [
-            Container(
+            const SizedBox(
               height: 250,
               width: 200,
               child: Center(
@@ -105,13 +105,18 @@ class Buyer extends StatelessWidget {
                 ),
               ),
             ),
-            Divider(
+            const Divider(
               height: 1,
               thickness: 1,
             ),
             ListTile(
-              leading: Icon(Icons.favorite),
-              title: Text('Wish List'),
+              leading: Image.asset(
+                    'assets/favourite.png',
+                    width: 38,
+                    height: 25,
+                    fit: BoxFit.contain,
+                  ),
+              title: const Text('Wish List'),
               // selected: true,
               onTap: () {
 
@@ -123,8 +128,14 @@ class Buyer extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(CupertinoIcons.hammer_fill),
-              title: Text('Bid Log'),
+              // leading: Icon(Icons.receipt),
+              leading:  Image.asset(
+                fit: BoxFit.contain,
+                    'assets/bidIcon.png',
+                    width: 35,
+                    height: 35,
+                  ),
+              title: const Text('Bid Log'),
               selected: false,
               onTap: () {
                 Navigator.push(context,MaterialPageRoute(builder: (context) => BidViewForBuyer(controller: bidController,),));
@@ -134,8 +145,14 @@ class Buyer extends StatelessWidget {
               },
             ),
               ListTile(
-              leading: Icon(CupertinoIcons.hammer_fill),
-              title: Text(' Approved Bid Log'),
+              // leading: Icon(Icons.receipt),
+              leading: Image.asset(
+                fit: BoxFit.contain,
+                    'assets/approvedBid.png',
+                    width: 35,
+                    height: 45,
+                  ),
+              title: const Text('Approved Bid Log'),
               selected: false,
               onTap: () {
 
@@ -148,8 +165,8 @@ class Buyer extends StatelessWidget {
             ),
            
             ListTile(
-              leading: Icon(Icons.exit_to_app_rounded),
-              title: Text('Exit'),
+              leading: const Icon(Icons.exit_to_app_rounded),
+              title: const Text('Exit'),
               selected: false,
               onTap: () {
                 

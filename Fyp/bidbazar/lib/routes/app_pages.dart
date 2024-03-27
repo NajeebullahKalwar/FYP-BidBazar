@@ -70,7 +70,7 @@ class AppPages {
       name: AppRoutes.search,
       transition: Transition.cupertino,
       transitionDuration: Duration(milliseconds: 200),
-      page: () => customSearch(),
+      page: () => CustomSearch(isScrolledColor: true),
     ),
     GetPage(
       name: AppRoutes.wishlist,

@@ -33,7 +33,8 @@ class customTextFormField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(
-        contentPadding:Theme.of(context).inputDecorationTheme.contentPadding,
+        contentPadding: EdgeInsets.all(0),
+        // contentPadding:Theme.of(context).inputDecorationTheme.contentPadding,
         labelText: labelText,
         hintText: hintText,
         prefixIcon: Icon(prefixIconData),

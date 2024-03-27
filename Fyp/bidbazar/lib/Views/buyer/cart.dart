@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // import 'package:input_quantity/input_quantity.dart';
 
+// ignore: must_be_immutable
 class Cart extends GetView<cartController> {
   Cart({super.key});
 
@@ -63,7 +64,7 @@ class Cart extends GetView<cartController> {
                             fit: BoxFit.contain,
 
                             // width: Get.width * .25,
-                            imageUrl: "http://192.168.0.164:4000/api/images/" +
+                            imageUrl: "http://192.168.143.172:4000/api/images/" +
                                 controller
                                     .cartlist[index].product!.images!.first
                                     .toString(),
@@ -204,6 +205,8 @@ class Cart extends GetView<cartController> {
                 ElevatedButton(
                   onPressed: () async {
                     if (true) {
+
+                      
                       Get.snackbar(
                         'Failed!',
                         'Project is not completed .',

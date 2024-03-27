@@ -465,6 +465,17 @@ class AuthenticateController extends GetxController {
       
   }
 
+    String? validateCNIC(value) {
+    if (value!.isEmpty) {
+      return 'Please enter an CNIC';
+    }
+    RegExp cnicRegExp = RegExp(r'^\d{5}-\d{7}-\d{1}$');
+    if (!cnicRegExp.hasMatch(value)) {
+      return 'Please enter a valid CNIC';
+    }
+    return null;
+  }
+
   String? validatePassword(String val) {
     print("Password value $val");
 

@@ -30,23 +30,23 @@ class gridItem extends StatelessWidget {
       child: Column(
         children: [
           Expanded(
-            flex: 3,
+            flex: 2,
             child: Container(
               decoration: const BoxDecoration(
                 // color: Colors.grey[200],
-                borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(10), bottom: Radius.circular(15)),
+                // borderRadius: BorderRadius.vertical(
+                    // top: Radius.circular(1), bottom: Radius.circular(10)),
               ),
               child: Hero(
                 tag: product.sId.toString(),
                 child: ClipRRect(
                   borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(10), bottom: Radius.circular(15)),
+                      top: Radius.circular(5), bottom: Radius.circular(5)),
                   child: CachedNetworkImage(
                     fit: BoxFit.cover,
                     // width: size.width * .9,
                     imageUrl:
-                        "http://192.168.0.164:4000/api/images/${product.images!.elementAt(0).toString()}",
+                        "http://192.168.143.172:4000/api/images/${product.images!.elementAt(0).toString()}",
                   ),
                   // "https://i.postimg.cc/nzdgXrFC/anh-nhat-Pd-ALQmf-Eqv-E-unsplash.jpg"
                 ),

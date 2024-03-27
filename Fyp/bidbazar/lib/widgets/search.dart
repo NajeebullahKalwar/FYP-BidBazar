@@ -5,38 +5,61 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class customSearch extends StatelessWidget {
-  customSearch(
+// ignore: must_be_immutable
+class CustomSearch extends StatelessWidget {
+  CustomSearch(
       {super.key,
       this.controller,
+      required this.isScrolledColor,
       this.onChanged,
       this.OnTap,
       this.searchProducts,
       this.userType,
       this.onlySearch});
-  // var data = Get.arguments;
-
-  TextEditingController? controller;
-  final ValueChanged<String>? onChanged;
-  String? userType;
-  bool? onlySearch;
-  List<productModel>? searchProducts;
-  void Function()? OnTap;
 
   // onlySearch = data[1]["onlySearch"];
 
   static const String routeName = '/customSearch';
 
+  void Function()? OnTap;
+  // var data = Get.arguments;
+
+  TextEditingController? controller;
+
+  bool isScrolledColor;
+  final ValueChanged<String>? onChanged;
+  bool? onlySearch;
+  List<productModel>? searchProducts;
+  String? userType;
+
+  // Widget searchProducts(product){
+  //   return
+  // }
+
   @override
   Widget build(BuildContext context) {
     return onlySearch == true
         ? Container(
+
             decoration: BoxDecoration(
-                border: Border.all(width: 1, color: Colors.black45),
+              boxShadow:isScrolledColor?[] : [
+                BoxShadow(
+   color: Colors.black.withOpacity(0.2), //color of shadow
+   spreadRadius: 5, //spread radius
+   blurRadius: 7, // blur radius
+   offset: Offset(0, 2), // changes position of shadow
+   //first paramerter of offset is left-right
+   //second parameter is top to down
+)
+              ],
+                border: Border.all(width: 1,
+                 color:isScrolledColor ?
+                  const Color.fromARGB(255, 0, 0, 0) :
+                   Color.fromARGB(255, 255, 255, 255)),  
                 borderRadius: BorderRadius.circular(8)),
             child: Row(
               children: [
-                Expanded(
+                const Expanded(
                   flex: 1,
                   child: Icon(Icons.search_rounded),
                 ),
@@ -44,7 +67,7 @@ class customSearch extends StatelessWidget {
                   flex: 5,
                   child:Text("Hi, "+AuthenticateController.userdata.first.fullname!.toUpperCase() , textScaleFactor: 0.7),
                 ),
-                Expanded(
+                const Expanded(
                   flex: 1,
                   child: SizedBox(),
                 ),
@@ -55,13 +78,13 @@ class customSearch extends StatelessWidget {
             appBar: AppBar(
               leading: InkWell(
                 onTap: () => Navigator.pop(context),
-                child: Icon(Icons.arrow_back),
+                child: const Icon(Icons.arrow_back),
               ),
               elevation: 0,
               backgroundColor: Colors.white60,
               foregroundColor: Colors.black54,
             ),
-            body: Container(
+            body: SizedBox(
               height: Get.height * 1,
               width: Get.width * 1,
               child: GridView.builder(
@@ -88,8 +111,4 @@ class customSearch extends StatelessWidget {
             ),
           );
   }
-
-  // Widget searchProducts(product){
-  //   return
-  // }
 }
