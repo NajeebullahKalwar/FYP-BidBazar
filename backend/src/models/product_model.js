@@ -43,6 +43,7 @@ const productSchema=mongoose.Schema({
     qty:{
         type:Number,
         required:false,
+        default:1
     },
 
 });

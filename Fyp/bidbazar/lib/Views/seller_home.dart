@@ -3,7 +3,6 @@ import 'package:bidbazar/controllers/wishList_controller.dart';
 import 'package:bidbazar/widgets/bidView.dart';
 import 'package:bidbazar/widgets/category.dart';
 import 'package:bidbazar/Views/home.dart';
-import 'package:bidbazar/Views/buyer/message.dart';
 import 'package:bidbazar/controllers/auth_controllers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,6 +26,7 @@ class Seller extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // appBar: AppBar(),
       backgroundColor: Colors.white,
       body: Obx(
         () => IndexedStack(
@@ -50,21 +50,17 @@ class Seller extends StatelessWidget {
           type: BottomNavigationBarType.fixed,
 
           // landscapeLayout: BottomNavigationBarLandscapeLayout.spread,
-          unselectedIconTheme: IconThemeData(
+          unselectedIconTheme: const IconThemeData(
             color: Colors.black54,
           ),
           iconSize: 27,
-          items: [
+          items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',
             ),
            
-            BottomNavigationBarItem(
-              activeIcon: SizedBox(),
-              icon: SizedBox(),
-              label: '',
-            ),
+          
             BottomNavigationBarItem(
               icon: Icon(Icons.category_rounded),
               label: 'Category',
@@ -90,7 +86,7 @@ class Seller extends StatelessWidget {
             Container(
               height: 250,
               width: 200,
-              child: Center(
+              child: const Center(
                 child: CircleAvatar(
                   backgroundImage: AssetImage(
                     'assets/profile.jpeg',
@@ -99,13 +95,13 @@ class Seller extends StatelessWidget {
                 ),
               ),
             ),
-            Divider(
+            const Divider(
               height: 1,
               thickness: 1,
             ),
             ListTile(
-              leading: Icon(Icons.favorite),
-              title: Text('wish list'),
+              leading: const Icon(Icons.favorite),
+              title: const Text('wish list'),
               // selected: true,
               onTap: () {
                 WishListController wishListController =
@@ -115,8 +111,8 @@ class Seller extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.receipt),
-              title: Text('Recent Bids'),
+              leading: const Icon(Icons.receipt),
+              title: const Text('Recent Bids'),
               selected: false,
               onTap: () {
                 print("working recent bid :");
@@ -127,8 +123,8 @@ class Seller extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.exit_to_app_rounded),
-              title: Text('Exit'),
+              leading: const Icon(Icons.exit_to_app_rounded),
+              title: const Text('Logout'),
               selected: false,
               onTap: () {
                 Get.offAllNamed('loginScreen');
@@ -153,7 +149,7 @@ class Seller extends StatelessWidget {
         onPressed: () {
           Get.toNamed("addProduct");
         },
-        child: Icon(
+        child: const Icon(
           Icons.add,
           size: 42,
         ),

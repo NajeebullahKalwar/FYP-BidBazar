@@ -50,10 +50,10 @@ class wishListRepo {
 
       ApiResponse apiResponse = ApiResponse.fromResponse(response);
 
-      if (!apiResponse.success) {
-        throw apiResponse.message.toString();
-      }
-            print("object working");
+      // if (!apiResponse.success) {
+      //   throw apiResponse.message.toString();
+      // }
+      //       print("object working");
 
       // print(apiResponse.data);
  
@@ -62,8 +62,9 @@ class wishListRepo {
         return (apiResponse.data as List<dynamic>)
             .map((json) => wishListModel.fromJson(json as Map<String, dynamic>))
             .toList();
-      } else
+      } else {
         return [];
+      }
     } catch (ex) {
       rethrow;
     }

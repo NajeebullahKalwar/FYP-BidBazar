@@ -21,6 +21,8 @@ productRoute.post("/wishListProduct",productController.wishListProduct
 productRoute.post("/RemoveProduct",productController.removeFromProducts
 );
 
+productRoute.post("/updateProduct",productController.updateProduct
+);
 
 
 module.exports=productRoute;

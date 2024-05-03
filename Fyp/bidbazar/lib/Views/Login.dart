@@ -53,22 +53,22 @@ class loginScreen extends StatelessWidget {
                     ),
                     Container(
                       alignment: Alignment.centerLeft,
-                      child: Text(
+                      child: const Text(
                         'Welcome Back',
                         style: TextStyle(
                             fontSize: 25.0,
                             fontWeight: FontWeight.w800,
-                            color: const Color.fromARGB(255, 0, 0, 0)),
+                            color: Color.fromARGB(255, 0, 0, 0)),
                       ),
                     ),
                     Container(
                       alignment: Alignment.centerLeft,
-                      child: Text(
+                      child: const Text(
                         'Login to your account',
                         style: TextStyle(
                             fontSize: 20.0,
                             fontWeight: FontWeight.w500,
-                            color: const Color.fromARGB(255, 0, 0, 0)),
+                            color: Color.fromARGB(255, 0, 0, 0)),
                       ),
                     ),
                     const SizedBox(
@@ -129,7 +129,7 @@ class loginScreen extends StatelessWidget {
                       child: Container(
                         width: double.infinity,
                         alignment: Alignment.bottomRight,
-                        child: Text(
+                        child: const Text(
                           'Forgot Password?',
                           style: TextStyle(
                               fontSize: 15.0, fontWeight: FontWeight.w600),
@@ -151,9 +151,9 @@ class loginScreen extends StatelessWidget {
                     Obx(
                       () => CustomButton(
                           loadingWidget: controller.isLoading.value
-                              ? CircularProgressIndicator(
+                              ? const CircularProgressIndicator(
                                   valueColor: AlwaysStoppedAnimation<Color>(
-                                      const Color.fromARGB(255, 255, 255, 255)))
+                                      Color.fromARGB(255, 255, 255, 255)))
                               : null,
                           color: Colors.orange.shade700,
                           textColor: Colors.white,
@@ -174,7 +174,7 @@ class loginScreen extends StatelessWidget {
                         const Padding(
                           padding: EdgeInsets.symmetric(vertical: 15.0),
                         ),
-                        Text(
+                        const Text(
                           "Don't have an account?",
                           style: TextStyle(fontSize: 15.0),
                         ),

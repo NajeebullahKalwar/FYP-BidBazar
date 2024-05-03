@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class productView extends GetView<product_controller> {
   productView(
       {super.key, required this.productList, this.cart, this.isProductDelete});
@@ -25,41 +26,48 @@ class productView extends GetView<product_controller> {
     final size = MediaQuery.of(context).size;
 
     return controller.obx(
-      (state) => GridView.builder(
-        itemCount: productList.length,
-        // padding: EdgeInsets.fromLTRB(10.0, 0, 0, 0),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          childAspectRatio: size.width / size.height / .65,
-          crossAxisCount: 2,
-          crossAxisSpacing: 0,
-          mainAxisSpacing: 0,
-        ),
-        itemBuilder: (context, index) {
-          productModel product = productList[index];
-
-          return CupertinoButton(
-            onPressed: () {
-              // print("working");
-              // print(productList);
-              Get.toNamed(
-                "productDetailScreen",
-                arguments: [
-                  productList[index],
-                  AuthenticateController.userdata.first.usertype,
-                  // controller,
-                  // index
-                ],
-              );
-            },
-            child: gridItem(
-              cart: cart,
-              isProductDelete: isProductDelete,
-              product: product,
-              index: index,
-              userType: AuthenticateController.userdata.first.usertype,
-            ),
-          );
+      (state) => RefreshIndicator(
+        onRefresh: () async{
+          controller.update();
         },
+        child: GridView.builder(
+          itemCount: productList.length,
+          // padding: EdgeInsets.fromLTRB(10.0, 0, 0, 0),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            childAspectRatio: size.width / size.height / .65,
+            crossAxisCount: 2,
+            crossAxisSpacing: 0,
+            mainAxisSpacing: 0,
+          ),
+          itemBuilder: (context, index) {
+            productModel product = productList[index];
+      
+            return CupertinoButton(
+              onPressed: () {
+                // print("working");
+                // print(productList);
+                Get.toNamed(
+                  "productDetailScreen",
+                  arguments: [
+                    productList[index],
+                    AuthenticateController.userdata.first.usertype,
+                    // controller,
+                    null,
+                    true,
+                    // index
+                  ],
+                );
+              },
+              child: gridItem(
+                cart: cart,
+                isProductDelete: isProductDelete,
+                product: product,
+                index: index,
+                userType: AuthenticateController.userdata.first.usertype,
+              ),
+            );
+          },
+        ),
       ),
       // onLoading: ,
       onEmpty: Text("There is no product to display"),

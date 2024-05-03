@@ -17,6 +17,7 @@ const imageRoute = require('./routes/image_route');
 const wishListRoutes = require('./routes/wishList_route');
 const IP = require('ip');
 const emailRoutes = require('./routes/email_routes');
+const orderRoutes = require('./routes/order_routes');
 
 
 
@@ -62,6 +63,8 @@ app.use("/api/bid",bidRoutes);
 app.use("/api/images", express.static('upload/images'), imageRoute );
 app.use("/api/wishList",wishListRoutes);
 app.use("/api/email",emailRoutes);
+app.use("/api/order",orderRoutes);
+
 
 app.listen(port,hostname,()=>{
 

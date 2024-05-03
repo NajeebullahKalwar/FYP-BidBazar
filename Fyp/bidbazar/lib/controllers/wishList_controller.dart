@@ -60,15 +60,21 @@ class WishListController extends GetxController with StateMixin {
 
 
       wishlist.assignAll(wishList);
-
-      print("wishlist");
-      print(wishlist);
+       if(wishlist.isEmpty){
+      change(wishList, status: RxStatus.empty() ,);
+      }else {
+      
       change(wishlist, status: RxStatus.success());
+      }
     } on DioException catch (ex) {
       change(wishlist, status: RxStatus.error(ex.toString()));
     }
   }
 
+
+
+
+//unused function
   Favourite(productModel product, String productId) async {
     // add and delete
     try {
@@ -80,7 +86,8 @@ class WishListController extends GetxController with StateMixin {
       await wishlistrepo.wishListItem(
           productId, AuthenticateController.userdata.first.sId.toString());
 
-      wishlist.add(item);
+      // wishlist.add(item);
+      
       print("wishlist item");
       print(wishlist);
       // ignore: unused_catch_clause

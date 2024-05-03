@@ -65,7 +65,7 @@ class CustomSearch extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 5,
-                  child:Text("Hi, "+AuthenticateController.userdata.first.fullname!.toUpperCase() , textScaleFactor: 0.7),
+                  child:Text("Hi, ${AuthenticateController.userdata.first.fullname!.toUpperCase()} ${AuthenticateController.userdata.first.usertype!.toUpperCase()}"  , textScaleFactor: 0.7),
                 ),
                 const Expanded(
                   flex: 1,
@@ -101,7 +101,7 @@ class CustomSearch extends StatelessWidget {
                     onPressed: () {
                       Get.toNamed(
                         "productDetailScreen",
-                        arguments: [product, userType],
+                        arguments: [product, userType,null,true],
                       );
                     },
                     child: gridItem(product: product, index: index),

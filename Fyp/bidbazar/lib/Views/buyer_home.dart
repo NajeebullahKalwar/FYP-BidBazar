@@ -166,7 +166,7 @@ class Buyer extends StatelessWidget {
            
             ListTile(
               leading: const Icon(Icons.exit_to_app_rounded),
-              title: const Text('Exit'),
+              title: const Text('Logout'),
               selected: false,
               onTap: () {
                 

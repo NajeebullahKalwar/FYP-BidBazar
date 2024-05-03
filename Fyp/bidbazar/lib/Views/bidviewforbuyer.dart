@@ -2,6 +2,7 @@ import 'package:bidbazar/controllers/bidController.dart';
 import 'package:bidbazar/widgets/bidView.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class BidViewForBuyer extends StatelessWidget {
    BidViewForBuyer({super.key ,required this.controller});
   BidController controller;

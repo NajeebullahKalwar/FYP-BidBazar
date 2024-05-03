@@ -1,5 +1,6 @@
 import 'package:bidbazar/controllers/auth_controllers.dart';
 import 'package:bidbazar/controllers/bidController.dart';
+import 'package:bidbazar/core/api.dart';
 import 'package:bidbazar/data/models/bid_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -96,7 +97,7 @@ class BidView extends GetView<BidController> {
                                         fit: BoxFit.contain,
                     
                                         // width: Get.width * .25,
-                                        imageUrl: "http://192.168.143.172:4000/api/images/"+item.product!.images!.first,
+                                        imageUrl: "${Api.BASE_URL}/images/"+item.product!.images!.first,
                                             // controller
                                                 // .cartlist[index].product!.images!.first
                                                 // .toString(),

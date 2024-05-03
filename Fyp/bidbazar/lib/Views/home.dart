@@ -36,6 +36,10 @@ class Home extends StatelessWidget {
     "Xiaomi": false,
     "Oppo": false,
     "Qmobile": false,
+    "House": false,
+    "Bike": false,
+    "Car": false,
+     
   }.obs;
 
   product_controller controller = Get.put(product_controller());
@@ -44,7 +48,7 @@ class Home extends StatelessWidget {
   RxList<productModel> searchProducts =
       (<productModel>[].obs); // AuthenticateController
 
-  RangeValues values = RangeValues(0, 1000000);
+  RangeValues values = const RangeValues(0, 1000000);
   WishListController wishListController = Get.put(WishListController());
 
   List<productModel> getSearchProducts() {
@@ -58,6 +62,7 @@ class Home extends StatelessWidget {
   }
 
   List<productModel> getCategoryProducts(String Category) {
+    print("66240a0ad4e14c0c3ac5cdc3");
     return controller.productList
         .where(
           (element) => element.category!.contains(Category),
@@ -83,6 +88,18 @@ class Home extends StatelessWidget {
     filterProducts.addAllIf(
       categoryCheck["Qmobile"],
       getCategoryProducts("655662a8382b1a3cca976169"),
+    );
+    filterProducts.addAllIf(
+      categoryCheck["House"],
+      getCategoryProducts("662409ded4e14c0c3ac5cdc2"),
+    );
+    filterProducts.addAllIf(
+      categoryCheck["Bike"],
+      getCategoryProducts("66240a16d4e14c0c3ac5cdc4"),
+    );
+     filterProducts.addAllIf(
+      categoryCheck["Car"],
+      getCategoryProducts("66240a0ad4e14c0c3ac5cdc3"),
     );
   }
 
@@ -132,12 +149,12 @@ class Home extends StatelessWidget {
           // snap: true,
           // forceMaterialTransparency: false,
         
-          iconTheme: IconThemeData(color:innerBoxIsScrolled?const Color.fromARGB(255, 0, 0, 0) :Color.fromARGB(255, 255, 255, 255)),
+          iconTheme: IconThemeData(color:innerBoxIsScrolled?const Color.fromARGB(255, 0, 0, 0) :const Color.fromARGB(255, 255, 255, 255)),
           flexibleSpace: FlexibleSpaceBar(
             centerTitle:true ,
             
             // title: Text('Hi Laksh ajeet',style: TextStyle(color: Colors.white)),
-            stretchModes: [
+            stretchModes: const [
               StretchMode.fadeTitle,
               // StretchMode.blurBackground,
               // StretchMode.zoomBackground
@@ -149,7 +166,7 @@ class Home extends StatelessWidget {
                   // height: 150,
                   // width: double.infinity,
                   color: Colors.orange,
-                  child: Row(
+                  child: const Row(
                     children: [
                       SizedBox(
                         width: 60,
@@ -222,7 +239,7 @@ class Home extends StatelessWidget {
                       }
                       // gridItem(product: searchProducts, index: index)
                     },
-                    child: Text("Search"))),
+                    child: const Text("Search"))),
             searchController: search,
             builder: (context, search) {
               return SizedBox(
@@ -249,7 +266,7 @@ class Home extends StatelessWidget {
                 if (list.isEmpty) {
                   return List.generate(
                       1,
-                      (index) => ListTile(
+                      (index) => const ListTile(
                             title: Text("No product found"),
                           ));
                 }
@@ -271,11 +288,11 @@ class Home extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: ListTile(
                         title: Text(searchProducts[index].name!),
-                        trailing: Icon(Icons.arrow_forward),
+                        trailing: const Icon(Icons.arrow_forward),
                         onTap: () {
                           Get.toNamed(
                             "productDetailScreen",
-                            arguments: [product, controller.usertypes],
+                            arguments: [product, controller.usertypes,null,true],
                           );
                         },
                       ),
@@ -299,7 +316,7 @@ class Home extends StatelessWidget {
           color: Colors.orange[800],
               width: 100,
               height: 20,
-              child: Center(
+              child: const Center(
                 child: Text('Welcom to over bidbazar App' ,style: TextStyle(color: Colors.white)),
               ),
             ),
@@ -358,7 +375,7 @@ class Home extends StatelessWidget {
                               Icons.filter_list,
                               color: Colors.amber[900],
                             ),
-                            title: Text("Filter")),
+                            title: const Text("Filter")),
                         onTap: () {
                           // RangeLabels labels = RangeLabels(
                           //     values.start.toString(), values.end.toString());
@@ -366,12 +383,12 @@ class Home extends StatelessWidget {
                           showModalBottomSheet(
                             isScrollControlled: true,
                             enableDrag: true,
-                            anchorPoint: Offset(100, 100),
+                            anchorPoint: const Offset(100, 100),
                             routeSettings: CupertinoPage(
                               child: Container(
                                 height: Get.height * 1,
                                 width: Get.width * 1,
-                                child: Text("data"),
+                                child: const Text("data"),
                               ),
                             ),
                             context: context,
@@ -379,7 +396,7 @@ class Home extends StatelessWidget {
                               //filter products
                               return Wrap(
                                 children: [
-                                  Center(
+                                  const Center(
                                       // child: Icon(Icons.filter_list),
                                       ),
                                   // ListTile(
@@ -389,9 +406,9 @@ class Home extends StatelessWidget {
                                   //   ),
                                   //   // tileColor: theme.colorScheme.primary,
                                   // ),,
-                                  Divider(),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
+                                  const Divider(),
+                                  const Padding(
+                                    padding: EdgeInsets.symmetric(
                                         horizontal: 15),
                                     child: Text(
                                       "Price",
@@ -427,7 +444,7 @@ class Home extends StatelessWidget {
                                       );
                                     },
                                   ),
-                                  Divider(),
+                                  const Divider(),
                                   const Padding(
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 15, vertical: 10),
@@ -441,10 +458,10 @@ class Home extends StatelessWidget {
                                         scrollDirection: Axis.horizontal,
                                         children: [
                                           Padding(
-                                            padding: EdgeInsets.all(8.0),
+                                            padding: const EdgeInsets.all(8.0),
                                             child: ChoiceChip(
                                               // showCheckmark: true,
-                                              label: Text("Samsung"),
+                                              label: const Text("Samsung"),
                                               // selectedColor: Colors.orange[200],
                                               selected:
                                                   categoryCheck["Samsung"]!,
@@ -458,10 +475,10 @@ class Home extends StatelessWidget {
                                             ),
                                           ),
                                           Padding(
-                                            padding: EdgeInsets.all(8.0),
+                                            padding: const EdgeInsets.all(8.0),
                                             child: ChoiceChip(
                                               // showCheckmark: true,
-                                              label: Text("Apple"),
+                                              label: const Text("Apple"),
                                               selected: categoryCheck["Apple"]!,
                                               onSelected: (value) {
                                                 categoryCheck["Apple"] =
@@ -475,10 +492,10 @@ class Home extends StatelessWidget {
                                             ),
                                           ),
                                           Padding(
-                                            padding: EdgeInsets.all(8.0),
+                                            padding: const EdgeInsets.all(8.0),
                                             child: ChoiceChip(
                                               // showCheckmark: true,
-                                              label: Text("Xiaomi"),
+                                              label: const Text("Xiaomi"),
                                               selected:
                                                   categoryCheck["Xiaomi"]!,
                                               onSelected: (value) {
@@ -491,10 +508,10 @@ class Home extends StatelessWidget {
                                             ),
                                           ),
                                           Padding(
-                                            padding: EdgeInsets.all(8.0),
+                                            padding: const EdgeInsets.all(8.0),
                                             child: ChoiceChip(
                                               // showCheckmark: true,
-                                              label: Text("Oppo"),
+                                              label: const Text("Oppo"),
                                               selected: categoryCheck["Oppo"]!,
                                               onSelected: (value) {
                                                 categoryCheck["Oppo"] =
@@ -506,10 +523,10 @@ class Home extends StatelessWidget {
                                             ),
                                           ),
                                           Padding(
-                                            padding: EdgeInsets.all(8.0),
+                                            padding: const EdgeInsets.all(8.0),
                                             child: ChoiceChip(
                                               // showCheckmark: true,
-                                              label: Text("Qmobile"),
+                                              label: const Text("Qmobile"),
                                               selected:
                                                   categoryCheck["Qmobile"]!,
                                               onSelected: (value) {
@@ -521,11 +538,59 @@ class Home extends StatelessWidget {
                                               },
                                             ),
                                           ),
+                                           Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: ChoiceChip(
+                                              // showCheckmark: true,
+                                              label: const Text("House"),
+                                              selected:
+                                                  categoryCheck["House"]!,
+                                              onSelected: (value) {
+                                                categoryCheck["House"] =
+                                                    categoryCheck["House"] ==
+                                                            true
+                                                        ? false
+                                                        : true;
+                                              },
+                                            ),
+                                          ),
+                                           Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: ChoiceChip(
+                                              // showCheckmark: true,
+                                              label: const Text("Bike"),
+                                              selected:
+                                                  categoryCheck["Bike"]!,
+                                              onSelected: (value) {
+                                                categoryCheck["Bike"] =
+                                                    categoryCheck["Bike"] ==
+                                                            true
+                                                        ? false
+                                                        : true;
+                                              },
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: ChoiceChip(
+                                              // showCheckmark: true,
+                                              label: const Text("Car"),
+                                              selected:
+                                                  categoryCheck["Car"]!,
+                                              onSelected: (value) {
+                                                categoryCheck["Car"] =
+                                                    categoryCheck["Car"] ==
+                                                            true
+                                                        ? false
+                                                        : true;
+                                              },
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
                                   ),
-                                  Divider(),
+                                  const Divider(),
                                   Padding(
                                     padding: const EdgeInsets.all(15.0),
                                     child: ElevatedButton(
@@ -553,7 +618,7 @@ class Home extends StatelessWidget {
                                         // Get.toNamed("filterScreen",
                                         //     arguments: controller.productList);
                                       },
-                                      child: Text("Filter"),
+                                      child: const Text("Filter"),
                                     ),
                                   ),
                                 ],

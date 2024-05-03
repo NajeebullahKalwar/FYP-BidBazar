@@ -158,4 +158,27 @@ class productRepo {
       rethrow;
     }
   }
+
+   Future updateProduct({required String productId,required String name,required int price,required String specs,required String quantity}) async {
+    try {
+      Response response = await api.sendRequest.post("/product/updateProduct",
+      data: {
+        "productId":productId,
+        "name":name,
+        "price":price,
+        "specs":specs,
+        "quantity":quantity,
+      }
+      );
+
+      ApiResponse productResponse = ApiResponse.fromResponse(response);
+
+      if (!productResponse.success) {
+        throw productResponse.message.toString();
+      }
+
+    } catch (ex) {
+      rethrow;
+    }
+  }
 }

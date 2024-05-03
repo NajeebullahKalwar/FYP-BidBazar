@@ -3,6 +3,7 @@ import 'package:bidbazar/widgets/productView.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class FilterProduct extends StatelessWidget {
   FilterProduct({super.key, this.productList});
   static const String routeName = '/filterScreen';

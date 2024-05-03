@@ -12,6 +12,7 @@ class WishList extends GetView<WishListController> {
   static const String routeName = '/wishListScreen';
 
   // final productController = Get.put(product_controller());
+  @override
   final WishListController controller = Get.put(WishListController());
 
   // void favouriteProduct() {
@@ -26,7 +27,7 @@ class WishList extends GetView<WishListController> {
   @override
   Widget build(BuildContext context) {
     // favouriteProduct();
-    print("state update");
+    // print("state update");
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -36,7 +37,7 @@ class WishList extends GetView<WishListController> {
             onPressed: () {
               Get.back();
             },
-            icon: Icon(Icons.arrow_back_ios_new_outlined)),
+            icon: const Icon(Icons.arrow_back_ios_new_outlined)),
       ),
       // drawer: Drawer(),
       body: controller.obx(
@@ -62,18 +63,55 @@ class WishList extends GetView<WishListController> {
                       Get.toNamed(
                         "productDetailScreen",
                         arguments: [
+                          
                           controller.wishlist[index].product!,
                           AuthenticateController.userdata.first.usertype,
-                          controller
+                          controller,
+                          false,
                         ],
                       );
                     },
                     // child: Text("dw"),
-                    child: gridItem(
-                      product: controller.wishlist[index].product!,
-                      // product: productController.favouriteProducts[index],
-                      index: index,
-                      // userType: controller.user.usertypes.toString(),
+                    child: Stack(
+                      alignment: Alignment.topRight,
+                      children: [
+                        gridItem(
+                        product: controller.wishlist[index].product!,
+                        // product: productController.favouriteProducts[index],
+                        index: index,
+                        isProductDelete: false,
+                        userType: AuthenticateController.userdata.first.usertype,
+                        // userType: controller.user.usertypes.toString(),
+                      ),
+
+                      InkWell(
+                        
+                        
+                        onTap: () {
+                           controller.Favourite(
+                              // add and delete functionality
+                              controller.wishlist[index].product!,
+                              controller.wishlist[index].product!.sId.toString(),
+                            );
+                          controller.wishlist.removeAt(index);
+                          
+                          controller.update();
+
+                         
+                          
+                        },
+                        child: 
+                          
+                          const Icon(Icons.delete , color: Color.fromARGB(180, 200, 200, 200),shadows: [
+                            Shadow(
+                              color:Colors.white12,
+                              blurRadius: 25,
+                              
+                            )
+                          ],))
+
+                      ],
+                     
                     ),
                   );
                 },

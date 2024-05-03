@@ -3,10 +3,11 @@
 import 'package:bidbazar/controllers/category_controller.dart';
 import 'package:bidbazar/controllers/image_controller.dart';
 import 'package:bidbazar/controllers/product_controller.dart';
-import 'package:bidbazar/widgets/customTextFormField.dart';
+import 'package:bidbazar/widgets/cuproduct.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class addProduct extends GetView<ImageController> {
   addProduct({super.key});
 
@@ -28,221 +29,14 @@ class addProduct extends GetView<ImageController> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: IconThemeData(color: Colors.black87),
-            title: Text(
+            title: const Text(
               "Bidbazar",
               style: TextStyle(color: Colors.black87),
             ),
             centerTitle: true,
             elevation: 0,
           ),
-          body: Container(
-            child: Form(
-              key: imgcontroller.productKey,
-              child: ListView(
-                children: [
-                  Card(
-                    semanticContainer: true,
-                    child: Container(
-                      width: Get.width * 0.9,
-                      height: Get.height * 0.4 / 1.2,
-                      child: Center(
-                        child: TextButton.icon(
-                          onPressed: () {
-                            imgcontroller.getImage();
-                          },
-                          icon: Icon(
-                            Icons.upload_file,
-                            color: Colors.black38,
-                          ),
-                          label: Obx(
-                            () => Text(
-                              "Images ${imgcontroller.imageList.length}",
-                              style: TextStyle(
-                                fontSize: 20,
-                                wordSpacing: 2,
-                                color: Colors.black38,
-                                leadingDistribution:
-                                    TextLeadingDistribution.proportional,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Divider(
-                    height: 5,
-                    thickness: 10,
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Card(
-                          elevation: 5,
-                          // margin: EdgeInsets.all(10),
-                          child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: customTextFormField(
-                              controller: productController.nameController,
-                              labelText: 'Product Name',
-                              // hintText: 'Email Address',
-                              prefixIconData: Icons.phone_android,
-                              keyboardType: TextInputType.emailAddress,
-                              textInputAction: TextInputAction.next,
-                              autofocus: false,
-                              validator: (value) {
-                                return value!.isEmpty
-                                    ? "Name can not be empty"
-                                    : null;
-
-                                // return controller.validateEmail(value!);
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Card(
-                          elevation: 5,
-                          // margin: EdgeInsets.all(10),
-                          child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: customTextFormField(
-                              controller: productController.priceController,
-                              labelText: 'Product Price',
-                              prefixIconData: Icons.payment,
-                              // hintText: 'Email Address',
-                              keyboardType: TextInputType.number,
-                              textInputAction: TextInputAction.next,
-                              autofocus: false,
-                              validator: (value) {
-                                return value!.isEmpty
-                                    ? "Price can not be empty"
-                                    : null;
-                                // return controller.validateEmail(value!);
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Card(
-                    elevation: 5,
-                    margin: EdgeInsets.all(10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
-                          child: Text(
-                            "Specification",
-                            style: TextStyle(
-                              fontSize: 20,
-                              wordSpacing: 2,
-                              leadingDistribution:
-                                  TextLeadingDistribution.proportional,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                        Divider(
-                          thickness: 2,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            controller: productController.specController,
-                            minLines: 5,
-                            maxLines: 20,
-                            // inputFormatters: [],
-                            validator: (value) {
-                              return value!.isEmpty
-                                  ? "Name can not be empty"
-                                  : null;
-                            },
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Card(
-                    elevation: 5,
-                    margin: EdgeInsets.all(10),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "Category",
-                          style: TextStyle(
-                            fontSize: 20,
-                            wordSpacing: 2,
-                            leadingDistribution:
-                                TextLeadingDistribution.proportional,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                         Spacer(
-                          flex: 1,
-                        ),
-                         Obx(
-                          () => DropdownButton(
-                        enableFeedback: true,
-                        value: catController.category.value,
-                        items: catController.categoryItems,
-                        onChanged: (value) {
-                          catController.category.value = value!;
-                          // print(value);
-                          // catController.update();
-                        },
-                          ),
-                        ),
-                       
-                       Spacer(
-                          flex: 10,
-                        ),
-                        
-
-                        
-                      ],
-                    ),
-                  ),
-                   Card(
-                    elevation: 5,
-                    margin: EdgeInsets.all(10),
-                     child: Container(
-                            // width: 150,
-                             child: customTextFormField(
-                                  controller: productController.qtyController,
-                                  labelText: 'Product QTY',
-                                  prefixIconData: Icons.production_quantity_limits_outlined,
-                                  // hintText: 'Email Address',
-                                  keyboardType: TextInputType.number,
-                                  textInputAction: TextInputAction.next,
-                                  autofocus: false,
-                                  validator: (value) {
-                                    return value!.isEmpty
-                                        ? "Qty can not be empty"
-                                        : null;
-                                    // return controller.validateEmail(value!);
-                                  },
-                                ),
-                           ),
-                   ),
-                ],
-              ),
-            ),
-          ),
+          body: cuProduct(isUpdate: false, imgcontroller: imgcontroller, productController: productController, catController: catController),
           persistentFooterButtons: [
             Row(
               children: [
@@ -291,10 +85,10 @@ class addProduct extends GetView<ImageController> {
                         productController.clearfields();
                         Get.snackbar("Product", "Product added successfully ");
 
-                        Navigator.pop(context);
+                         Navigator.pop(context);
                       }
                     },
-                    child: Text(
+                    child: const Text(
                       "Add Product",
                       style: TextStyle(
                         fontSize: 16,
@@ -311,3 +105,4 @@ class addProduct extends GetView<ImageController> {
     );
   }
 }
+

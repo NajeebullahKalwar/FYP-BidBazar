@@ -37,7 +37,19 @@ const cartController={
         }
 
     },
-
+    removeAllFromCart:async function(req,res){
+            try{
+                const {user}=req.body;
+                    const deleteCart = await cartModel.deleteOne({
+                        user:user
+                    });
+            return res.json({success:true,message:"Successfully deleted" ,data:deleteCart });
+                    
+            }catch{
+            return res.json({success:false,message:ex });
+                
+            }
+    },
     removeFromCart:async function(req,res){
         try{
             const {user,product}=req.body;

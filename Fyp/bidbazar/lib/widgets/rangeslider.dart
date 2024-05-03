@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class RangeSlider extends StatefulWidget {
   RangeSlider({super.key, required this.values, required this.labels});
   RangeValues values;

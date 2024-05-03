@@ -7,8 +7,10 @@ import 'package:bidbazar/controllers/bidController.dart';
 import 'package:bidbazar/controllers/cart_controller.dart';
 // import 'package:bidbazar/controllers/product_controller.dart';
 import 'package:bidbazar/controllers/wishList_controller.dart';
+import 'package:bidbazar/core/api.dart';
 import 'package:bidbazar/data/models/product_model.dart';
 import 'package:bidbazar/widgets/customTextFormField.dart';
+import 'package:bidbazar/widgets/updateproduct.dart';
 // import 'package:bidbazar/data/models/wishListModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -33,7 +35,7 @@ class ProductDetailScreen extends StatelessWidget {
   productModel product = Get.arguments[0];
   String? type;
   String userType = Get.arguments[1];
-
+  bool showpersistentFooterButtons=Get.arguments[3]??false;
   // WishListController wishlistController;
  
   // product_controller productController =
@@ -49,15 +51,15 @@ class ProductDetailScreen extends StatelessWidget {
       bidPrice.value=product.price!;
       bidMenu.addAll(
       [
-        DropdownMenuItem(child: Text("0% Down"), 
+        DropdownMenuItem(child: const Text("0% Down"), 
         value: product.price!),
-        DropdownMenuItem(child: Text("5% Down"), 
+        DropdownMenuItem(child: const Text("5% Down"), 
         value: (product.price!-product.price!*0.05).round()),
-        DropdownMenuItem(child: Text("10% Down"), 
+        DropdownMenuItem(child: const Text("10% Down"), 
         value: (product.price!-product.price!*0.1).round() ),
-        DropdownMenuItem(child: Text("15% Down"), 
+        DropdownMenuItem(child: const Text("15% Down"), 
         value: (product.price!-product.price!*0.15).round() ),
-        DropdownMenuItem(child: Text("20% Down"),
+        DropdownMenuItem(child: const Text("20% Down"),
          value: (product.price!-product.price!*0.2).round() )
     ]);}
     
@@ -73,7 +75,7 @@ class ProductDetailScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
-          iconTheme: IconThemeData(color: Colors.black87),
+          iconTheme: const IconThemeData(color: Colors.black87),
           centerTitle: true,
           elevation: 0,
           actions: [userType == "Buyer"
@@ -106,7 +108,7 @@ class ProductDetailScreen extends StatelessWidget {
                             // throw 'Could not launch $whatsapp';
                           }
                           },),
-                        SpeedDialChild(child: Icon(Icons.call), label: 'Whatsapp', onTap: ()async {
+                        SpeedDialChild(child: const Icon(Icons.call), label: 'Whatsapp', onTap: ()async {
                            AuthenticateController controller =   AuthenticateController();
                             var user = await controller
                                 .findUserById("655a7e77876d92cd633d5968");
@@ -139,7 +141,7 @@ class ProductDetailScreen extends StatelessWidget {
                         return CachedNetworkImage(
                           fit: BoxFit.cover,
                           imageUrl:
-                              "http://192.168.143.172:4000/api/images/${product.images!.elementAt(index)}",
+                              "${Api.BASE_URL}/images/${product.images!.elementAt(index)}",
                         );
                       },
 
@@ -154,28 +156,28 @@ class ProductDetailScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Divider(
+              const Divider(
                 height: 5,
                 thickness: 10,
               ),
               Card(
                 elevation: 5,
-                margin: EdgeInsets.all(10),
+                margin: const EdgeInsets.all(10),
                 child: ListTile(
-                  titleTextStyle: TextStyle(
+                  titleTextStyle: const TextStyle(
                       color: Colors.black, fontWeight: FontWeight.w700),
                   title: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 5),
+                    padding: const EdgeInsets.symmetric(vertical: 5),
                     child: Text(
                       product.name!.toUpperCase(),
                     ),
                   ),
                   subtitle: Row(
                     children: [
-                      Text("Rs "),
+                      const Text("Rs "),
                       Text(
                         product.price.toString(),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
                         ),
@@ -260,11 +262,11 @@ class ProductDetailScreen extends StatelessWidget {
               ),
               Card(
                 elevation: 5,
-                margin: EdgeInsets.all(10),
+                margin: const EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
+                    const Padding(
                       padding:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       child: Text(
@@ -278,14 +280,14 @@ class ProductDetailScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       thickness: 2,
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         product.specs.toString(),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 15,
                           wordSpacing: 2,
                           leadingDistribution:
@@ -294,7 +296,7 @@ class ProductDetailScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     )
                   ],
@@ -309,10 +311,11 @@ class ProductDetailScreen extends StatelessWidget {
 
 
         // persistentFooterAlignment: AlignmentDirectional.centerStart,
-        persistentFooterButtons: [
+       
+        persistentFooterButtons:showpersistentFooterButtons==true? [
 
           
-          SizedBox(
+          const SizedBox(
             height: 1,
           ),
           Row(
@@ -348,22 +351,23 @@ class ProductDetailScreen extends StatelessWidget {
                         userType == "Buyer"
                             ? {
                                 controller.addToCart(product, 1),
+                                controller.carStateSuccess(),
                                 Get.snackbar(
                                     "Add to cart", "Product added to your cart")
                               }
-                            : null;
+                            : Navigator.push(context,MaterialPageRoute(builder: (context) => UpdateProduct(product:product ,),));
 
                                 
                       },
                       child: userType == "Buyer"
-                          ? Text(
+                          ? const Text(
                               "Add to Cart",
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
                               ),
                             )
-                          : Text(
+                          : const Text(
                               "Edit Product",
                               style: TextStyle(
                                 fontSize: 16,
@@ -401,7 +405,7 @@ class ProductDetailScreen extends StatelessWidget {
                                   // Navigator.pop(context);
                                 }
                       },
-                      child: Text(
+                      child: const Text(
                               "Confirm",
                               style: TextStyle(
                                 fontSize: 16,
@@ -473,7 +477,7 @@ class ProductDetailScreen extends StatelessWidget {
 
                                 
                       },
-                      child: Text(
+                      child: const Text(
                               "Bid",
                               style: TextStyle(
                                 fontSize: 16,
@@ -513,7 +517,7 @@ class ProductDetailScreen extends StatelessWidget {
                             // productController.isWishListed.value;
                             // print(productController.isWishListed.value);
                           },
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.favorite_border_rounded,
                             // fill: 10,
                             size: 32,
@@ -527,7 +531,7 @@ class ProductDetailScreen extends StatelessWidget {
             ],
           ),
          
-        ],
+        ]:null,
         // // : null,
         // floatingActionButton: FloatingActionButton.small(
         //   backgroundColor: Colors.orange[800],

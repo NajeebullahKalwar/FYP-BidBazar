@@ -19,6 +19,33 @@ const productController = {
         }
     },
 
+    updateProduct:async function(req,res){
+        try{
+            const {productId,name,price,specs,quantity}=req.body;
+                  console.log(productId);    
+
+            const updatedProduct =  await productModel.findOneAndUpdate(
+                {_id:productId},
+                {
+                    $set:{ name:name,
+                        specs:specs,
+                        price:price,
+                        qty:quantity} 
+                }, //dollar pull is array function ->pull value from array means delete values from array using function pull
+                { new: true }
+                );
+                
+
+                return res.json({success:true,message:"Product updated",data:updatedProduct });
+
+        
+        }catch(ex){
+            return res.json({success:false,message:ex });
+
+        }
+
+    },
+
     removeFromProducts:async function(req,res){
         try{
             const {id,userId,productId}=req.body;

@@ -1,11 +1,14 @@
 import 'package:bidbazar/controllers/auth_controllers.dart';
 import 'package:bidbazar/controllers/cart_controller.dart';
 import 'package:bidbazar/controllers/product_controller.dart';
+import 'package:bidbazar/controllers/wishList_controller.dart';
+import 'package:bidbazar/core/api.dart';
 import 'package:bidbazar/data/models/product_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class gridItem extends StatelessWidget {
   gridItem(
       {super.key,
@@ -46,7 +49,7 @@ class gridItem extends StatelessWidget {
                     fit: BoxFit.cover,
                     // width: size.width * .9,
                     imageUrl:
-                        "http://192.168.143.172:4000/api/images/${product.images!.elementAt(0).toString()}",
+                        "${Api.BASE_URL}/images/${product.images!.elementAt(0).toString()}",
                   ),
                   // "https://i.postimg.cc/nzdgXrFC/anh-nhat-Pd-ALQmf-Eqv-E-unsplash.jpg"
                 ),
@@ -104,11 +107,12 @@ class gridItem extends StatelessWidget {
                         ),
                       ),
                       InkWell(
-                        onTap: () {
+                        onTap: () async{
                           //Please ensure that the item is in your cart before adding it. => not implemented
                           userType == "Buyer"
                               ? {
-                                  cart!.addToCart(product, 1),
+                                   cart!.addToCart(product, 1),                      
+                                  cart!.carStateSuccess(),
                                   Get.snackbar("Add to cart",
                                       "Product added to your cart")
                                 }

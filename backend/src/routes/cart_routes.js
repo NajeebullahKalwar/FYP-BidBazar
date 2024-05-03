@@ -11,6 +11,8 @@ cartRoutes.patch("/",cartController.updateFromCart);
 
 cartRoutes.get("/:user",cartController.getAllFromCart);
 
+cartRoutes.post("/removeAllFromCart",cartController.removeAllFromCart);
+
 
 
 

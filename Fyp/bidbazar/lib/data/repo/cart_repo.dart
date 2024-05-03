@@ -62,6 +62,30 @@ class cartRepo {
     }
   }
 
+      Future removeAllFromCart(String userId) async {
+        Map<String, dynamic> data = {
+          "user": userId,
+          };
+
+    try {
+      Response response = await api.sendRequest.post(
+        "/cart/removeAllFromCart",
+        data: jsonEncode(data),
+      );
+      ApiResponse apiResponse = ApiResponse.fromResponse(response);
+
+      if (!apiResponse.success) {
+        throw apiResponse.message.toString();
+      }else{
+        
+      }
+    } on DioException catch (_) {
+      rethrow ;
+    }
+  }
+
+
+
 // userId = 655bc3739287689f923902f5
   Future<List<cartModel>> fetchCart(String userId) async {
     try {
@@ -71,16 +95,17 @@ class cartRepo {
 
       ApiResponse apiResponse = ApiResponse.fromResponse(response);
 
-      if (!apiResponse.success) {
-        throw apiResponse.message.toString();
-      }
+      // if (!apiResponse.success) {
+      //   throw apiResponse.message.toString();
+      // }
 
       if (apiResponse.data != null) {
         return (apiResponse.data as List<dynamic>)
             .map((json) => cartModel.fromJson(json))
             .toList();
-      } else
+      } else {
         return [];
+      }
     } catch (ex) {
       rethrow;
     }
