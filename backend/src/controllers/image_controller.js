@@ -24,6 +24,28 @@ const image = {
             }
     },
 
+    cnicUpload:async function(req,res){
+
+        try{
+            const imageUrls = req.files.map(element => `${element.filename}`);// ex http://192.168.137.1:4000/api/images/image123545.png
+            return res.json({success:true,message:`Image uploaded!` , data:imageUrls});
+
+        }catch(ex){
+            return res.json({success:false,message:`Image not found!  ${ex}`});
+        }
+},
+
+profileUpload:async function(req,res){
+
+    try{
+        const imageUrls = req.files.map(element => `${element.filename}`);// ex http://192.168.137.1:4000/api/images/image123545.png
+        return res.json({success:true,message:`Image uploaded!` , data:imageUrls});
+
+    }catch(ex){
+        return res.json({success:false,message:`Image not found!  ${ex}`});
+    }
+},
+
     deleteImage: async function (req, res) {
         try {
             console.log("working");

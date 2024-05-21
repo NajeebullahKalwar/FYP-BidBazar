@@ -1,11 +1,15 @@
 import 'package:bidbazar/Views/bidviewforbuyer.dart';
 import 'package:bidbazar/Views/buyer/cart.dart';
 import 'package:bidbazar/controllers/bidController.dart';
+import 'package:bidbazar/controllers/order_controller.dart';
 import 'package:bidbazar/controllers/wishList_controller.dart';
 import 'package:bidbazar/widgets/bidView.dart';
 import 'package:bidbazar/widgets/category.dart';
 import 'package:bidbazar/Views/home.dart';
 import 'package:bidbazar/controllers/auth_controllers.dart';
+import 'package:bidbazar/widgets/orderView.dart';
+import 'package:bidbazar/widgets/profile.dart';
+import 'package:flutter/cupertino.dart';
 // import 'package:flutter/cupertino.dart';
 // import 'package:bidbazar/widgets/wishList.dart';
 import 'package:flutter/material.dart';
@@ -92,6 +96,7 @@ class Buyer extends StatelessWidget {
         child: ListView(
           // Important: Remove any padding from the ListView.
           padding: EdgeInsets.zero,
+          
           children: [
             const SizedBox(
               height: 250,
@@ -135,13 +140,31 @@ class Buyer extends StatelessWidget {
                     width: 35,
                     height: 35,
                   ),
-              title: const Text('Bid Log'),
+              title: const Text('Bid Logs'),
               selected: false,
               onTap: () {
-                Navigator.push(context,MaterialPageRoute(builder: (context) => BidViewForBuyer(controller: bidController,),));
+                Navigator.push(context,CupertinoPageRoute(builder: (context) => BidViewForBuyer(controller: bidController,),));
                 
                 // Navigator.push(context,MaterialPageRoute(builder: (context) => BidView(controller: bidController, approvedBid:false ),),);
                 // bidController.dispose();
+              },
+            ),
+             ListTile(
+              leading: Image.asset(
+                    'assets/order.png',
+                    width: 38,
+                    height: 25,
+                    fit: BoxFit.contain,
+                  ),
+              title: const Text('Order Logs'),
+              // selected: true,
+              onTap: () {
+
+                OrderController orderController =
+                    Get.put(OrderController());
+                  
+                orderController.fetchOrders();
+                Navigator.push(context, CupertinoPageRoute( builder: (context) => OrderView(),));
               },
             ),
               ListTile(
@@ -154,16 +177,31 @@ class Buyer extends StatelessWidget {
                   ),
               title: const Text('Approved Bid Log'),
               selected: false,
-              onTap: () {
-
-                Navigator.push(context,MaterialPageRoute(builder: (context) => BidView(items: bidController.bidItemsList.value.first.items!, approvedBid: true , buyerId: bidController.bidItemsList.first.buyer! , ),));
+              onTap: ()async {
+                bidController.bidItemsList.clear();
+                await bidController.fetchBidItems();
+                Navigator.push(context,CupertinoPageRoute(builder: (context) => BidView(items:bidController.bidItemsList.isEmpty? []: bidController.bidItemsList.first.items!, approvedBid: true , buyerId: bidController.bidItemsList.isEmpty? "": bidController.bidItemsList.first.buyer! , ),));
 
                 // Navigator.push(context,MaterialPageRoute(builder: (context) => BidView(controller: bidController , approvedBid: true,
                 // ),),);
                 // bidController.dispose();
               },
             ),
-           
+           Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 2),
+             child: ListTile(
+                // leading: Icon(Icons.receipt),
+                leading:const Icon(Icons.person, size: 32,color:  Colors.black),
+                title: const Text('Profile'),
+                selected: false,
+                onTap: () {
+                  Navigator.push(context,CupertinoPageRoute(builder: (context) => Profile(),));
+                  
+                  // Navigator.push(context,MaterialPageRoute(builder: (context) => BidView(controller: bidController, approvedBid:false ),),);
+                  // bidController.dispose();
+                },
+              ),
+           ),
             ListTile(
               leading: const Icon(Icons.exit_to_app_rounded),
               title: const Text('Logout'),

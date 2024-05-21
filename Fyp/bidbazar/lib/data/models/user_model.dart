@@ -8,6 +8,10 @@ class userModel {
   String? password;
   String? usertype;
   String? id;
+  bool? block;
+  bool? verification;
+  List<String>? cnicimages;
+  List<String>? profileimages;
 
   userModel(
       {this.sId,
@@ -18,7 +22,12 @@ class userModel {
       this.address,
       this.password,
       this.usertype,
-      this.id});
+      this.id,
+      this.block,
+      this.verification,
+      this.profileimages,
+      this.cnicimages
+      });
 
   userModel.fromJson(Map<String, dynamic> json) {
     //return method
@@ -31,6 +40,10 @@ class userModel {
     password = json['password'];
     usertype = json['usertype'];
     id = json['id'];
+    block = json['block'];
+    verification = json['verification'];
+    profileimages = json['profileimages'].cast<String>();
+    cnicimages = json['cnicimages'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -45,6 +58,8 @@ class userModel {
     data['password'] = this.password;
     data['usertype'] = this.usertype;
     data['id'] = this.id;
+    data['block'] = this.block;
+    data['verification'] = this.verification;
     return data;
   }
 }

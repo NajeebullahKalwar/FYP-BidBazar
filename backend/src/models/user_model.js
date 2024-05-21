@@ -44,7 +44,25 @@ var userSchema = new mongoose.Schema({
     usertype:{
         type:String,
         required:true,
-    },    
+    },   
+    block:{
+        type:Boolean,
+        required:true,
+        default:false,
+    },
+    verification:{
+        type:Boolean,
+        required:true,
+        default:false
+    }, 
+    cnicimages:{
+        type:Array,
+        default:[]
+    },
+    profileimages:{
+        type:Array,
+        default:[]
+    },
 },);
 
 userSchema.pre("save",function(next){//save ke time kiya hoga

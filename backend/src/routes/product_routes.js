@@ -23,6 +23,8 @@ productRoute.post("/RemoveProduct",productController.removeFromProducts
 
 productRoute.post("/updateProduct",productController.updateProduct
 );
+productRoute.post("/soldqty",productController.updateSoldQty
+);
 
 
 module.exports=productRoute;

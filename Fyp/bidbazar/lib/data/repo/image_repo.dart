@@ -41,4 +41,57 @@ class ImageRepository {
       rethrow;
     }
   }
+
+  Future<List<dynamic>> uploadcnic(List<String> image,) async {
+    try {
+      List<MultipartFile> files = [];
+      // Convert image paths to MultipartFiles
+      for (String path in image) {
+        files.add(
+          await MultipartFile.fromFile(path, filename: path.split('/').last),
+        );
+      }
+      FormData formData = FormData.fromMap({
+        'images': files,
+      });
+      // FormData images = await FormData.fromMap({'images': image});
+      Response response =
+          await api.sendRequest.post('/images/cnicImages', data: formData);
+      final apiResponse = ApiResponse.fromResponse(response);
+      if (!apiResponse.success) {
+        throw apiResponse.message.toString();
+      }
+      // print("response of najeeb");
+      print(apiResponse.data);
+      return apiResponse.data; //return object of user
+    } catch (ex) {
+      rethrow;
+    }
+  }
+  Future<List<dynamic>> uploadprofile(List<String> image,) async {
+    try {
+      List<MultipartFile> files = [];
+      // Convert image paths to MultipartFiles
+      for (String path in image) {
+        files.add(
+          await MultipartFile.fromFile(path, filename: path.split('/').last),
+        );
+      }
+      FormData formData = FormData.fromMap({
+        'images': files,
+      });
+      // FormData images = await FormData.fromMap({'images': image});
+      Response response =
+          await api.sendRequest.post('/images/profileImages', data: formData);
+      final apiResponse = ApiResponse.fromResponse(response);
+      if (!apiResponse.success) {
+        throw apiResponse.message.toString();
+      }
+      // print("response of najeeb");
+      print(apiResponse.data);
+      return apiResponse.data; //return object of user
+    } catch (ex) {
+      rethrow;
+    }
+  }
 }

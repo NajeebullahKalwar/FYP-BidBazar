@@ -9,6 +9,7 @@ import 'package:bidbazar/data/repo/email_repo.dart';
 import 'package:bidbazar/data/repo/user_repo.dart';
 // import 'package:bidbazar/routes/app_pages.dart';
 import 'package:bidbazar/widgets/buttonController.dart';
+import 'package:bidbazar/widgets/customTextFormField.dart';
 // import 'package:email_auth/email_auth.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:flutter/foundation.dart';
@@ -17,7 +18,7 @@ import 'package:get/get.dart';
 
 // import 'package:firebase_auth/firebase_auth.dart';
 
-class AuthenticateController extends GetxController {
+class AuthenticateController extends GetxController with StateMixin {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -26,21 +27,34 @@ class AuthenticateController extends GetxController {
   final TextEditingController cnicController = TextEditingController();
   final TextEditingController otpController = TextEditingController();
 
+
+
+
   Rx<bool> isLoading = false.obs;
   Rx<bool> isObscure = true.obs;
   RxString ErrorMessage = "".obs;
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+  }
   // late final userModel usermodel;
   UserRepository userRepo = UserRepository();
   // List<userModel>  = [];
   static RxList<userModel> userdata = (List<userModel>.of([])).obs;
+  RxList<userModel> listOfSeller = (List<userModel>.of([])).obs;
+  RxList<userModel> listOfBuyer = (List<userModel>.of([])).obs;
+  RxList<userModel> users = (List<userModel>.of([])).obs;
 
   RxInt screenIndex = 0.obs;
 
   final loginFormKey = GlobalKey<FormState>();
   final signupFormKey = GlobalKey<FormState>();
   final otpkey = GlobalKey<FormState>();
-  EmailRepo emailAuth= EmailRepo(); 
+  EmailRepo emailAuth = EmailRepo();
 
   ButtonController usertypes = Get.put(ButtonController());
 
@@ -63,22 +77,87 @@ class AuthenticateController extends GetxController {
     }
   }
 
+  void blockUsers({required String userId}) {
+    userRepo.blockUser(Id: userId);
+  }
+
+  void userVerification({required String userId}) {
+    userRepo.userVerification(Id: userId);
+  }
+
+  Future fetchBuyers() async {
+    try {
+      users.clear();
+      change(listOfBuyer, status: RxStatus.loading());
+      listOfBuyer.clear();
+      var user = await userRepo.findAllBuyers();
+      listOfBuyer.assignAll(user);
+      users.assignAll(user);
+
+      if (listOfBuyer.isEmpty) {
+        change(
+          listOfBuyer,
+          status: RxStatus.empty(),
+        );
+      } else {
+        change(
+          listOfBuyer,
+          status: RxStatus.success(),
+        );
+        // change(cartlist, status: RxStatus.success());
+      }
+    } catch (ex) {
+      throw ex;
+    }
+  }
+
+  Future fetchSellers() async {
+    try {
+      users.clear();
+      change(listOfBuyer, status: RxStatus.loading());
+      listOfSeller.clear();
+      var user = await userRepo.findAllSellers();
+      listOfSeller.assignAll(user);
+      users.assignAll(user);
+      if (listOfSeller.isEmpty) {
+        change(
+          listOfBuyer,
+          status: RxStatus.empty(),
+        );
+      } else {
+        change(
+          listOfBuyer,
+          status: RxStatus.success(),
+        );
+        // change(cartlist, status: RxStatus.success());
+      }
+    } catch (ex) {
+      throw ex;
+    }
+  }
+
   Future login(String email, String password) async {
     toggleLoading();
     try {
       userModel? user = await userRepo.signIn(email, password);
-      if (user == null) {
-        toggleLoading();
-        Get.snackbar(
-          margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-          'Error Logging in',
-          'Please try again.',
-        );
-      } else {
-        userdata.assign(user);
-
-        routeForBuyerSellerAdmin(user.usertype.toString());
-      }
+      user!.block == true
+          ? throw Exception("Your account is blocked.")
+          : {
+              if (user == null)
+                {
+                  toggleLoading(),
+                  Get.snackbar(
+                    margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    'Error Logging in',
+                    'Please try again.',
+                  )
+                }
+              else
+                {
+                  userdata.assign(user),
+                  routeForBuyerSellerAdmin(user.usertype.toString()),
+                }
+            };
     } catch (e) {
       toggleLoading();
 
@@ -99,7 +178,7 @@ class AuthenticateController extends GetxController {
         break;
       default:
         Get.snackbar(
-          margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+          margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
           'Error Logging in',
           'Please check usertype.',
         );
@@ -107,15 +186,14 @@ class AuthenticateController extends GetxController {
   }
 
   // EmailAuth emailAuth = EmailAuth(sessionName: "send otp");
-  
-  Future<String>  sendOTP() async {
-    var res = await emailAuth.sendOtp(
-        email: emailController.text.trim());
-      // otp=res.toString();
+
+  Future<String> sendOTP() async {
+    var res = await emailAuth.sendOtp(email: emailController.text.trim());
+    // otp=res.toString();
     return res;
   }
 
-  // Future<bool> verifyOTP({required String userOtp}) async {    
+  // Future<bool> verifyOTP({required String userOtp}) async {
   //   if (userOtp==otp) {
   //     ErrorMessage.value="Otp verified";
   //     print("Otp verified");
@@ -126,11 +204,81 @@ class AuthenticateController extends GetxController {
   //     print("Invalid OTP");
   //   return false;
   // }
-
-  Future dialoge() async{
-    
+  Future forgot() async {
+                  String otp= await sendOTP();
     await Get.defaultDialog(
-      barrierDismissible:false ,
+        barrierDismissible: false,
+        
+        title: 'Forgot password',
+        content: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Form(
+              key: otpkey,
+              child: Column(
+                children: [
+                  const SizedBox(
+              height: 20.0,
+            ),
+                  customTextFormField(
+                    labelText: "Password",
+                    hintText: 'New password',
+                    prefixIconData: Icons.key,
+                    controller: passwordController,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  customTextFormField(
+                    controller: otpController,
+                    // maxLines: 1,
+                    keyboardType: TextInputType.number,
+                    // prefixIconData: Icons.dot,
+                    validator: (value) {
+                      return validateOtp(value!);
+                    },
+                    labelText: ' Enter Otp here',
+                  )
+
+                  // key: otpkey,
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 20.0,
+            ),
+            ElevatedButton(
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: Colors.orange[900]),
+              onPressed: () async{
+                if (otpkey.currentState!.validate()) {
+                  otp == otpController.text?
+                 {
+                  userRepo.forgot(email: emailController.text, password: passwordController.text),
+                  emailController.clear(),
+                  otpController.clear(),
+                  passwordController.clear(),
+                  Get.back(),
+                 }
+                  :Get.snackbar("forgot", "please enter correct otp");
+                  
+                }
+                ;
+              },
+              child: const Text(
+                'submit',
+                style: TextStyle(color: Colors.white, fontSize: 16.0),
+              ),
+              // color: Colors.redAccent,
+            )
+          ],
+        ),
+        radius: 10.0);
+  }
+
+  Future dialoge() async {
+    await Get.defaultDialog(
+        barrierDismissible: false,
         title: 'Email Verification',
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -150,34 +298,29 @@ class AuthenticateController extends GetxController {
 
                 // keyboardType: TextInputType.number,
                 maxLines: 1,
-                decoration: InputDecoration(
-                  isDense: true,  
-                  contentPadding: EdgeInsets.all(10),
+                decoration: const InputDecoration(
+                    isDense: true,
+                    contentPadding: EdgeInsets.all(10),
                     labelText: ' Enter otp here',
                     hintMaxLines: 1,
                     border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.green, width: 4.0))),
+                        borderSide:
+                            BorderSide(color: Colors.green, width: 4.0))),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 30.0,
             ),
             ElevatedButton(
-
-              style: ElevatedButton.styleFrom(
-                
-                backgroundColor: Colors.orange[900]
-              ),
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: Colors.orange[900]),
               onPressed: () {
-                
-                if (otpkey.currentState!
-                                .validate()) {
-                
+                if (otpkey.currentState!.validate()) {
                   Get.back();
-                }; 
-
+                }
+                ;
               },
-              child: Text(
+              child: const Text(
                 'Verify',
                 style: TextStyle(color: Colors.white, fontSize: 16.0),
               ),
@@ -188,7 +331,7 @@ class AuthenticateController extends GetxController {
         radius: 10.0);
   }
 
-  Future signup  (
+  Future signup(
       {required String name,
       required String email,
       required String password,
@@ -198,39 +341,38 @@ class AuthenticateController extends GetxController {
     toggleLoading();
 
 // Future<String>  sendOTP() async {
-    String OTP = await emailAuth.sendOtp(
-        email: emailController.text.trim());
-      // otp=res.toString();
+    String OTP = await emailAuth.sendOtp(email: emailController.text.trim());
+    // otp=res.toString();
     // return res;
-  // }
+    // }
 
     // await sendOTP();
-    
+
     await dialoge();
 
     print("Entered OTP: ${otpController.text}");
     print("Generated OTP: $OTP");
-    
+
     // bool otpVerify = await verifyOTP(userOtp: otpController.text);
 
-    bool isOtpCorrect=otpController.text.trim()==OTP.trim()?true:false;
+    bool isOtpCorrect = otpController.text.trim() == OTP.trim() ? true : false;
     print("Generated OTP: $isOtpCorrect");
-    
+
     try {
       if (isOtpCorrect) {
-      String usertype =
-          usertypes.getUserName == null ? 'Buyer' : usertypes.getUserName;
-      // ignore: unused_local_variable
-      userModel? user = await userRepo.createAccount(
-          name, email, phonenum, cnic, address, password, usertype);
-      toggleLoading();
-      clearfields();
-      Get.offAndToNamed('loginScreen');
+        String usertype =
+            usertypes.getUserName == null ? 'Buyer' : usertypes.getUserName;
+        // ignore: unused_local_variable
+        userModel? user = await userRepo.createAccount(
+            name, email, phonenum, cnic, address, password, usertype);
+        toggleLoading();
+        clearfields();
+        Get.offAndToNamed('loginScreen');
       } else {
-      ErrorMessage.value="Invalid OTP";
-      clearfields();
-      Get.snackbar("Sign up", "Please Enter correct otp for verification");
-      toggleLoading();
+        ErrorMessage.value = "Invalid OTP";
+        clearfields();
+        Get.snackbar("Sign up", "Please Enter correct otp for verification");
+        toggleLoading();
       }
     } catch (ex) {
       toggleLoading();
@@ -457,15 +599,14 @@ class AuthenticateController extends GetxController {
   String? validateOtp(String val) {
     if (val.isEmpty) {
       return "OTP can not be empty";
-    }else if(val.length<6&&val.length>6){
+    } else if (val.length < 6 && val.length > 6) {
       return "OTP can not more then 6 and less";
-    }else{
+    } else {
       return null;
     }
-      
   }
 
-    String? validateCNIC(value) {
+  String? validateCNIC(value) {
     if (value!.isEmpty) {
       return 'Please enter an CNIC';
     }

@@ -64,7 +64,7 @@ class addProduct extends GetView<ImageController> {
                         minimumSize: Size(Get.width * 0.9, Get.height * 0.1 / 2),
                         backgroundColor: Colors.amber[900]),
                     onPressed: () async {
-                      if (controller.productKey.currentState!.validate()) {
+                      if (controller.productKey.currentState!.validate() ) {
                         await imgcontroller.upload(); //upload image to server
                         print("Product uploading started ");
 
@@ -78,11 +78,13 @@ class addProduct extends GetView<ImageController> {
                           price: int.parse(productController.priceController.text),
                           images: imgcontroller.uploadImageList,
                           category: catController.category.value,
-                          qty: 1
+                          autoSoldOnPrice: int.parse(productController.saleOnPriceController.text),
+                          qty:int.parse(productController.qtyController.text)
                         );
                         imgcontroller.imageList.clear();
                         imgcontroller.uploadImageList.clear();
                         productController.clearfields();
+                        productController.saleOnPriceController.clear();
                         Get.snackbar("Product", "Product added successfully ");
 
                          Navigator.pop(context);

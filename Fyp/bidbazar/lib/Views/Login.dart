@@ -120,6 +120,7 @@ class loginScreen extends StatelessWidget {
                     GestureDetector(
                       onTap: () {
                         if (!(controller.emailController.text.isEmpty)) {
+                            controller.forgot();
                           // controller.resetPassword(controller.emailController.text);
                         } else {
                           controller.ErrorMessage.value =

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const uuid = require('uuid');
+const customDate = require('../controllers/date_controller');
 
 
 
@@ -27,6 +28,10 @@ const productSchema=mongoose.Schema({
         type:Number,
         required:true,
     },
+    saleonprice:{//if price is heigher then sold the bid 
+        type:Number,
+        required:true,
+    },
     wishlist:{
         type:Boolean,
         default:false,        
@@ -45,7 +50,19 @@ const productSchema=mongoose.Schema({
         required:false,
         default:1
     },
-
+    soldqty:{
+        type:Number,
+        required:false,
+        default:0
+    },
+    createdat: {
+        type:String,
+        default: customDate.getStringFormattedDate()  // Set default value to current date and time
+    },
+    expire:{
+        type:Boolean,
+        default: false
+    },
 });
 
 

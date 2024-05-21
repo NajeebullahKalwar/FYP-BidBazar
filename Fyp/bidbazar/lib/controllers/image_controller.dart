@@ -14,11 +14,16 @@ class ImageController extends GetxController with StateMixin {
 
   List<String> imageList = RxList(<String>[].obs);
   List<String> uploadImageList = [];
+  List<String> uploadCnicList = RxList(<String>[].obs);
+  List<String> uploadProfileList = RxList(<String>[].obs);
+
 
   // RxList<String> uploadImageList = RxList(<String>[].obs);
   final productKey = GlobalKey<FormState>();
 
-  Future getImage() async {
+
+  //pick images 
+  Future pickImages() async {
     change(imageList, status: RxStatus.loading());
 
     List<XFile> pickedImage;
@@ -38,15 +43,40 @@ class ImageController extends GetxController with StateMixin {
       String filePath = xFile.path;
       imageList.add(filePath);
     }
+    print(imageList);
     change(imageList, status: RxStatus.success());
   }
+
+//  Future cnicImageUpload()async {
+//     await pickImages();
+//     uploadCnicList.addAll(imageList);
+//   }
+//   Future profileImageUpload() async{
+//         await pickImages();
+//     uploadProfileList.addAll(imageList);
+//   }
+
+
+
   Future upload() async {
     var image = await imageRepo.uploadImage(imageList);
     List<String> img = List<String>.from(image);
     uploadImageList.addAll(img);
     // print("done images");
   }
+Future uploadCnic() async {
+    var image = await imageRepo.uploadcnic(imageList);
+    List<String> img = List<String>.from(image);
+    uploadCnicList.addAll(img);
+    // print("done images");
+  }
 
+  Future uploadProfile() async {
+    var image = await imageRepo.uploadprofile(imageList);
+    List<String> img = List<String>.from(image);
+    uploadProfileList .addAll(img);
+    // print("done images");
+  }
   // void _upload(List<XFile> file) async {
   //   print("upload image");
   //   print(file.first);

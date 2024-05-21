@@ -1,6 +1,7 @@
 import 'dart:convert';
 // import 'dart:html';
 
+import 'package:bidbazar/controllers/auth_controllers.dart';
 import 'package:bidbazar/core/api.dart';
 import 'package:bidbazar/data/models/bid_model.dart';
 // import 'package:bidbazar/data/models/cart_model.dart';
@@ -87,8 +88,12 @@ class BidRepo {
         // item.add(BidModel.fromJson(apiResponse.data));
         // return item;
         // }
-        // print();
-        if(!apiResponse.success){
+        print("bid value repo  ${apiResponse.data}" );
+        
+
+        if(!apiResponse.success ){
+        print("bid value repo  ${apiResponse.data}" );
+
           // throw Exception("There is no item in your bid");
         return  [];
         }else
@@ -110,10 +115,11 @@ class BidRepo {
         if(!apiResponse.success){
           return [];
           // throw apiResponse.message.toString();
-        }else
-        return (apiResponse.data as List<dynamic>)
+        }else {
+          return (apiResponse.data as List<dynamic>)
           .map((json) => BidModel.fromJson(json))
           .toList();
+        }
     } catch (ex) {
       rethrow;
     }
@@ -157,6 +163,24 @@ class BidRepo {
       "buyerId": buyerId,
       "status": status,
         }),
+      );
+      ApiResponse apiResponse = ApiResponse.fromResponse(response);
+
+       if (!apiResponse.success) {
+        throw apiResponse.message.toString();
+      }
+
+      
+    } on DioException catch (_) {
+       rethrow;
+    }
+  }
+
+    Future deletebid({required String bidId,}) async {
+    try {
+      Response response = await api.sendRequest.delete(
+        "/bid/delete/$bidId/${AuthenticateController.userdata.first.sId}",
+    
       );
       ApiResponse apiResponse = ApiResponse.fromResponse(response);
 

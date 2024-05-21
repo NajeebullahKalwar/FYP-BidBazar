@@ -1,9 +1,12 @@
 import 'package:bidbazar/controllers/bidController.dart';
+import 'package:bidbazar/controllers/order_controller.dart';
 import 'package:bidbazar/controllers/wishList_controller.dart';
 import 'package:bidbazar/widgets/bidView.dart';
 import 'package:bidbazar/widgets/category.dart';
 import 'package:bidbazar/Views/home.dart';
 import 'package:bidbazar/controllers/auth_controllers.dart';
+import 'package:bidbazar/widgets/orderView.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -103,20 +106,39 @@ class Seller extends StatelessWidget {
               leading: const Icon(Icons.favorite),
               title: const Text('wish list'),
               // selected: true,
-              onTap: () {
+              onTap: ()async {
                 WishListController wishListController =
                     Get.put(WishListController());
-                wishListController.fetchWishListItems();
+               await wishListController.fetchWishListItems();
                 Get.toNamed("wishListScreen");
+              },
+            ),
+            ListTile(
+              leading: Image.asset(
+                    'assets/order.png',
+                    width: 38,
+                    height: 25,
+                    fit: BoxFit.contain,
+                  ),
+              title: const Text('Order Logs'),
+              // selected: true,
+              onTap: () {
+                OrderController orderController =
+                    Get.put(OrderController());
+                  
+                orderController.fetchOrders();
+                Navigator.push(context, CupertinoPageRoute( builder: (context) => OrderView(),));
               },
             ),
             ListTile(
               leading: const Icon(Icons.receipt),
               title: const Text('Recent Bids'),
               selected: false,
-              onTap: () {
-                print("working recent bid :");
-                Navigator.push(context,MaterialPageRoute(builder: (context) => BidView(items: bidController.bidItemsList.value.first.items!, approvedBid: false , buyerId: bidController.bidItemsList.first.buyer!),));
+              onTap: () async{
+                // print("working recent bid :");
+                BidController bd=Get.put(BidController());
+                await bd.fetchBidItems();
+                 Navigator.push(context,CupertinoPageRoute(builder: (context) => BidView(items:bidController.bidItemsList.isEmpty? []: bidController.bidItemsList.first.items!, approvedBid: false , buyerId:bidController.bidItemsList.isEmpty? "": bidController.bidItemsList.first.buyer!),));
 
                 // Navigator.push(context,MaterialPageRoute(builder: (context) => BidView(controller: bidController, approvedBid: false),),);
                 // bidController.dispose();

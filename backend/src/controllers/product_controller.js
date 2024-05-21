@@ -8,8 +8,6 @@ const productController = {
             const productData = req.body;//data send    
             // console.log(productData);
             // const jsonData = JSON.stringify(productData);
-            
-
             const newProduct = new productModel(productData);             
             await newProduct.save();//data save to database
 
@@ -35,6 +33,32 @@ const productController = {
                 { new: true }
                 );
                 
+
+                return res.json({success:true,message:"Product updated",data:updatedProduct });
+
+        
+        }catch(ex){
+            return res.json({success:false,message:ex });
+
+        }
+
+    },
+    updateSoldQty:async function(req,res){
+        try{
+            const {productId,soldqty}=req.body;
+                  console.log(productId);    
+
+            const product = await productModel.findOne({_id:productId})
+
+            const updatedProduct =  await productModel.findOneAndUpdate(
+                {_id:productId},
+                {
+                    $set:{
+                        soldqty:product.soldqty+soldqty} 
+                }, //dollar pull is array function ->pull value from array means delete values from array using function pull
+                { new: true }
+                );
+
 
                 return res.json({success:true,message:"Product updated",data:updatedProduct });
 
@@ -95,7 +119,8 @@ const productController = {
     getAllProducts:async function(req,res){
 
         try{
-            const getProducts = await productModel.find();//it uses mongoose local client which fetch all data from db   
+            const getProducts = await productModel.find()
+            // .populate("user");//it uses mongoose local client which fetch all data from db   
                          
             return res.json({success:true,message:"Product Found",data:getProducts}); 
         }catch(e){

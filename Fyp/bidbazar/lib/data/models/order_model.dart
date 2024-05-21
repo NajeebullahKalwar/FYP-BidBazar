@@ -1,109 +1,170 @@
-// import 'package:bidbazar/data/models/user_model.dart';
+import 'package:bidbazar/data/models/product_model.dart';
+import 'package:bidbazar/data/models/user_model.dart';
 
 class OrderModel {
-  String? buyer;
-  List<OrderItem>? items;
   String? sId;
+  String? buyer;
+  List<Items>? items;
 
-  OrderModel({this.buyer, this.items, this.sId});
+  OrderModel({this.sId, this.buyer, this.items});
 
   OrderModel.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
     buyer = json['buyer'];
     if (json['items'] != null) {
-      items = <OrderItem>[];
+      items = <Items>[];
       json['items'].forEach((v) {
-        items!.add( OrderItem.fromJson(v));
+        items!.add(new Items.fromJson(v));
       });
     }
-    sId = json['_id'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  Map<String, dynamic>();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.sId;
     data['buyer'] = this.buyer;
     if (this.items != null) {
       data['items'] = this.items!.map((v) => v.toJson()).toList();
     }
-    data['_id'] = this.sId;
     return data;
   }
 }
 
-class OrderItem {
-  List<OrderedProduct>? orderedProduct;
-  int? totalquantity;
-  double? totalprice;
-  String? status;
+class Items {
   String? sId;
+  int? totalquantity;
+  int? totalprice;
+  String? status;
   String? createdat;
+  List<OrderedProduct>? orderedProduct;
 
-  OrderItem(
-      {this.orderedProduct,
+  Items(
+      {this.sId,
       this.totalquantity,
       this.totalprice,
       this.status,
-      this.sId,
-      this.createdat
-      });
+      this.createdat,
+      this.orderedProduct});
 
-  //  OrderItem.partial({
-  //   this.orderedProduct,
-  //   this.totalquantity,
-  //   this.totalprice,
-  // });
-  
-
-  OrderItem.fromJson(Map<String, dynamic> json) {
+  Items.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    totalquantity = json['totalquantity'];
+    totalprice = json['totalprice'];
+    status = json['status'];
+    createdat = json['createdat'];
     if (json['orderedProduct'] != null) {
       orderedProduct = <OrderedProduct>[];
       json['orderedProduct'].forEach((v) {
         orderedProduct!.add(new OrderedProduct.fromJson(v));
       });
     }
-    totalquantity = json['totalquantity'];
-    totalprice = json['totalprice'];
-    status = json['status'];
-    sId = json['_id'];
-    // createdat = json['createdat'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    // data['_id'] = this.sId;
+    data['totalquantity'] = this.totalquantity;
+    data['totalprice'] = this.totalprice;
+    // data['status'] = this.status;
+    // data['createdat'] = this.createdat;
     if (this.orderedProduct != null) {
       data['orderedProduct'] =
           this.orderedProduct!.map((v) => v.toJson()).toList();
     }
-    data['totalquantity'] = this.totalquantity;
-    data['totalprice'] = this.totalprice;
-    this.status=="" ? data['status'] = this.status:null;
-      this.sId==""? data['_id'] = this.sId:null;
-    this.createdat==""?
-    data['createdat'] = this.createdat:null;
     return data;
   }
 }
 
 class OrderedProduct {
-  String? productid;
-  int? quantity;
   String? sId;
+  int? quantity;
+  productModel? productid;
+  userModel? seller;
+  int? bidprice;
 
-  OrderedProduct({this.productid, this.quantity, this.sId});
-  // OrderedProduct({this.productid, this.quantity, this.sId});
-
+  OrderedProduct(
+      {this.sId, this.quantity, this.productid, this.seller, this.bidprice});
 
   OrderedProduct.fromJson(Map<String, dynamic> json) {
-    productid = json['productid'];
+    sId = json['_id'];
     quantity = json['quantity'];
-    // sId = json['_id'];
+    bidprice = json['bidprice'];
+
+    productid = json['productid'] != null
+        ? new productModel.fromJson(json['productid'])
+        : null;
+    json['seller'] is String? null:
+    seller = userModel.fromJson(json['seller']);
+    //  seller = json['seller'] != null
+    // ? new userModel.fromJson(json['seller'])
+    // : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['productid'] = this.productid;
+    // data['_id'] = this.sId;
     data['quantity'] = this.quantity;
-    this.sId==""? data['_id'] = this.sId:null;
+    data['bidprice'] = this.bidprice;
+    if (this.productid != null) {
+      data['productid'] = this.productid!.toJson();
+    }
+    if (this.seller != null) {
+      data['seller'] = this.seller!.toJson();
+    }
     return data;
   }
-
 }
+
+// class Productid {
+//   String? sId;
+//   String? user;
+//   String? name;
+//   int? price;
+//   int? saleonprice;
+//   bool? wishlist;
+//   List<String>? images;
+//   String? category;
+//   int? qty;
+//   int? soldqty;
+//   String? createdat;
+//   Productid(
+//       {this.sId,
+//       this.user,
+//       this.name,
+//       this.price,
+//       this.saleonprice,
+//       this.wishlist,
+//       this.images,
+//       this.category,
+//       this.qty,
+//       this.soldqty,
+//       this.createdat});
+//   Productid.fromJson(Map<String, dynamic> json) {
+//     sId = json['_id'];
+//     user = json['user'];
+//     name = json['name'];
+//     price = json['price'];
+//     saleonprice = json['saleonprice'];
+//     wishlist = json['wishlist'];
+//     images = json['images'].cast<String>();
+//     category = json['category'];
+//     qty = json['qty'];
+//     soldqty = json['soldqty'];
+//     createdat = json['createdat'];
+//   }
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = new Map<String, dynamic>();
+//     data['_id'] = this.sId;
+//     data['user'] = this.user;
+//     data['name'] = this.name;
+//     data['price'] = this.price;
+//     data['saleonprice'] = this.saleonprice;
+//     data['wishlist'] = this.wishlist;
+//     data['images'] = this.images;
+//     data['category'] = this.category;
+//     data['qty'] = this.qty;
+//     data['soldqty'] = this.soldqty;
+//     data['createdat'] = this.createdat;
+//     return data;
+//   }
+// }

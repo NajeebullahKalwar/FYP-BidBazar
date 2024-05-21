@@ -9,6 +9,9 @@ class productModel {
   List<String>? images;
   String? category;
   int? qty;
+  int? soldqty;
+  int? saleonprice;
+  String? createdat;
 
   productModel(
       {this.sId,
@@ -20,7 +23,9 @@ class productModel {
       this.images,
       this.category,
       this.qty,
-      
+      this.saleonprice,
+      this.soldqty,
+        this.createdat
       });
 
   productModel.fromJson(Map<String, dynamic> json) {
@@ -33,6 +38,9 @@ class productModel {
     images = json['images'].cast<String>();
     category = json['category'];
     qty = json['qty'];
+    soldqty = json['soldqty'];
+    saleonprice = json['saleonprice'];
+    createdat = json['createdat'] ?? "";
 
   }
 
@@ -47,7 +55,9 @@ class productModel {
     data['images'] = this.images;
     data['category'] = this.category;
     data['qty'] = this.qty;
-
+    data['soldqty'] = this.soldqty;
+    data['saleonprice'] = this.saleonprice;
     return data;
   }
+  
 }

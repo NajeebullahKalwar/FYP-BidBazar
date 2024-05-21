@@ -39,7 +39,6 @@ class Home extends StatelessWidget {
     "House": false,
     "Bike": false,
     "Car": false,
-     
   }.obs;
 
   product_controller controller = Get.put(product_controller());
@@ -97,7 +96,7 @@ class Home extends StatelessWidget {
       categoryCheck["Bike"],
       getCategoryProducts("66240a16d4e14c0c3ac5cdc4"),
     );
-     filterProducts.addAllIf(
+    filterProducts.addAllIf(
       categoryCheck["Car"],
       getCategoryProducts("66240a0ad4e14c0c3ac5cdc3"),
     );
@@ -139,28 +138,28 @@ class Home extends StatelessWidget {
     // final size = MediaQuery.of(context).size;
 
     return NestedScrollView(
-      
       headerSliverBuilder: (context, innerBoxIsScrolled) => [
         SliverAppBar(
-
           // forceElevated: true,
           // excludeHeaderSemantics: true,
           // iconTheme: IconThemeData(color: Colors.white),
           // snap: true,
           // forceMaterialTransparency: false,
         
-          iconTheme: IconThemeData(color:innerBoxIsScrolled?const Color.fromARGB(255, 0, 0, 0) :const Color.fromARGB(255, 255, 255, 255)),
+          iconTheme: IconThemeData(
+              color: innerBoxIsScrolled
+                  ? const Color.fromARGB(255, 0, 0, 0)
+                  : const Color.fromARGB(255, 255, 255, 255)),
           flexibleSpace: FlexibleSpaceBar(
-            centerTitle:true ,
-            
+            centerTitle: true,
+
             // title: Text('Hi Laksh ajeet',style: TextStyle(color: Colors.white)),
             stretchModes: const [
               StretchMode.fadeTitle,
               // StretchMode.blurBackground,
               // StretchMode.zoomBackground
-
             ],
-            background:Stack(
+            background: Stack(
               children: [
                 Container(
                   // height: 150,
@@ -174,9 +173,7 @@ class Home extends StatelessWidget {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          
-                        ],
+                        children: [],
                       ),
                     ],
                   ),
@@ -185,21 +182,20 @@ class Home extends StatelessWidget {
                   height: 200,
                   bottom: 0,
                   // right: 0,
-                  width: Get.width*1,
+                  width: Get.width * 1,
                   child: Image.asset(
                     'assets/sale.jpg',
-                    fit:BoxFit.fitWidth ,
+                    fit: BoxFit.fitWidth,
                     // height: 400,
                   ),
                 ),
               ],
             ),
-            
           ),
           elevation: 0.0,
           backgroundColor: Colors.white,
           automaticallyImplyLeading: true,
-          foregroundColor:innerBoxIsScrolled? Colors.black:Colors.white,
+          foregroundColor: innerBoxIsScrolled ? Colors.black : Colors.white,
           centerTitle: true,
           title: SearchAnchor(
             // viewHintText: ,
@@ -208,7 +204,6 @@ class Home extends StatelessWidget {
                 1,
                 (index) => TextButton(
                     onPressed: () {
-                      
                       if (!search.text.isEmpty) {
                         var list =
                             getSearchProducts(); //get strams of search products
@@ -218,7 +213,7 @@ class Home extends StatelessWidget {
 
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
+                            CupertinoPageRoute(
                               builder: (context) => CustomSearch(
                                 isScrolledColor: innerBoxIsScrolled,
                                 onlySearch: false,
@@ -245,7 +240,7 @@ class Home extends StatelessWidget {
               return SizedBox(
                 height: Get.height * 0.1 / 2.5,
                 child: CustomSearch(
-                  isScrolledColor:innerBoxIsScrolled ,
+                  isScrolledColor: innerBoxIsScrolled,
                   onlySearch: true,
                   OnTap: () {
                     search.openView();
@@ -292,7 +287,12 @@ class Home extends StatelessWidget {
                         onTap: () {
                           Get.toNamed(
                             "productDetailScreen",
-                            arguments: [product, controller.usertypes,null,true],
+                            arguments: [
+                              product,
+                              controller.usertypes,
+                              null,
+                              true
+                            ],
                           );
                         },
                       ),
@@ -310,36 +310,30 @@ class Home extends StatelessWidget {
           expandedHeight: 200,
           pinned: true,
         ),
-
-       SliverToBoxAdapter(
-            child: Container(
-          color: Colors.orange[800],
-              width: 100,
-              height: 20,
-              child: const Center(
-                child: Text('Welcom to over bidbazar App' ,style: TextStyle(color: Colors.white)),
-              ),
+        SliverToBoxAdapter(
+          child: Container(
+            color: Colors.orange[800],
+            width: 100,
+            height: 20,
+            child: const Center(
+              child: Text('Welcom to over bidbazar App',
+                  style: TextStyle(color: Colors.white)),
             ),
-
-          ), 
-
-
+          ),
+        ),
       ],
-      
+
       // floatHeaderSlivers: true,
       body: Container(
-                      
-
         decoration: BoxDecoration(
-            color: Colors.grey[100],
-            // borderRadius: BorderRadius.vertical(top: Radius.circular(30.0))
-            ),
+          color: Colors.grey[100],
+          // borderRadius: BorderRadius.vertical(top: Radius.circular(30.0))
+        ),
         // width: size.width * 1,
         // height: size.height * 1,
         padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
         child: Column(
           children: [
-             
             // Padding(
             //   padding: EdgeInsets.symmetric(horizontal: 15),
             //   child:,
@@ -364,13 +358,12 @@ class Home extends StatelessWidget {
               flex: 1,
               child: Row(
                 children: [
-
                   Expanded(
                     flex: 3,
                     child: Container(
                       child: InkWell(
                         child: ListTile(
-                          dense: true,
+                            dense: true,
                             leading: Icon(
                               Icons.filter_list,
                               color: Colors.amber[900],
@@ -408,8 +401,8 @@ class Home extends StatelessWidget {
                                   // ),,
                                   const Divider(),
                                   const Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 15),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 15),
                                     child: Text(
                                       "Price",
                                       style: TextStyle(fontSize: 15),
@@ -538,13 +531,12 @@ class Home extends StatelessWidget {
                                               },
                                             ),
                                           ),
-                                           Padding(
+                                          Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: ChoiceChip(
                                               // showCheckmark: true,
                                               label: const Text("House"),
-                                              selected:
-                                                  categoryCheck["House"]!,
+                                              selected: categoryCheck["House"]!,
                                               onSelected: (value) {
                                                 categoryCheck["House"] =
                                                     categoryCheck["House"] ==
@@ -554,13 +546,12 @@ class Home extends StatelessWidget {
                                               },
                                             ),
                                           ),
-                                           Padding(
+                                          Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: ChoiceChip(
                                               // showCheckmark: true,
                                               label: const Text("Bike"),
-                                              selected:
-                                                  categoryCheck["Bike"]!,
+                                              selected: categoryCheck["Bike"]!,
                                               onSelected: (value) {
                                                 categoryCheck["Bike"] =
                                                     categoryCheck["Bike"] ==
@@ -575,12 +566,10 @@ class Home extends StatelessWidget {
                                             child: ChoiceChip(
                                               // showCheckmark: true,
                                               label: const Text("Car"),
-                                              selected:
-                                                  categoryCheck["Car"]!,
+                                              selected: categoryCheck["Car"]!,
                                               onSelected: (value) {
                                                 categoryCheck["Car"] =
-                                                    categoryCheck["Car"] ==
-                                                            true
+                                                    categoryCheck["Car"] == true
                                                         ? false
                                                         : true;
                                               },
@@ -656,7 +645,7 @@ class Home extends StatelessWidget {
                     AuthenticateController.userdata.first.usertype == "Seller"
                         ? productView(
                             productList: controller.productList,
-                            isProductDelete: true,//show delete option
+                            isProductDelete: true, //show delete option
                           )
                         : productView(
                             cart: cart,

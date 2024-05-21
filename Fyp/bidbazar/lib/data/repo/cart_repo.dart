@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:bidbazar/core/api.dart';
 import 'package:bidbazar/data/models/cart_model.dart';
+import 'package:bidbazar/data/models/product_model.dart';
 import 'package:dio/dio.dart';
 
 class cartRepo {
@@ -11,14 +12,19 @@ class cartRepo {
   // UserRepository user= UserRepository();
 
   Future<List<cartModel>> addToCart(cartModel cart, String userId) async {
-    Map<String, dynamic> data = cart.toJson();
-    data["user"] = userId;
-    // print("newCart");
-    // print(data);
+    // Map<String, dynamic> data = cart.toJson();
+    // data["user"] = userId;
+    print("newCart 5");
+    print(cart);
     try {
       Response response = await api.sendRequest.post(
         "/cart",
-        data: jsonEncode(data),
+        data:{
+          "user":userId,
+          "product":cart.product ,
+          "quantity": cart.quantity,
+        } 
+        // jsonEncode(data),
       );
       ApiResponse apiResponse = ApiResponse.fromResponse(response);
 

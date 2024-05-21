@@ -1,5 +1,6 @@
 const mongoose  = require("mongoose");
 const { type } = require("os");
+const customDate = require("../controllers/date_controller");
 
 
 const item = mongoose.Schema({
@@ -8,9 +9,18 @@ const item = mongoose.Schema({
         ref:'Product',
         
     },
+     seller:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User',
+        required:true
+    },
     quantity:{
         type:Number,
         default:1
+    },
+    bidprice:{
+        type:Number,
+        default:0
     }
 });
 
@@ -20,6 +30,7 @@ const itemSchema = new mongoose.Schema({//same as order but different logic
       type:[item],
       default:[]
     },
+  
     totalquantity:{
         type:Number,
         default:1
@@ -29,8 +40,8 @@ const itemSchema = new mongoose.Schema({//same as order but different logic
         default:0.0 ,
     },
     createdat: {
-        type: Date,
-        default: Date.now // Set default value to current date and time
+        type: String,
+        default: customDate.getStringFormattedDate()  // Set default value to current date and time
     },
     status:{
         type:String,
@@ -48,6 +59,7 @@ const orderSchema =  mongoose.Schema({//nested object
         ref:"User",
         required:true
     },
+   
     // seller:{
     //     type:mongoose.Schema.ObjectId,
     //     ref:"User",

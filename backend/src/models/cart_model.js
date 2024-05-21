@@ -1,10 +1,13 @@
 const mongoose  = require("mongoose");
+const productModel = require("./product_model");
 
 
 const cartItemSchema = new mongoose.Schema({
     product:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'Product',
+        type:mongoose.Schema.Types.Mixed,
+        // ref:'Product',
+        required:true,
+        // default:productModel
     },
     quantity:{
         type:Number,

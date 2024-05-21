@@ -60,8 +60,9 @@ class WishListController extends GetxController with StateMixin {
 
 
       wishlist.assignAll(wishList);
+      
        if(wishlist.isEmpty){
-      change(wishList, status: RxStatus.empty() ,);
+      change(wishlist, status: RxStatus.empty() ,);
       }else {
       
       change(wishlist, status: RxStatus.success());

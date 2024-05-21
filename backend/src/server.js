@@ -60,7 +60,7 @@ app.use("/api/category",catRouter);
 app.use("/api/product",productRoute);
 app.use("/api/cart",cartRoutes);
 app.use("/api/bid",bidRoutes);
-app.use("/api/images", express.static('upload/images'), imageRoute );
+app.use("/api/images", express.static('upload/images'),express.static('upload/profile'),express.static('upload/cnic'), imageRoute );
 app.use("/api/wishList",wishListRoutes);
 app.use("/api/email",emailRoutes);
 app.use("/api/order",orderRoutes);

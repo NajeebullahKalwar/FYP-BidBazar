@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:bidbazar/controllers/auth_controllers.dart';
 import 'package:bidbazar/controllers/cart_controller.dart';
 import 'package:bidbazar/controllers/product_controller.dart';
@@ -27,50 +29,95 @@ class productView extends GetView<product_controller> {
 
     return controller.obx(
       (state) => RefreshIndicator(
-        onRefresh: () async{
+        onRefresh: () async {
           controller.update();
         },
         child: GridView.builder(
           itemCount: productList.length,
           // padding: EdgeInsets.fromLTRB(10.0, 0, 0, 0),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            childAspectRatio: size.width / size.height / .65,
+            childAspectRatio: size.width / size.height / .61,
             crossAxisCount: 2,
             crossAxisSpacing: 0,
             mainAxisSpacing: 0,
           ),
           itemBuilder: (context, index) {
             productModel product = productList[index];
-      
+
             return CupertinoButton(
               onPressed: () {
                 // print("working");
                 // print(productList);
-                Get.toNamed(
-                  "productDetailScreen",
-                  arguments: [
-                    productList[index],
-                    AuthenticateController.userdata.first.usertype,
-                    // controller,
-                    null,
-                    true,
-                    // index
-                  ],
-                );
+                product.soldqty == product.qty
+                    ? null
+                    : Get.toNamed(
+                        "productDetailScreen",
+                        arguments: [
+                          productList[index],
+                          AuthenticateController.userdata.first.usertype,
+                          // controller,
+                          null,
+                          true,
+                          // index
+                        ],
+                      );
               },
-              child: gridItem(
-                cart: cart,
-                isProductDelete: isProductDelete,
-                product: product,
-                index: index,
-                userType: AuthenticateController.userdata.first.usertype,
-              ),
+              child:
+               
+               product.qty == product.soldqty
+                  ? Stack(
+                      children: [
+                       
+                        CupertinoButton(
+                          onPressed: () {
+                            Get.snackbar("Product", "product is sold");
+                          },
+                          child: gridItem(
+                            cart: cart,
+                            isProductDelete: isProductDelete,
+                            product: product,
+                            index: index,
+                            userType:
+                                AuthenticateController.userdata.first.usertype,
+                          ),
+                        ),
+                        ClipRRect(
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
+                            child: const SizedBox(
+                              height: 220,
+                              width: 150,
+                            ),
+                          ),
+                        ),
+                        const Card(
+                            margin: EdgeInsets.all(5),
+                            child: Padding(
+                                padding: EdgeInsets.all(5),
+                                child: Text(
+                                  "Sold out",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600),
+                                ))),
+                       
+                      ],
+                    )
+                  : gridItem(
+                      cart: cart,
+                      isProductDelete: isProductDelete,
+                      product: product,
+                      index: index,
+                      userType: AuthenticateController.userdata.first.usertype,
+                    ),
             );
           },
         ),
       ),
       // onLoading: ,
-      onEmpty: Text("There is no product to display"),
+      onEmpty: const Text(
+        "There is no product to display",
+      ),
       onError: (error) => Center(child: Text("${error}")),
     );
   }

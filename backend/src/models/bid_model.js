@@ -1,5 +1,5 @@
 const mongoose  = require("mongoose");
-
+const customDate = require("../controllers/date_controller");
 
 const bidProductSchema = new mongoose.Schema({//same as order but different logic
     product:{
@@ -17,7 +17,11 @@ const bidProductSchema = new mongoose.Schema({//same as order but different logi
     bidprice:{
         type:Number,
         default:0 ,
-    }
+    },
+    createdat: {
+        type: String,
+        default: customDate.getStringFormattedDate() // Set default value to current date and time
+    },
 });
 
 

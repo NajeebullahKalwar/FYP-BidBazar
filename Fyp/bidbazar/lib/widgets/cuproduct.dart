@@ -53,7 +53,7 @@ class cuProduct extends StatelessWidget { // create and update product screen
                 child: Center(
                   child: TextButton.icon(
                     onPressed: () {
-                      imgcontroller.getImage();
+                      imgcontroller.pickImages();//pick images
                     },
                     icon: const Icon(
                       Icons.upload_file,
@@ -146,7 +146,7 @@ class cuProduct extends StatelessWidget { // create and update product screen
                     padding: EdgeInsets.symmetric(
                         horizontal: 10, vertical: 10),
                     child: Text(
-                      "Specification",
+                      "Description",
                       style: TextStyle(
                         fontSize: 20,
                         wordSpacing: 2,
@@ -243,6 +243,25 @@ class cuProduct extends StatelessWidget { // create and update product screen
                             },
                           ),
                      ),
+             ),
+             Card(
+              elevation: 5,
+              margin: const EdgeInsets.all(10),
+               child: customTextFormField(
+                    controller: productController.saleOnPriceController,
+                    labelText: 'Product Auto Sold price',
+                    prefixIconData: Icons.price_check,
+                    // hintText: 'Email Address',
+                    keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.next,
+                    autofocus: false,
+                    validator: (value) {
+                      return value!.isEmpty
+                          ? "Item Sold price can not be empty"
+                          : int.parse(productController.saleOnPriceController.text) < int.parse(productController.priceController.text)?null:"sold price is not greater then actual price ";
+                      // return controller.validateEmail(value!);
+                    },
+                  ),
              ),
           ],
         ),

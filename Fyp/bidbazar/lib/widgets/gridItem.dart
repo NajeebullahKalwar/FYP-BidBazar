@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:bidbazar/controllers/auth_controllers.dart';
 import 'package:bidbazar/controllers/cart_controller.dart';
 import 'package:bidbazar/controllers/product_controller.dart';
@@ -30,10 +32,17 @@ class gridItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.all(3),
+       decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey,
+                    
+                  )
+              ),
       child: Column(
         children: [
           Expanded(
-            flex: 2,
+            flex: 5,
             child: Container(
               decoration: const BoxDecoration(
                 // color: Colors.grey[200],
@@ -47,7 +56,6 @@ class gridItem extends StatelessWidget {
                       top: Radius.circular(5), bottom: Radius.circular(5)),
                   child: CachedNetworkImage(
                     fit: BoxFit.cover,
-                    // width: size.width * .9,
                     imageUrl:
                         "${Api.BASE_URL}/images/${product.images!.elementAt(0).toString()}",
                   ),
@@ -63,29 +71,30 @@ class gridItem extends StatelessWidget {
           // ),
           // ListTile(
           //   // leading: ,
-
+          
           //   // title: Text("Samung s21 ultra"),
           //   trailing: Icon(Icons.shopping_cart),
           // ),
           // Card(),
           // Padding(padding: padding),
-
+          
           Expanded(
+            flex: 2,
             child: Container(
-              width: Get.width * 1,
+              // width: Get.width * 1,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.fromLTRB(0, 6, 0, 5),
+                    padding: EdgeInsets.fromLTRB(0, 6, 0, 3),
                     child: Text(
                       maxLines: 1,
                       product.name!,
                       // controller.productList[index].name.toString(),
                       style: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         color: Colors.black87,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
                   ),
@@ -94,13 +103,13 @@ class gridItem extends StatelessWidget {
                       Expanded(
                         child: Text(
                           "Rs " + product.price.toString(),
-
+          
                           // controller.productList[index].price.toString(),
                           style: const TextStyle(
-                            letterSpacing: 1,
+                            // letterSpacing: 1,
                             color: Colors.black54,
                             fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w700,
                             // color: Colors.orange[900],
                           ),
                           maxLines: 1,

@@ -8,6 +8,7 @@ import 'package:bidbazar/controllers/cart_controller.dart';
 // import 'package:bidbazar/controllers/product_controller.dart';
 import 'package:bidbazar/controllers/wishList_controller.dart';
 import 'package:bidbazar/core/api.dart';
+import 'package:bidbazar/data/models/bid_model.dart';
 import 'package:bidbazar/data/models/product_model.dart';
 import 'package:bidbazar/widgets/customTextFormField.dart';
 import 'package:bidbazar/widgets/updateproduct.dart';
@@ -26,7 +27,7 @@ class ProductDetailScreen extends StatelessWidget {
 
   static const routeName = "/productDetailScreen";
 
-  BidController bidController=BidController();
+  BidController bidController = BidController();
   final bidFormKey = GlobalKey<FormState>();
   RxList<DropdownMenuItem> bidMenu = (List<DropdownMenuItem>.of([])).obs;
   RxInt bidPrice = 0.obs;
@@ -35,35 +36,56 @@ class ProductDetailScreen extends StatelessWidget {
   productModel product = Get.arguments[0];
   String? type;
   String userType = Get.arguments[1];
-  bool showpersistentFooterButtons=Get.arguments[3]??false;
+  bool showpersistentFooterButtons = Get.arguments[3] ?? false;
   // WishListController wishlistController;
- 
+  bool isProductExpire=false;
   // product_controller productController =
   // Get.arguments[2] ?? product_controller();
   // int? index = Get.arguments[3];
 
   @override
   Widget build(BuildContext context) {
-      // bidController.text= product.price.toString();
-      
-     
-     if(bidMenu.isEmpty){ 
-      bidPrice.value=product.price!;
-      bidMenu.addAll(
-      [
-        DropdownMenuItem(child: const Text("0% Down"), 
-        value: product.price!),
-        DropdownMenuItem(child: const Text("5% Down"), 
-        value: (product.price!-product.price!*0.05).round()),
-        DropdownMenuItem(child: const Text("10% Down"), 
-        value: (product.price!-product.price!*0.1).round() ),
-        DropdownMenuItem(child: const Text("15% Down"), 
-        value: (product.price!-product.price!*0.15).round() ),
-        DropdownMenuItem(child: const Text("20% Down"),
-         value: (product.price!-product.price!*0.2).round() )
-    ]);}
+    // var currentDate=(DateTime.now()).toString().split("-").getRange(0, 3).toList();
+    int currentYear = DateTime.now().year;
+    int currentMonth = DateTime.now().month;
+    int currentDay = DateTime.now().day;
     
-    final size=MediaQuery.of(context).size;
+    var date = product.createdat!.split("/").getRange(0, 3).toList();//[0] is day [1] is month [2] is year
+    int productExpireDay =int.parse(date[0]);
+    int productExpireMonth =int.parse(date[1]);
+    int productExpireYear =int.parse(date[2]);
+
+    currentYear>=productExpireYear && 
+    currentMonth >= productExpireMonth  && 
+    currentDay  >= productExpireDay+3  ?isProductExpire=true :null;
+    print("current date "+(DateTime.now()).toString());
+    print(isProductExpire);
+    // if(productExpireYear==currentYear && currentMonth ==
+    //  productExpireMonth && productExpireDay+3 == currentDay ){
+
+    // }
+    // bidController.text= product.price.toString();
+
+    if (bidMenu.isEmpty) {
+      bidPrice.value = product.price!;
+      bidMenu.addAll([
+        DropdownMenuItem(child: const Text("0% Down"), value: product.price!),
+        DropdownMenuItem(
+            child: const Text("5% Down"),
+            value: (product.price! - product.price! * 0.05).round()),
+        DropdownMenuItem(
+            child: const Text("10% Down"),
+            value: (product.price! - product.price! * 0.1).round()),
+        DropdownMenuItem(
+            child: const Text("15% Down"),
+            value: (product.price! - product.price! * 0.15).round()),
+        DropdownMenuItem(
+            child: const Text("20% Down"),
+            value: (product.price! - product.price! * 0.2).round())
+      ]);
+    }
+
+    final size = MediaQuery.of(context).size;
     // print("data");
     // productController.isWishListed.value = product.wishlist!;
     return WillPopScope(
@@ -78,51 +100,67 @@ class ProductDetailScreen extends StatelessWidget {
           iconTheme: const IconThemeData(color: Colors.black87),
           centerTitle: true,
           elevation: 0,
-          actions: [userType == "Buyer"
-                      ?
-            SizedBox(
-              width: 40,
-              height: 40,
-              child: SpeedDial(
-                
-                elevation: 0,
-                backgroundColor: Colors.white,
-                direction: SpeedDialDirection.down,
-                        //  animatedIcon: AnimatedIcons.view_list,
-                            overlayColor: Colors.black,
-                         overlayOpacity: 0.5,
-                             children: [
-                          SpeedDialChild(
-                            child: const Icon(Icons.call ,), label: 'Phone' ,onTap: () async{
+          actions: [
+            userType == "Buyer"
+                ? SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: SpeedDial(
+                      elevation: 0,
+                      backgroundColor: Colors.white,
+                      direction: SpeedDialDirection.down,
+                      //  animatedIcon: AnimatedIcons.view_list,
+                      overlayColor: Colors.black,
+                      overlayOpacity: 0.5,
+                      children: [
+                        SpeedDialChild(
+                          child: const Icon(
+                            Icons.call,
+                          ),
+                          label: 'Phone',
+                          onTap: () async {
                             AuthenticateController controller =
                                 AuthenticateController();
                             var user = await controller
                                 .findUserById("655a7e77876d92cd633d5968");
-                            final Uri phone = Uri.parse('tel:+92${user.mobile}');
-                                if(await canLaunchUrl(phone)){
-                           await launchUrl(phone);
-                            
-                          }  
-                           else {
-                            Get.snackbar("Could not launch ", user.mobile.toString());
-                            // throw 'Could not launch $whatsapp';
-                          }
-                          },),
-                        SpeedDialChild(child: const Icon(Icons.call), label: 'Whatsapp', onTap: ()async {
-                           AuthenticateController controller =   AuthenticateController();
+                            final Uri phone =
+                                Uri.parse('tel:+92${user.mobile}');
+                            if (await canLaunchUrl(phone)) {
+                              await launchUrl(phone);
+                            } else {
+                              Get.snackbar(
+                                  "Could not launch ", user.mobile.toString());
+                              // throw 'Could not launch $whatsapp';
+                            }
+                          },
+                        ),
+                        SpeedDialChild(
+                          child: const Icon(Icons.call),
+                          label: 'Whatsapp',
+                          onTap: () async {
+                            AuthenticateController controller =
+                                AuthenticateController();
                             var user = await controller
                                 .findUserById("655a7e77876d92cd633d5968");
                             final Uri whatsapp =
                                 Uri.parse('http://wa.me/${user.mobile}');
-                           await launchUrl(whatsapp);
-                            
+                            await launchUrl(whatsapp);
+
                             // throw 'Could not launch $whatsapp';
-                        },),
-                                    ],
-                           child: const Icon(Icons.more_vert_outlined,size: 30, color: Colors.black,),
+                          },
                         ),
-            ):const SizedBox.shrink(),
-            const SizedBox(width: 10,)
+                      ],
+                      child: const Icon(
+                        Icons.more_vert_outlined,
+                        size: 30,
+                        color: Colors.black,
+                      ),
+                    ),
+                  )
+                : const SizedBox.shrink(),
+            const SizedBox(
+              width: 10,
+            )
           ],
         ),
         body: Container(
@@ -150,6 +188,7 @@ class ProductDetailScreen extends StatelessWidget {
 
                         // enlargeCenterPage: true,
                         // enlargeFactor: 1,
+                        viewportFraction: 1,
                         autoPlay: true,
                       ),
                     ),
@@ -160,8 +199,9 @@ class ProductDetailScreen extends StatelessWidget {
                 height: 5,
                 thickness: 10,
               ),
+
               Card(
-                elevation: 5,
+                elevation: 2,
                 margin: const EdgeInsets.all(10),
                 child: ListTile(
                   titleTextStyle: const TextStyle(
@@ -171,6 +211,7 @@ class ProductDetailScreen extends StatelessWidget {
                     child: Text(
                       product.name!.toUpperCase(),
                     ),
+
                   ),
                   subtitle: Row(
                     children: [
@@ -184,84 +225,140 @@ class ProductDetailScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                //   trailing: userType == "Buyer"
-                //       ? InkWell(
-                //           onTap: () async {
-                //             AuthenticateController controller =
-                //                 AuthenticateController();
-                //             var user = await controller
-                //                 .findUserById("655a7e77876d92cd633d5968");
-                //             final Uri whatsapp =
-                //                 Uri.parse('http://wa.me/${user.mobile}');
-                //             final Uri phone = Uri.parse('tel:+92${user.mobile}');
-                //            showModalBottomSheet(
-                //             context: context,
-                //             builder: (context) {
-                //             return Row(
-                //               mainAxisAlignment: MainAxisAlignment.center,
-                //               children: [
-                //                 Text("Phone "),
-                //               IconButton(onPressed: ()async {
-                //                if(await canLaunchUrl(phone)){
-                //            await launchUrl(phone);                       
-                //           }  
-                //            else {
-                //             Get.snackbar("Could not launch ", user.mobile.toString());
-                //             // throw 'Could not launch $whatsapp';
-                //           }
-                //               }, icon: Icon(Icons.call),                             
-                //                     ),        
-                //                      Text("whatsapp "),
-                //               IconButton(onPressed: ()async {                               
-                //                 // if (await  canLaunchUrl(whatsapp)) {      
-                //             await launchUrl(whatsapp);
-                //             // launchUrlString(whatsapp.toString());
-                //           // } 
-                //           //  else {
-                //             // Get.snackbar("Could not launch ", user.mobile.toString());
-                //             // throw 'Could not launch $whatsapp';
-                //           // }                          
-                //               }, icon:Icon(Icons.call) )
-                //             ]);
-                //           },);
-                //           // if (await canLaunchUrl(whatsapp)) {      
-                //           //   await launchUrl(whatsapp);
-                //           // }else if(await canLaunchUrl(phone)){
-                //           //  await launchUrl(phone);
-                //           // }  
-                //           //  else {
-                //           //   Get.snackbar("Could not launch ", user.mobile.toString());
-                //           //     // throw 'Could not launch $whatsapp';
-                //           // }
-                //             print(user.mobile);
-                //             print(product.user);
-                //           },
-                //           child: Icon(
-                //             Icons.call_outlined,
-                //             size: 30,
-                //             // color: Colors.amber[900],
-                //             fill: 1,
-                //           ),
-                //         )
-                //       :
-                //       SizedBox.shrink(),
-                //   // trailing: Obx(
-                //   //   () => productController.isWishListed.value == false
-                //   //       ? Icon(
-                //   //           Icons.favorite_outline_rounded,
-                //   //           size: 30,
-                //   //         )
-                //   //       : Icon(
-                //   //           Icons.favorite_outlined,
-                //   //           size: 30,
-                //   //           color: Colors.amber[900],
-                //   //           fill: 1,
-                //   //         ),
-                //   // ),
+                  trailing:  Column(children: [
+
+                    const SizedBox(height: 10,),
+                    const Icon(Icons.timer_sharp),
+                     Text("${isProductExpire? 0 : productExpireDay+3-currentDay}d")
+                  ]),
+                  //   trailing: userType == "Buyer"
+                  //       ? InkWell(
+                  //           onTap: () async {
+                  //             AuthenticateController controller =
+                  //                 AuthenticateController();
+                  //             var user = await controller
+                  //                 .findUserById("655a7e77876d92cd633d5968");
+                  //             final Uri whatsapp =
+                  //                 Uri.parse('http://wa.me/${user.mobile}');
+                  //             final Uri phone = Uri.parse('tel:+92${user.mobile}');
+                  //            showModalBottomSheet(
+                  //             context: context,
+                  //             builder: (context) {
+                  //             return Row(
+                  //               mainAxisAlignment: MainAxisAlignment.center,
+                  //               children: [
+                  //                 Text("Phone "),
+                  //               IconButton(onPressed: ()async {
+                  //                if(await canLaunchUrl(phone)){
+                  //            await launchUrl(phone);
+                  //           }
+                  //            else {
+                  //             Get.snackbar("Could not launch ", user.mobile.toString());
+                  //             // throw 'Could not launch $whatsapp';
+                  //           }
+                  //               }, icon: Icon(Icons.call),
+                  //                     ),
+                  //                      Text("whatsapp "),
+                  //               IconButton(onPressed: ()async {
+                  //                 // if (await  canLaunchUrl(whatsapp)) {
+                  //             await launchUrl(whatsapp);
+                  //             // launchUrlString(whatsapp.toString());
+                  //           // }
+                  //           //  else {
+                  //             // Get.snackbar("Could not launch ", user.mobile.toString());
+                  //             // throw 'Could not launch $whatsapp';
+                  //           // }
+                  //               }, icon:Icon(Icons.call) )
+                  //             ]);
+                  //           },);
+                  //           // if (await canLaunchUrl(whatsapp)) {
+                  //           //   await launchUrl(whatsapp);
+                  //           // }else if(await canLaunchUrl(phone)){
+                  //           //  await launchUrl(phone);
+                  //           // }
+                  //           //  else {
+                  //           //   Get.snackbar("Could not launch ", user.mobile.toString());
+                  //           //     // throw 'Could not launch $whatsapp';
+                  //           // }
+                  //             print(user.mobile);
+                  //             print(product.user);
+                  //           },
+                  //           child: Icon(
+                  //             Icons.call_outlined,
+                  //             size: 30,
+                  //             // color: Colors.amber[900],
+                  //             fill: 1,
+                  //           ),
+                  //         )
+                  //       :
+                  //       SizedBox.shrink(),
+                  //   // trailing: Obx(
+                  //   //   () => productController.isWishListed.value == false
+                  //   //       ? Icon(
+                  //   //           Icons.favorite_outline_rounded,
+                  //   //           size: 30,
+                  //   //         )
+                  //   //       : Icon(
+                  //   //           Icons.favorite_outlined,
+                  //   //           size: 30,
+                  //   //           color: Colors.amber[900],
+                  //   //           fill: 1,
+                  //   //         ),
+                  //   // ),
                 ),
               ),
+              isProductExpire==true?  Card(
+                elevation: 2,
+                margin: const EdgeInsets.all(10),
+                child: ListTile(
+                  titleTextStyle: const TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.w700),
+                  title: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 5),
+                    child: Text(
+                      "Product Expired",
+                    ),
+
+                  ),
+                  subtitle: Text(
+                    "Expired Date ${(productExpireDay+3)}D ${productExpireMonth}M ${productExpireYear}Y",
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  trailing:  TextButton(
+                     style: TextButton.styleFrom(
+                                shape: const ContinuousRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(5)),
+                                    side: BorderSide(
+                                        color: Color.fromARGB(
+                                            255, 158, 158, 158)))),
+                    onPressed: () {
+                    
+                  }, child: const Text("Reniew product", style:TextStyle(color:  Colors.grey) ,) ),
+                ),
+              ):SizedBox.shrink(),
+              userType == "Buyer"
+                  ? SizedBox.shrink()
+                  : Card(
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      elevation: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Product auto sold price Rs-${product.saleonprice}",
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
               Card(
-                elevation: 5,
+                elevation: 1,
                 margin: const EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -270,13 +367,13 @@ class ProductDetailScreen extends StatelessWidget {
                       padding:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       child: Text(
-                        "Specification",
+                        "Description",
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 16,
                           wordSpacing: 2,
                           leadingDistribution:
                               TextLeadingDistribution.proportional,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
                     ),
@@ -290,6 +387,7 @@ class ProductDetailScreen extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 15,
                           wordSpacing: 2,
+                          color: Colors.grey,
                           leadingDistribution:
                               TextLeadingDistribution.proportional,
                           fontWeight: FontWeight.w600,
@@ -302,236 +400,286 @@ class ProductDetailScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              
-              
-
+              // const ListTile(
+              //   title: Text("sellers"),
+              //   // dense: true,
+              //   leading: CircleAvatar(
+              //     backgroundColor: Color.fromARGB(22, 0, 0, 0),
+              //     child: Icon(Icons.person,color: Colors.black54,)),
+              // )
             ],
           ),
         ),
 
-
         // persistentFooterAlignment: AlignmentDirectional.centerStart,
-       
-        persistentFooterButtons:showpersistentFooterButtons==true? [
 
-          
-          const SizedBox(
-            height: 1,
-          ),
-          Row(
-            children: [
-             
-              Expanded(
-                child: Row(
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        minimumSize:
-                            Size(Get.width * 0.4, Get.height * 0.1 / 2),
-                        backgroundColor: Colors.amber[900],
-                      ),
-                      onPressed: () {
-                        
-                        
-                                  // productModel Product=productModel(
-                                  //   category: product.category,
-                                  //   images: product.images,
-                                  //   name: product.name,
-                                  //   price: int.parse(bidController.text),
-                                  //   qty: product.qty??1,
-                                  //   sId: product.sId,
-                                  //   specs: product.specs,
-                                  //   user: product.user,
-                                  //   wishlist: product.wishlist,
-                               
-                                  // );  
-                                  // product ;
-                                  // Product.price=;
-
-                        userType == "Buyer"
-                            ? {
-                                controller.addToCart(product, 1),
-                                controller.carStateSuccess(),
-                                Get.snackbar(
-                                    "Add to cart", "Product added to your cart")
-                              }
-                            : Navigator.push(context,MaterialPageRoute(builder: (context) => UpdateProduct(product:product ,),));
-
-                                
-                      },
-                      child: userType == "Buyer"
-                          ? const Text(
-                              "Add to Cart",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
+        persistentFooterButtons:isProductExpire?[]  :  showpersistentFooterButtons == true
+            ? <Widget>[
+                const SizedBox(
+                  height: 1,
+                ),
+                SizedBox(
+                  height: 35,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Row(
+                          children: [
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                minimumSize:
+                                    Size(Get.width * 0.3, Get.height * 0.1 / 2),
+                                backgroundColor: Colors.amber[900],
                               ),
-                            )
-                          : const Text(
-                              "Edit Product",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                      
-                    ),
-                     SizedBox(
-                      width: Get.width * 0.009,
-                    ),
-                     userType == "Buyer"
-                          ?
-                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        minimumSize:
-                            Size(Get.width * 0.4, Get.height * 0.1 / 2),
-                        backgroundColor: Colors.amber[900],
-                      ),
-                      onPressed: () {
-                 
-                        Get.defaultDialog(
-                          confirm:  ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        minimumSize:
-                            Size(Get.width * 0.4, Get.height * 0.1 / 2),
-                        backgroundColor: Colors.amber[900],
-                      ),
-                      onPressed: () {
-                              if(bidFormKey.currentState!
-                                .validate()){
-                                 bidController.addBid(product.sId!, product.user!, int.parse(bidPriceController.text.toString()) );
-                                //  bidPriceController.clear();
-                                 Get.back();
-                                  // Navigator.pop(context);
-                                }
-                      },
-                      child: const Text(
-                              "Confirm",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            )
-                        
-                    ),
-                          title: 'BID',
-                          // middleText: 'BID',
-                          content:   SingleChildScrollView(
-                            
-                            child: Column(
-                              children: [
-                                 Obx(
-                                   () =>  DropdownButton(
-                                                         enableFeedback: true,
-                                                         value:bidPrice.value,
-                                                         items:bidMenu,
-                                                         onChanged: (value) {
-                                                          bidPrice.value=value;
-                                                          bidPriceController.text=value.toString();
-                                                            // bidController.text=value.toString();
-                                                          //  bidController.text = value.toString();
-                                                           // print(value);
-                                                           // catController.update();
-                                                         },
-                                                           ),
-                                 ),
-                                Center(
-                                      child: Container(
-                                        width: size.width*0.8,
-                                        height: size.height*0.1,
-                                        child: Form(
-                                            key:bidFormKey,
-                                            child: customTextFormField(
-                                            controller: bidPriceController,
-                                            labelText: 'Bid',
-                                            prefixIconData: Icons.price_change,
-                                                    // hintText: 'Email Address',
-                                            keyboardType: TextInputType.number,
-                                            textInputAction: TextInputAction.next,
-                                            autofocus: false,
-                                            validator: (value) {
-                                             if(value!.isEmpty){
-                                            return "Bid can not be Empty";
-                                            }else if((product.price!-product.price!*0.2)>int.parse(bidPriceController.text)){
-                                            return "Bid can not lower then 20%";
-                                            }else if(int.parse(bidPriceController.text)>product.price!){
-                                            return "Bid price can not higher then product price.";
-                                      
-                                            }else{
-                                              return null;
-                                            }
-                                            
-                                            
-                                             // return controller.validateEmail(value!);
-                                             },
-                                             ),
+                              onPressed: () {
+                                // productModel Product=productModel(
+                                //   category: product.category,
+                                //   images: product.images,
+                                //   name: product.name,
+                                //   price: int.parse(bidController.text),
+                                //   qty: product.qty??1,
+                                //   sId: product.sId,
+                                //   specs: product.specs,
+                                //   user: product.user,
+                                //   wishlist: product.wishlist,
+                                // );
+                                // product ;
+                                // Product.price=;
+                
+                                userType == "Buyer"
+                                    ? {
+                                        controller.addToCart(product, 1),
+                                        controller.carStateSuccess(),
+                                        Get.snackbar("Add to cart",
+                                            "Product added to your cart")
+                                      }
+                                    : Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                          builder: (context) => UpdateProduct(
+                                            product: product,
                                           ),
+                                        ));
+                              },
+                              child: userType == "Buyer"
+                                  ? const Icon(Icons.shopping_cart_outlined)
+                                  : const Text(
+                                      "Edit Product",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
                                       ),
                                     ),
-                          
-                                    
-                              ],
                             ),
-                          ),
-                        );
-
-                                
-                      },
-                      child: const Text(
-                              "Bid",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            )
-                          ,
-                      
-                    ):SizedBox.fromSize(size:Size(Get.width*0.4,30)),
-                   
-                    SizedBox(
-                      width: Get.width * 0.001,
-                    ),
-                    Container(
-                      // color: Colors.amber[900],
-                      width: Get.width * 0.2 / 1.5,
-                      child: Center(
-                        child: IconButton(
-                          onPressed: () async {
-                            WishListController wishListController =
-                                Get.put(WishListController());
-
-                            wishListController.Favourite(
-                              // add and delete functionality
-                              product,
-                              product.sId.toString(),
-                            );
-                            // wishListController.wishlist.add(wishListModel(
-                            //   product: product,
-                            //   user: AuthenticateController.userdata.first.sId,
-                            // ));
-                            // wishListController.fetchWishListItems();
-                            // productController.productList[index].wishlist =
-                            //     await productController.wishlistProduct(
-                            //         productId: product.sId!);
-
-                            // productController.isWishListed.value;
-                            // print(productController.isWishListed.value);
+                            SizedBox(
+                              width: Get.width * 0.009,
+                            ),
+                            userType == "Buyer"
+                                ? ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      minimumSize: Size(
+                                          Get.width * 0.49, Get.height * 0.1 / 2),
+                                      backgroundColor: Colors.amber[900],
+                                    ),
+                                    onPressed: () {
+                                      Get.defaultDialog(
+                                        confirm: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              minimumSize: Size(Get.width * 0.4,
+                                                  Get.height * 0.1 / 2),
+                                              backgroundColor: Colors.amber[900],
+                                            ),
+                                            onPressed: () async {
+                                              print("price of bid product ${bidPriceController.text}");
+                                              if (bidFormKey.currentState!
+                                                  .validate()) {
+                
+                                               await bidController.addBid(
+                                                    product.sId!,
+                                                    product.user!,
+                                                    int.parse(bidPriceController
+                                                        .text
+                                                        .toString()));
+                
+                                                
+                                                if(int.parse(bidPriceController.text) >= product.saleonprice!){
+                                                  print("price is less then ${bidPriceController.text} >= ${product.saleonprice}");
+                                             await   bidController.updateBidStatus(buyerId: AuthenticateController.userdata.first.sId!, productId: product.sId!, status: "bid approved and closed");
+                                                productModel newProduct=productModel(price:int.parse(bidPriceController.text),category: product.category, images: product.images, name: product.name ,qty:product.qty, sId: product.sId, saleonprice: product.saleonprice , soldqty: product.soldqty , specs:  product.specs , user: product.user , wishlist:  product.wishlist   );
+                                                // p=product;
+                                                // p.price=;
+                                                
+                                                controller.addToCart(newProduct, 1);
+                                                controller.carStateSuccess();
+                                                
+                                                // bidController.bidItemsList.add(BidModel(buyer:AuthenticateController.userdata.first.id , items: [Items(bidprice: int.parse(bidPriceController.text) , product: product, quantity: 1 , status: "bid approved and closed")]));
+                                              //  await bidController.fetchBidItems();
+                                                // bidController.update();
+                                                
+                                                // bidController.bidItemsList.refresh();
+                                                Get.snackbar("Bid", "Bid Successfully approved");
+                                                
+                                                Navigator.pop(context);
+                
+                                                }
+                
+                                                Navigator.pop(context);
+                
+                                                //  bidPriceController.clear();
+                                                
+                                                // Navigator.pop(context);
+                                              }
+                                            },
+                                            child: const Text(
+                                              "Confirm",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            )),
+                                        title: 'BID',
+                                        // middleText: 'BID',
+                                        content: SingleChildScrollView(
+                                          child: Column(
+                                            children: [
+                                              Obx(
+                                                () => DropdownButton(
+                                                  enableFeedback: true,
+                                                  value: bidPrice.value,
+                                                  items: bidMenu,
+                                                  onChanged: (value) {
+                                                    bidPrice.value = value;
+                                                    bidPriceController.text =
+                                                        value.toString();
+                                                    // bidController.text=value.toString();
+                                                    //  bidController.text = value.toString();
+                                                    // print(value);
+                                                    // catController.update();
+                                                  },
+                                                ),
+                                              ),
+                                              Center(
+                                                child: Container(
+                                                  width: size.width * 0.6,
+                                                  height: size.height * 0.1,
+                                                  child: Form(
+                                                    key: bidFormKey,
+                                                    child: customTextFormField(
+                                                      controller:
+                                                          bidPriceController,
+                                                      labelText: 'Bid',
+                                                      prefixIconData:
+                                                          Icons.price_change,
+                                                      // hintText: 'Email Address',
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                      textInputAction:
+                                                          TextInputAction.next,
+                                                      autofocus: false,
+                                                      validator: (value) {
+                                                        if (value!.isEmpty) {
+                                                          return "Bid can not be Empty";
+                                                        } else if ((product
+                                                                    .price! -
+                                                                product.price! *
+                                                                    0.2) >
+                                                            int.parse(
+                                                                bidPriceController
+                                                                    .text)) {
+                                                          return "Bid can not lower then 20%";
+                                                        } else if (int.parse(
+                                                                bidPriceController
+                                                                    .text) >
+                                                            product.price!) {
+                                                          return "Bid price can not higher then product price.";
+                                                        } else {
+                                                          return null;
+                                                        }
+                
+                                                        // return controller.validateEmail(value!);
+                                                      },
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text(
+                                      "Bid",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox.fromSize(
+                                    size: Size(Get.width * 0.4, 30)),
+                            SizedBox(
+                              width: Get.width * 0.0001,
+                            ),
+                              InkWell(
+                          
+                          onTap: () {
+                             WishListController wishListController =
+                                    Get.put(WishListController());   
+                                wishListController.Favourite(
+                                  // add and delete functionality
+                                  product,
+                                  product.sId.toString(),
+                                );
                           },
-                          icon: const Icon(
-                            Icons.favorite_border_rounded,
-                            // fill: 10,
-                            size: 32,
+                          child: const Padding(
+                            padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                            child: Icon(
+                                    Icons.favorite_border_rounded,
+                                    // fill: 10,
+                                    size: 32,
+                                    color: Color.fromARGB(255, 255, 111, 0),
+                                  ),
                           ),
                         ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+
+                     
+                      //  IconButton(      
+                      //         onPressed: () async {
+                      //           WishListController wishListController =
+                      //               Get.put(WishListController());   
+                      //           wishListController.Favourite(
+                      //             // add and delete functionality
+                      //             product,
+                      //             product.sId.toString(),
+                      //           );
+                       
+                      //           // wishListController.wishlist.add(wishListModel(
+                      //           //   product: product,
+                      //           //   user: AuthenticateController.userdata.first.sId,
+                      //           // ));
+                      //           // wishListController.fetchWishListItems();
+                      //           // productController.productList[index].wishlist =
+                      //           //     await productController.wishlistProduct(
+                      //           //         productId: product.sId!);
+                                          
+                      //           // productController.isWishListed.value;
+                      //           // print(productController.isWishListed.value);
+                      //         },
+                      //         icon:  Icon(
+                      //           Icons.favorite_border_rounded,
+                      //           // fill: 10,
+                      //           size: 32,
+                      //           color: Color.fromARGB(255, 255, 111, 0),
+                      //         ),
+                      //       ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-         
-        ]:null,
+              ]
+            : [const SizedBox.shrink()],
         // // : null,
         // floatingActionButton: FloatingActionButton.small(
         //   backgroundColor: Colors.orange[800],

@@ -19,6 +19,7 @@ class productRepo {
     required List<String> image,
     required String category,
     required int qty,
+    required autoSoldOnPrice
 
   }) async {
     try {
@@ -39,6 +40,7 @@ class productRepo {
         "images": image,
         "category": category,
         "qty": qty,
+        "saleonprice":autoSoldOnPrice
       };
 
       // FormData formData = FormData.fromMap(data, ListFormat.multiCompatible);
@@ -168,6 +170,25 @@ class productRepo {
         "price":price,
         "specs":specs,
         "quantity":quantity,
+      }
+      );
+
+      ApiResponse productResponse = ApiResponse.fromResponse(response);
+
+      if (!productResponse.success) {
+        throw productResponse.message.toString();
+      }
+
+    } catch (ex) {
+      rethrow;
+    }
+  }
+   Future updateSoldQty({required String productId,required int soldqty}) async {
+    try {
+      Response response = await api.sendRequest.post("/product/soldqty",
+      data: {
+        "productId":productId,
+        "soldqty":soldqty,
       }
       );
 

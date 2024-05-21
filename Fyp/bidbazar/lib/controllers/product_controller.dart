@@ -17,6 +17,7 @@ class product_controller extends GetxController with StateMixin {
   final TextEditingController priceController = TextEditingController();
   final TextEditingController specController = TextEditingController();
   final TextEditingController qtyController = TextEditingController();
+  final TextEditingController saleOnPriceController = TextEditingController();
 
 
   ImageController imagecontroller = Get.put(ImageController());
@@ -92,17 +93,17 @@ class product_controller extends GetxController with StateMixin {
     required List<String> images,
     required String category,
     required int qty,
-
+    required int autoSoldOnPrice
   }) async {
     try {
       change(productList, status: RxStatus.loading());
-
       var product = await product_repo.createProduct(
         UserId: AuthenticateController.userdata.first.sId!,
         name: name,
         specs: specs,
         price: price,
         image: images,
+        autoSoldOnPrice:autoSoldOnPrice,
         // image: ["https://i.postimg.cc/G267pKHS/front.png"],
         category: category,
         qty: qty ,

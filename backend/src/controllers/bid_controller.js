@@ -106,6 +106,32 @@ const bidController={
             }
     },
 
+    deletebid:async function(req,res) {
+        try{
+            const {bidId,buyerId} = req.params;
+            console.log(bidId);
+            // const foundbids = await bidModel.findByIdAndDelete({
+            //     "buyer":"655bc3739287689f923902f5",
+            //     "items":bidId
+            // },)
+            const foundbids =  await bidModel.findOneAndUpdate(
+                {buyer:buyerId}, //match condition
+                {$pull:{items:{_id:bidId}} }, //dollar pull is array function ->pull value from array means delete values from array using function pull
+                );
+
+
+            // if(!foundbids){
+            //     return res.json({success:false,data:[],message:"There is no item in your bid to delete" });
+            //     }else
+            return res.json({success:true,message:"bid found and deleted",});
+
+            
+        }catch(ex){
+            return res.json({success:false,message:`"bid not found ${ex}"`});
+
+        }
+},
+
     updateBidStatus:async function(req,res) {
         try{
             

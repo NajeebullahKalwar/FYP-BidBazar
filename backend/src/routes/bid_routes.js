@@ -12,6 +12,7 @@ bidRoutes.get("/fetchAllBidsForBuyer/:buyerId",bidController.fetchbidsForBuyer);
 
 bidRoutes.post("/updateStatus",bidController.updateBidStatus);
 
+bidRoutes.delete("/delete/:bidId/:buyerId",bidController.deletebid);
 
 
 

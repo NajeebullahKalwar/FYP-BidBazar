@@ -11,7 +11,8 @@ class cartController extends GetxController with StateMixin {
   RxList<cartModel> cartlist = (List<cartModel>.of([])).obs;
   cartRepo cart = cartRepo();
   RxDouble totalAmount = 0.0.obs;
-  RxInt totalQty = 0.obs;
+  // RxInt totalQty = 0.obs;
+  int totalQty = 0;
   RxInt qty = 0.obs;
 
   AuthenticateController user = Get.put(AuthenticateController());
@@ -63,10 +64,16 @@ class cartController extends GetxController with StateMixin {
 
   cartTotalAmount() {
     totalAmount.value = 0.0;
+    totalQty = 0;
     cartlist.forEach(
       // ignore: unnecessary_set_literal
       (element) => {
-        totalQty.value+=element.product!.qty!,
+        print(totalQty),
+
+        print(element.quantity!),
+        totalQty=totalQty + element.quantity!,
+        print(totalQty),
+
         // print("price " + cartlist.first.product!.price.toString()),
         totalAmount.value +=
             element.product!.price!.toDouble() * element.quantity!.toDouble(),
@@ -75,7 +82,7 @@ class cartController extends GetxController with StateMixin {
 
     // ignore: prefer_interpolation_to_compose_strings
     print("total cart price " + totalAmount.value.toString());
-    print("total cart qty ${totalQty.value}");
+    print("total cart qty ${totalQty}");
 
   }
 
@@ -85,7 +92,7 @@ class cartController extends GetxController with StateMixin {
       print(product.price);
       cartModel item = cartModel(
           product: product, quantity: Quantity); // object id will generate auto
-
+      print(item.product!.price);
       var cartItems = await cart.addToCart(
           item, AuthenticateController.userdata.first.sId!);
 
@@ -120,7 +127,7 @@ class cartController extends GetxController with StateMixin {
       cartlist.clear();
       qty.value = 0;
       totalAmount.value=0;
-      totalQty.value=0;
+      totalQty=0;
       Get.snackbar("Cart", "Cart items delete successfully");
       // ignore: unused_catch_clause
     } on DioException catch (ex) {

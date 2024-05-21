@@ -6,19 +6,25 @@ class BidModel {
   this.seller,
      this.buyer, this.items});
 
-  BidModel.fromJson(Map<String, dynamic> json) {
-    buyer = json['buyer'];
-    // print(json['seller'] is userModel);
-    seller =userModel.fromJson(json['seller']);
-    
-    if (json['items'] != null) {
-      items = <Items>[];
-      json['items'].forEach((v) {
-       
-        items!.add(new Items.fromJson(v));
-      });
-    }
+ BidModel.fromJson(Map<String, dynamic> json) {
+  buyer = json['buyer'];
+
+  if (json['seller'] is String) {
+    // If 'seller' is a string, assume it's the ID of the seller
+    seller = userModel(id: json['seller']);
+  } else if (json['seller'] is Map<String, dynamic>) {
+    // If 'seller' is a map, parse it as a userModel object
+    seller = userModel.fromJson(json['seller']);
   }
+
+  if (json['items'] != null) {
+    items = <Items>[];
+    json['items'].forEach((v) {
+      items!.add(new Items.fromJson(v));
+    });
+  }
+}
+
   userModel? seller;
   String? buyer;
   List<Items>? items;
@@ -37,8 +43,9 @@ class BidModel {
 
 class Items {
   Items({this.product, this.quantity, this.status, this.sId ,
-  this.bidprice
-  
+  this.bidprice,
+        this.createdat
+
   });
 
   Items.fromJson(Map<String, dynamic> json) {
@@ -49,6 +56,8 @@ class Items {
 
     status = json['status'];
     sId = json['_id'];
+    // json['createdat']==""? createdat = json['createdat']:null;
+
   }
 
   int? bidprice;
@@ -56,6 +65,7 @@ class Items {
   int? quantity;
   String? sId;
   String? status;
+  String? createdat;
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -67,6 +77,9 @@ class Items {
 
     data['status'] = this.status;
     data['_id'] = this.sId;
+    this.createdat==""?
+    data['createdat'] = this.createdat:null;
+    // data['createdat'] = this.createdat;
     return data;
   }
 }

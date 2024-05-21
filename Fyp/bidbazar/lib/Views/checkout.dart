@@ -3,9 +3,11 @@
 import 'package:bidbazar/controllers/auth_controllers.dart';
 import 'package:bidbazar/controllers/cart_controller.dart';
 import 'package:bidbazar/controllers/order_controller.dart';
+import 'package:bidbazar/controllers/product_controller.dart';
 import 'package:bidbazar/core/api.dart';
 import 'package:bidbazar/widgets/customTextFormField.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bidbazar/Views/home.dart';
 import 'package:get/get.dart';
@@ -98,9 +100,10 @@ class AddAddressPage extends StatelessWidget {
               onPressed: () {
 
                 OrderController orderController=OrderController();
-                orderController.placeOrder( totalprice:controller.totalAmount.value, totalquantity: controller.totalQty.value );
+                orderController.placeOrder( totalprice:controller.totalAmount.value, totalquantity: controller.totalQty );
                 controller.removeAllFromCart();// remove all items from cart 
                 Navigator.pushReplacement(context,MaterialPageRoute(builder:(context) => const PlaceOrder(),));
+                // product_controller()
               },
               child: const Text(
                 'Place order',
@@ -563,7 +566,7 @@ class _CustomerInfoScreenState extends State<CustomerInfoScreen> {
 
   void _navigateCheckout() {
     Navigator.of(context).push(
-      MaterialPageRoute(
+      CupertinoPageRoute(
         builder: (context) => AddAddressForm(),
       ),
     );

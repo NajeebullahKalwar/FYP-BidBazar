@@ -138,7 +138,7 @@ class Cart extends GetView<cartController> {
                                         child: Icon(Icons.add,
                                             color: Colors.orange[800]),
                                         onTap: () {
-                                          if(controller.qty.value<10 && controller.qty.value <= controller.cartlist[index].product!.qty! ){
+                                          if(controller.qty.value<10 && controller.qty.value < controller.cartlist[index].product!.qty! ){
                                           controller.qty.value =
                                               controller.cartlist[index].quantity!;
                                           controller.qty.value += 1;
