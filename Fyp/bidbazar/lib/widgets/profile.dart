@@ -2,7 +2,6 @@ import 'package:bidbazar/controllers/auth_controllers.dart';
 import 'package:bidbazar/controllers/image_controller.dart';
 import 'package:bidbazar/core/api.dart';
 import 'package:bidbazar/data/repo/user_repo.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,14 +11,43 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          AppBar(backgroundColor: Colors.white, foregroundColor: Colors.black),
+      appBar: AppBar(
+          title:
+              Text(AuthenticateController.userdata.first.fullname.toString()),
+          actions: [
+            AuthenticateController.userdata.first.verification == false
+                ? const Row(
+                    children: [
+                      Icon(Icons.cancel),
+                      Text(
+                        "verified",
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w600),
+                      )
+                    ],
+                  )
+                : const Icon(Icons.verified_sharp),
+            const SizedBox(
+              width: 20,
+            )
+          ],
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          ImagesWidget( imgcontroller: imgcontroller,isCnic:false , ),
-          ImagesWidget( imgcontroller: imgcontroller,isCnic:true , ),
+          const SizedBox(
+            height: 100,
+          ),
+          ImagesWidget(
+            imgcontroller: imgcontroller,
+            isCnic: false,
+          ),
+          ImagesWidget(
+            imgcontroller: imgcontroller,
+            isCnic: true,
+          ),
           // Container(
           //   height: 160,
           //   child: Stack(
@@ -115,9 +143,10 @@ class Profile extends StatelessWidget {
 }
 
 class ImagesWidget extends StatelessWidget {
-   ImagesWidget({
+  ImagesWidget({
     super.key,
-    required this.imgcontroller, required  this.isCnic,
+    required this.imgcontroller,
+    required this.isCnic,
     // required this.imageType
   });
 
@@ -128,46 +157,12 @@ class ImagesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 300,
+      height: isCnic == true ? 250 : 200,
       child: Stack(
-        
         children: [
-
-           Positioned(
-            top: 10,
-            left: 0,
-            right: 0,
-            child: SizedBox(
-              width: 250,
-              height:isCnic?400 : 360,
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                      width: 400,
-                      // color: Colors.black,
-                      height: 250,
-                    child:
-                    isCnic==true?AuthenticateController.userdata.first.cnicimages!.isEmpty==true?Center(child: Text("Please provide cnic to display" ),): Image.network(
-                      fit: BoxFit.contain,
-                        "${Api.BASE_URL}/images/${AuthenticateController.userdata.first.cnicimages![0]}"
-                    ):AuthenticateController.userdata.first.profileimages!.isEmpty==true?
-                    const Center(child: Text("Please provide profile to display" )):
-                        
-                       Image.network(
-                      fit: BoxFit.contain,
-                        "${Api.BASE_URL}/images/${AuthenticateController.userdata.first.profileimages![0]}"
-                    ),
-                    
-                    
-
-                  ),
-                  ),
-              ),),
-          ),
           Positioned.fromRect(
-              rect: Rect.fromCenter(center: Offset(190, 80), width: 190, height:130),
+            rect: Rect.fromCenter(
+                center: const Offset(190, 80), width: 190, height: 130),
             child: Card(
               semanticContainer: true,
               child: SizedBox(
@@ -182,14 +177,15 @@ class ImagesWidget extends StatelessWidget {
                     Center(
                       child: TextButton.icon(
                         onPressed: () {},
-                        icon:  Icon(
+                        icon: const Icon(
                           Icons.upload_file,
                           color: Colors.black38,
                         ),
                         label: Obx(
                           () => Text(
-                            isCnic==true?"Select Images ${imgcontroller.uploadCnicList.length}":
-                            "Select Images ${imgcontroller.uploadProfileList.length}",
+                            isCnic == true
+                                ? "Select Images ${imgcontroller.uploadCnicList.length}"
+                                : "Select Images ${imgcontroller.uploadProfileList.length}",
                             style: const TextStyle(
                               fontSize: 18,
                               // wordSpacing: 2,
@@ -205,27 +201,30 @@ class ImagesWidget extends StatelessWidget {
                     SizedBox(
                       width: 160,
                       child: TextButton(
-                        onPressed: () async{
-                           //pick images
-                         
-                          isCnic==true?
-                         { 
-                          await imgcontroller.pickImages(),//pick a image 
-                          await imgcontroller.uploadCnic(),//upload image
-                          await UserRepository().uploadCnicPicture (//upload picture string to user
-                              images: imgcontroller.uploadCnicList),
-                              AuthenticateController.userdata.first.cnicimages=imgcontroller.uploadCnicList
-                              }
-                              
-                          :
-                          {
-                          await  imgcontroller.pickImages(),
-                          await imgcontroller.uploadProfile(),
-                          await UserRepository().uploadProfilePicture (
-                              images: imgcontroller.uploadProfileList),
-                              AuthenticateController.userdata.first.profileimages=imgcontroller.uploadProfileList
-                              
-                              };
+                        onPressed: () async {
+                          //pick images
+
+                          isCnic == true
+                              ? {
+                                  await imgcontroller
+                                      .pickImages(), //pick a image
+                                  await imgcontroller
+                                      .uploadCnic(), //upload image
+                                  await UserRepository().uploadCnicPicture(
+                                      //upload picture string to user
+                                      images: imgcontroller.uploadCnicList),
+                                  AuthenticateController.userdata.first
+                                      .cnicimages = imgcontroller.uploadCnicList
+                                }
+                              : {
+                                  await imgcontroller.pickImages(),
+                                  await imgcontroller.uploadProfile(),
+                                  await UserRepository().uploadProfilePicture(
+                                      images: imgcontroller.uploadProfileList),
+                                  AuthenticateController
+                                          .userdata.first.profileimages =
+                                      imgcontroller.uploadProfileList
+                                };
                           //create user api to insert images in cnic and  profile
                           print(imgcontroller.uploadCnicList);
                           imgcontroller.imageList.clear();
@@ -241,10 +240,9 @@ class ImagesWidget extends StatelessWidget {
                             ),
                           ),
                         ),
-                        child:  Text(
-                          isCnic==true?
-                          'Upload Cnic':'Upload Profile',
-                          style: TextStyle(
+                        child: Text(
+                          isCnic == true ? 'Upload Cnic' : 'Upload Profile',
+                          style: const TextStyle(
                               color: Colors.black54,
                               fontSize: 16.0,
                               fontWeight: FontWeight.w700),
@@ -256,20 +254,43 @@ class ImagesWidget extends StatelessWidget {
               ),
             ),
           ),
-           Positioned.fromRect(
-            rect: Rect.fromCenter(center: const Offset(190, 25), width: 50, height:50),
+          Positioned.fromRect(
+            rect: Rect.fromCenter(
+                center: Offset(190, isCnic == true ? 200 : 25),
+                width: isCnic == true ? 180 : 50,
+                height: isCnic == true ? 180 : 50),
             // alignment: Alignment.topCenter,
-            child: CircleAvatar(
-                radius: 24,
-                backgroundColor: Colors.grey,
-                child: Icon( isCnic==true?
-                        Icons.recent_actors:
-                  Icons.person,
-                  size: 34,
-                  color: Colors.black,
-                )),
-                   ),
-
+            child: isCnic == false
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: Image.network(
+                      "${Api.BASE_URL}/images/${AuthenticateController.userdata.first.profileimages![0]}",
+                      fit: BoxFit.cover,
+                      errorBuilder: (BuildContext context, Object exception,
+                          StackTrace? stackTrace) {
+                        return const CircleAvatar(
+                          foregroundColor: Colors.black,
+                          backgroundColor: Colors.black87,
+                          radius: 30,
+                          child: Icon(Icons.person, // Or any other icon
+                              size: 30.0,
+                              color: Colors.white),
+                        );
+                      },
+                    ),
+                  )
+                : Image.network(
+                    fit: BoxFit.contain,
+                    "${Api.BASE_URL}/images/${AuthenticateController.userdata.first.cnicimages![0]}",
+                    errorBuilder: (BuildContext context, Object exception,
+                        StackTrace? stackTrace) {
+                      return const Icon(
+                        Icons.recent_actors, // Or any other icon
+                        size: 50.0,
+                      );
+                    },
+                  ),
+          ),
         ],
       ),
     );

@@ -1,10 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const orderModel = require("../models/order_model");
 
-
-
 const orderController = {
-
     createOrder: async function (req, res) {
         try {
             const { items, seller, buyer, } = req.body;
@@ -60,7 +57,8 @@ const orderController = {
 
             const foundOrders = await orderModel.find(
                 { buyer: buyerid },
-            ).populate("items.orderedProduct.productid").populate('items.orderedProduct.seller');
+            ).populate("items.orderedProduct.productid");
+            // .populate('items.orderedProduct.buyer');
             // .populate("items.product").populate("seller");
             console.log(foundOrders);
             console.log("we");
@@ -82,8 +80,8 @@ const orderController = {
             const foundbids = await orderModel.find({
                 // "items.orderedProduct.seller": sellerId
             },
-        // {totalprice:0,totalquantity:0}
-        ).populate('items.orderedProduct.productid');
+                // {totalprice:0,totalquantity:0}
+            ).populate('items.orderedProduct.productid').populate('items.orderedProduct.buyer');
 
             console.log(foundbids);
 
@@ -120,32 +118,30 @@ const orderController = {
         }
     },
 
-    updateBidStatus: async function (req, res) {
+    updateOrderStatus: async function (req, res) {
         try {
+            const { status, orderId, buyerId } = req.body;
+            console.log("buyerid " + buyerId + " orderId: " + orderId + " status: " + status);
 
-            const { productId, status, buyerId } = req.body;
-            console.log("buyerid " + buyerId + " productId: " + productId + " status: " + status);
-
-            const updateBid = await bidModel.findOneAndUpdate(
+            const order = await orderModel.findOneAndUpdate(
                 {
                     buyer: buyerId,
-                    'items.product': productId
+                    'items._id': orderId
                 },
                 {
                     $set: {
                         'items.$.status': status
                     }
                 },
-
                 { new: true }
             );
 
-            console.log(updateBid);
-            if (updateBid == null) {
-                return res.json({ success: false, message: "bid not found." });
+            console.log(order);
+            if (order == null) {
+                return res.json({ success: false, message: "order not found." });
 
             }
-            return res.json({ success: true, message: "bid found and updated status.", data: updateBid });
+            return res.json({ success: true, message: "order found and updated status.", data: status });
 
 
         } catch (ex) {

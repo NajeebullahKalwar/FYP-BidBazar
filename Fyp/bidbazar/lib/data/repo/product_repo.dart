@@ -118,6 +118,26 @@ class productRepo {
     }
   }
 
+   Future<String> renewProduct({required String productId}) async {
+    try {
+      Response response = await api.sendRequest.post("/product/renew",
+      data: {
+        "id":productId
+      }
+      );
+
+      ApiResponse productResponse = ApiResponse.fromResponse(response);
+
+      if (!productResponse.success) {
+        throw productResponse.message.toString();
+      }
+
+      return productResponse.data ;//add all streams of json object
+    } catch (ex) {
+      rethrow;
+    }
+  }
+
   Future<List<productModel>> fetchProductByUserId(String userId) async {
     try {
       print("id repo " + userId);

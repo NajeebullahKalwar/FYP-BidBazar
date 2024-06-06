@@ -44,7 +44,7 @@ class OrderRepo {
     try {
       Response response =AuthenticateController.userdata.first.usertype! == "Seller"?
          await api.sendRequest.get("/order/fetchForSeller/$Id")
-       : await api.sendRequest.get("/order/fetch/$Id");
+       : await api.sendRequest.get("/order/fetch/$Id");//fetch for buyer
 
       ApiResponse orderResponse = ApiResponse.fromResponse(response);
 
@@ -63,4 +63,27 @@ class OrderRepo {
   }
 
 
+ Future<String> orderStatus({required String status,required String orderId,required String buyerId}) async {
+    try {
+      Response response = await api.sendRequest.post("/order/statusupdate",
+      data: {
+            "status":status,
+            "orderId":orderId,
+            "buyerId":buyerId
+      }
+      );
+
+      ApiResponse orderResponse = ApiResponse.fromResponse(response);
+
+      if (!orderResponse.success) {
+        throw orderResponse.message.toString();
+      }
+      print(orderResponse.data);
+
+      return  orderResponse.data; //jsonObject.key Or jsonObject.value
+           //add all streams of json object
+    } catch (ex) {
+      rethrow;
+    }
+  }
 }

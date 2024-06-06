@@ -25,6 +25,8 @@ productRoute.post("/updateProduct",productController.updateProduct
 );
 productRoute.post("/soldqty",productController.updateSoldQty
 );
+productRoute.post("/renew",productController.renewProduct
+);
 
 
 module.exports=productRoute;

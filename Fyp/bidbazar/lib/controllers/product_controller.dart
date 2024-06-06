@@ -86,6 +86,21 @@ class product_controller extends GetxController with StateMixin {
     }
   }
 
+    Future<String?> renewProduct({required String productId}) async {
+    try {
+      change(productList, status: RxStatus.loading());
+      // user.usertypes
+      String currentDat = await product_repo
+          .renewProduct(productId:productId);
+      
+
+      change(productList, status: RxStatus.success());
+      return currentDat;
+    } catch (ex) {
+      change(productList, status: RxStatus.error(ex.toString()));
+    }
+  }
+
   Future addProduct({
     required String name,
     required String specs,

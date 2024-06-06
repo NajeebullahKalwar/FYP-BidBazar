@@ -1,5 +1,7 @@
 import 'package:bidbazar/controllers/auth_controllers.dart';
+import 'package:bidbazar/core/api.dart';
 import 'package:bidbazar/data/models/user_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 // import 'package:bidbazar/widgets/search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -60,6 +62,7 @@ class BlockUnblockUser extends GetView<AuthenticateController> {
                               final allUsers = controller.users[index];
                               return buildBuyer(
                                 allUsers,
+                                context
                               );
                             },
                           ),
@@ -76,17 +79,117 @@ class BlockUnblockUser extends GetView<AuthenticateController> {
 
   Widget buildBuyer(
     userModel buyer,
+    BuildContext context
   ) =>
       ListTile(
+        onTap: () async {
+           showBottomSheet (
+            enableDrag: true,
+
+              context: context,
+              builder: (context) {
+                return Container(
+                  width: Get.width*1,
+                  height: 400,
+                  color: Colors.white,
+                  child: Column(
+                    
+                    children: [
+                      // const Center(child: Text("Profile")),
+                      // SizedBox(
+                      //  width: 200,
+                      //  height: 100,
+                      //   child: Image.network(
+                      //     "${Api.BASE_URL}/images/${buyer.profileimages![0]}",
+                      //     fit: BoxFit.cover,
+                      //     errorBuilder: (BuildContext context, Object exception,
+                      //         StackTrace? stackTrace) {
+                      //       return const Column(
+                      //         children: [
+                      //            Icon(
+                      //           Icons.error, // Or any other icon
+                      //           size: 50.0,
+                               
+                      //         ),
+                      //         Text("No Image")
+                      //         ],
+                      //       );
+                      //     },
+                      //   ),
+                      // ),
+
+                       
+                      Expanded(
+                       
+                        child: Image.network(
+                          "${Api.BASE_URL}/images/${buyer.cnicimages![0]}",
+                          fit: BoxFit.cover,
+                          errorBuilder: (BuildContext context, Object exception,
+                              StackTrace? stackTrace) {
+                            return const Column(
+                              children: [
+                                 Icon(
+                                Icons.error, // Or any other icon
+                                size: 50.0,
+                               
+                              ),
+                              Text("user not upload cnic 1 img")
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                      Expanded(
+                       
+                        child: CachedNetworkImage(
+                          imageUrl: 
+                          buyer.cnicimages!.length>1==true?
+                          "${Api.BASE_URL}/images/${buyer.cnicimages![1] }":"",
+                          fit: BoxFit.cover,
+                          errorWidget: (context, url, error) {
+                            return const Column(
+                              children: [
+                                 Icon(
+                                Icons.error, // Or any other icon
+                                size: 50.0,
+                               
+                              ),
+                              Text("user not upload cnic 2 img")
+                              ],
+                            );
+                          },
+                          
+                        ),
+                      ),
+
+                    ],
+                  ),
+                );
+              },
+            );
+        },
         // leading: Image.network(
         //   buyer.urlImage,
         //   fit: BoxFit.cover,
         //   width: 50,
         //   height: 50,
         // ),
-        leading: const Icon(
-          Icons.person,
-          size: 24,
+        leading: SizedBox(
+          width: 40,
+          height: 40,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(100),
+            child: CachedNetworkImage(
+              fit: BoxFit.cover,
+              errorWidget: (context, url, error) {
+                return const Icon(
+                  Icons.person, // Or any other icon
+                  size: 24,
+                );
+              },
+              imageUrl: "${Api.BASE_URL}/images/${buyer.profileimages![0]}",
+            ),
+          ),
         ),
         title: Text(buyer.fullname!.toLowerCase()),
         subtitle: Text("${buyer.mobile!} - ${buyer.cnic!}"),
@@ -242,7 +345,7 @@ class BlockUnblockUser extends GetView<AuthenticateController> {
 //         onChanged: (value) {
 //           // function
 //           // bu.searchuser(query: textcontroller.text , isBuyer:isBuyer);
-//       // searchuser(query: textEditingController.text , isBuyer:isBuyer);      
+//       // searchuser(query: textEditingController.text , isBuyer:isBuyer);
 //         },
 //         // onChanged: widget.onChanged,
 //       ),

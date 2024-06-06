@@ -1,5 +1,6 @@
 const productModel = require("../models/product_model");
 const wishListModel = require("../models/wishList_model");
+const customDate = require("./date_controller");
 
 const productController = {
 
@@ -137,6 +138,23 @@ const productController = {
             
             return res.json({success:true,message:"",data:products}); 
     
+        }catch(e){
+         return res.json({success:false,message:`Product not found!  ${e}`});
+    
+        }
+    },
+
+    
+    renewProduct:async function(req,res){// for category
+        try{
+            const id=   req.body.id;  
+            console.log(id);
+            // const  products=await productModel.findById(id);
+            const  product=await productModel.findOneAndUpdate(
+                {_id:id},
+                {createdat:customDate.getStringFormattedDate()}
+        );
+            return res.json({success:true,message:"product found and renew",data:product["createdat"]}); 
         }catch(e){
          return res.json({success:false,message:`Product not found!  ${e}`});
     

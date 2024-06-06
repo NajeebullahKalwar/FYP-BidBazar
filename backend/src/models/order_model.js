@@ -9,7 +9,12 @@ const item = mongoose.Schema({
         ref:'Product',
         
     },
-     seller:{
+     buyer:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User',
+        required:true
+    },
+    seller:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'User',
         required:true
@@ -45,7 +50,7 @@ const itemSchema = new mongoose.Schema({//same as order but different logic
     },
     status:{
         type:String,
-        default:"order succefully placed" ,
+        default:"order placed" ,
     },
     // Productprice:{
     //     type:Number,

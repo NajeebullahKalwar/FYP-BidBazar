@@ -1,8 +1,9 @@
-
 import 'package:bidbazar/Views/checkout.dart';
+import 'package:bidbazar/controllers/auth_controllers.dart';
 import 'package:bidbazar/controllers/cart_controller.dart';
 import 'package:bidbazar/core/api.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // import 'package:input_quantity/input_quantity.dart';
@@ -18,22 +19,21 @@ class Cart extends GetView<cartController> {
   Widget build(BuildContext context) {
     // controller.amount.value = 0;
     return Scaffold(
-      appBar : AppBar(
-            elevation: 0.0,
-            backgroundColor: Colors.white,
-            automaticallyImplyLeading: true,
-            foregroundColor: Colors.black,
-            title: const Text("Cart"),
-            centerTitle: true,
-          ),
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: true,
+        foregroundColor: Colors.black,
+        title: const Text("Cart"),
+        centerTitle: true,
+      ),
       body: RefreshIndicator(
-        onRefresh: ()async {
-           controller!.cartlist.length == 0 ? controller.fetchCartItems():null;
-            controller.cartlist.refresh();
-          },
+        onRefresh: () async {
+          controller.cartlist.length == 0 ? controller.fetchCartItems() : null;
+          controller.cartlist.refresh();
+        },
         child: Column(
           children: [
-           
             Expanded(
               flex: 9,
               child: controller.obx(
@@ -59,17 +59,18 @@ class Cart extends GetView<cartController> {
                             children: [
                               Text(
                                 maxLines: 1,
-                                controller.cartlist[index].product!.specs.toString(),
+                                controller.cartlist[index].product!.specs
+                                    .toString(),
                                 style: const TextStyle(),
                               ),
                               Text(
-                            maxLines: 1,
-                            "Quantity ${controller.cartlist[index].product!.qty!}",
-                            style: const TextStyle(),
-                          ),
+                                maxLines: 1,
+                                "Quantity ${controller.cartlist[index].product!.qty!}",
+                                style: const TextStyle(),
+                              ),
                             ],
                           ),
-                          
+
                           leading: Container(
                             width: Get.width * 0.24,
                             child: ClipRRect(
@@ -79,10 +80,10 @@ class Cart extends GetView<cartController> {
                               child: CachedNetworkImage(
                                 // fit: BoxFit.scaleDown,
                                 fit: BoxFit.contain,
-            
+
                                 // width: Get.width * .25,
-                                imageUrl: "${Api.BASE_URL}/images/${controller
-                                        .cartlist[index].product!.images!.first}",
+                                imageUrl:
+                                    "${Api.BASE_URL}/images/${controller.cartlist[index].product!.images!.first}",
                               ),
                               // "https://i.postimg.cc/nzdgXrFC/anh-nhat-Pd-ALQmf-Eqv-E-unsplash.jpg"
                             ),
@@ -105,17 +106,20 @@ class Cart extends GetView<cartController> {
                                         child: Icon(Icons.remove,
                                             color: Colors.orange[800]),
                                         onTap: () {
-                                          controller.qty.value =
-                                              controller.cartlist[index].quantity!;
+                                          controller.qty.value = controller
+                                              .cartlist[index].quantity!;
                                           if (controller.qty.value > 1) {
                                             controller.qty.value -= 1;
                                             controller.addToCart(
-                                                controller.cartlist[index].product!,
+                                                controller
+                                                    .cartlist[index].product!,
                                                 controller.qty.value);
-                                          }else{
-                                             controller.removeItemfromCart(
-                                             controller.cartlist[index].product!.sId!);
-                                             controller.cartlist.removeAt(index);
+                                          } else {
+                                            Get.snackbar("Cart", "Cart item can't be zero ");
+                                            // controller.removeItemfromCart(
+                                            //     controller.cartlist[index]
+                                            //         .product!.sId!);
+                                            // controller.cartlist.removeAt(index);
                                           }
                                         },
                                       ),
@@ -134,18 +138,23 @@ class Cart extends GetView<cartController> {
                                     Expanded(
                                       flex: 2,
                                       child: InkWell(
-                                        borderRadius: BorderRadius.circular(100),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
                                         child: Icon(Icons.add,
                                             color: Colors.orange[800]),
                                         onTap: () {
-                                          if(controller.qty.value<10 && controller.qty.value < controller.cartlist[index].product!.qty! ){
-                                          controller.qty.value =
-                                              controller.cartlist[index].quantity!;
-                                          controller.qty.value += 1;
-            
-                                          controller.addToCart(
-                                              controller.cartlist[index].product!,
-                                              controller.qty.value);
+                                          if (controller.qty.value < 10 &&
+                                              controller.qty.value <
+                                                  controller.cartlist[index]
+                                                      .product!.qty!) {
+                                            controller.qty.value = controller
+                                                .cartlist[index].quantity!;
+                                            controller.qty.value += 1;
+
+                                            controller.addToCart(
+                                                controller
+                                                    .cartlist[index].product!,
+                                                controller.qty.value);
                                           }
                                         },
                                       ),
@@ -161,8 +170,8 @@ class Cart extends GetView<cartController> {
                                   height: Get.height * 0.05,
                                   child: InkWell(
                                     onTap: () {
-                                      controller.removeItemfromCart(
-                                          controller.cartlist[index].product!.sId!);
+                                      controller.removeItemfromCart(controller
+                                          .cartlist[index].product!.sId!);
                                       controller.cartlist.removeAt(index);
                                     },
                                     child: const Icon(Icons.delete),
@@ -175,8 +184,7 @@ class Cart extends GetView<cartController> {
                   ),
                 ),
                 // onLoading: CircularProgressIndicator(),
-                onEmpty:     
-                  const Center(child:  Text("Cart data not found ")),
+                onEmpty: const Center(child: Text("Cart data not found ")),
                 onError: (error) => Text("$error"),
               ),
             ),
@@ -216,14 +224,21 @@ class Cart extends GetView<cartController> {
                       ),
                     ),
                     // SizedBox(width: Get.width * 0.3),
-        
+
                     ElevatedButton(
                       onPressed: () async {
-        
-                        if(controller.cartlist.isNotEmpty){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => AddAddressPage(),));
-                        }else{
-                            Get.snackbar("Cart", "There is no item to buy please add item to your cart.");
+
+                        if (controller.cartlist.isNotEmpty) {
+                          AuthenticateController.userdata.first.verification == true?
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => AddAddressPage(),
+                              )): Get.snackbar(AuthenticateController.userdata.first.fullname.toString(),
+                              "Your profile is not verified");
+                        } else {
+                          Get.snackbar("Cart",
+                              "There is no item to buy please add item to your cart.");
                         }
                         // if (true) {
                         //   Get.snackbar(

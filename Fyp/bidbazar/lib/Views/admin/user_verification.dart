@@ -1,5 +1,7 @@
 import 'package:bidbazar/controllers/auth_controllers.dart';
+import 'package:bidbazar/core/api.dart';
 import 'package:bidbazar/data/models/user_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -58,7 +60,7 @@ class userverification extends GetView<AuthenticateController> {
                               //     : controller.listOfSeller[index];
                               final allUsers = controller.users[index];
                               return buildBuyer(
-                                allUsers,
+                                allUsers,context
                               );
                             },
                           ),
@@ -75,17 +77,94 @@ class userverification extends GetView<AuthenticateController> {
 
   Widget buildBuyer(
     userModel buyer,
+    BuildContext context
   ) =>
       ListTile(
+         onTap: () async {
+           showBottomSheet (
+            enableDrag: true,
+
+              context: context,
+              builder: (context) {
+                return Container(
+                  width: Get.width*1,
+                  height: 400,
+                  color: Colors.white,
+                  child: Column(
+                    
+                    children: [
+               
+                      Expanded(
+                       
+                        child: Image.network(
+                          "${Api.BASE_URL}/images/${buyer.cnicimages![0]}",
+                          fit: BoxFit.cover,
+                          errorBuilder: (BuildContext context, Object exception,
+                              StackTrace? stackTrace) {
+                            return const Column(
+                              children: [
+                                 Icon(
+                                Icons.error, // Or any other icon
+                                size: 50.0,
+                               
+                              ),
+                              Text("user not upload cnic 1 img")
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                      Expanded(
+                       
+                        child: CachedNetworkImage(
+                          imageUrl: 
+                          buyer.cnicimages!.length>1==true?
+                          "${Api.BASE_URL}/images/${buyer.cnicimages![1] }":"",
+                          fit: BoxFit.cover,
+                          errorWidget: (context, url, error) {
+                            return const Column(
+                              children: [
+                                 Icon(
+                                Icons.error, // Or any other icon
+                                size: 50.0,
+                               
+                              ),
+                              Text("user not upload cnic 2 img")
+                              ],
+                            );
+                          },
+                          
+                        ),
+                      ),
+
+                    ],
+                  ),
+                );
+              },
+            );
+        },
         // leading: Image.network(
         //   buyer.urlImage,
         //   fit: BoxFit.cover,
         //   width: 50,
         //   height: 50,
         // ),
-        leading: const Icon(
-          Icons.person,
-          size: 24,
+        leading:SizedBox(
+          width: 40,
+          height: 40,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(100),
+            child: CachedNetworkImage(
+              fit: BoxFit.cover,
+              errorWidget: (context, url, error) {
+                return const Icon(
+                  Icons.person, // Or any other icon
+                  size: 24,
+                );
+              },
+              imageUrl: "${Api.BASE_URL}/images/${buyer.profileimages![0]}",
+            ),
+          ),
         ),
         title: Text(buyer.fullname!.toLowerCase()),
         subtitle: Text("${buyer.mobile!} - ${buyer.cnic!}"),
@@ -149,18 +228,7 @@ class userverification extends GetView<AuthenticateController> {
 
     controller.users.value = filtered;
 
-    // users.value = filteredUsers;
-    print(
-        "users ${controller.users} ${isBuyer} filtered ${filtered}  query ${query}");
-    // users.refresh();
-    // ignore: invalid_use_of_protected_member
-    // controller.refresh();
-    //  controller. users.refresh();
-
-    // setState(() {
-    //   this.query = query;
-    //   this.users = filteredBuyers; // Update the state variable with filtered results
-    // });
+ 
   }
 
   Widget customSearch({
@@ -184,15 +252,15 @@ class userverification extends GetView<AuthenticateController> {
       child: TextField(
         controller: textcontroller,
         decoration: InputDecoration(
-          icon: Icon(
+          icon: const Icon(
             Icons.search,
           ),
-          suffixIcon: Icon(Icons.close),
+          suffixIcon: const Icon(Icons.close),
           hintText: hintText,
-          hintStyle: TextStyle(color: Colors.black),
+          hintStyle: const TextStyle(color: Colors.black),
           border: InputBorder.none,
         ),
-        style: TextStyle(color: Colors.black),
+        style: const TextStyle(color: Colors.black),
         onChanged: (value) {
           // function
           // bu.searchuser(query: textcontroller.text , isBuyer:isBuyer);

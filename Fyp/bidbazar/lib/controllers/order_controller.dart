@@ -16,6 +16,9 @@ class OrderController extends GetxController with StateMixin {
   productRepo productrepo = productRepo();
   RxList<Items> orderList = (List<Items>.of([])).obs;
   product_controller productController = Get.put(product_controller());
+  RxString orderStatus="Order Placed".obs;
+  RxList<Items> OrdersFilters=<Items>[].obs;
+  
   @override
   void onClose() {
     // TODO: implement onClose
@@ -27,6 +30,28 @@ class OrderController extends GetxController with StateMixin {
     // TODO: implement onInit
     super.onInit();
   }
+  Future pendingOrderFilter()async{
+    for (var element in orderList) {
+      if(element.status=="Pending"){
+       OrdersFilters.add(element);
+      }
+    }
+  }
+   Future deliveredOrderFilter()async{
+
+     for (var element in orderList) {
+      if(element.status=="Delivered"){
+        OrdersFilters.add(element);
+      }
+    }
+  }
+   Future canceldOrderFilter()async{
+    for (var element in orderList) {
+      if(element.status=="Canceld"){
+       OrdersFilters.add(element);
+      }
+    }
+  }
 
   Future placeOrder(
       {required double totalprice, required int totalquantity}) async {
@@ -37,11 +62,13 @@ class OrderController extends GetxController with StateMixin {
       for (var element in controller.cartlist) {
         print("Start working");
         orderProducts.add(OrderedProduct(
-            productid: productModel(sId: element.product!.sId!, user: element.product!.user!),
+            productid: productModel(
+                sId: element.product!.sId!, user: element.product!.user!),
             quantity: element.quantity!,
+            buyer: AuthenticateController.userdata.first,
             seller: userModel(sId: element.product!.user!),
             bidprice: element.product!.price!
-            )
+            ),
             );
         //product sold added
         productrepo.updateSoldQty(
@@ -79,35 +106,39 @@ class OrderController extends GetxController with StateMixin {
 
   Future fetchOrders() async {
     orderList.clear();
-        try {
+    OrdersFilters.clear();
+    try {
       change(orderList, status: RxStatus.loading());
-      
-      List<OrderModel> orders = await orderRepo.fetchOrders(Id: AuthenticateController.userdata.first.sId! );
-     
+
+      List<OrderModel> orders = await orderRepo.fetchOrders(
+          Id: AuthenticateController.userdata.first.sId!);
+
       print("working order data");
       print(orders);
       // orderList.assignAll(orders);
-      
-      if(orders.isEmpty){
-      change(orderList, status: RxStatus.empty());
-      }else{
-      orderList.addAll(orders[0].items!);
 
-  
-      // print("leght of ${productList.length} ");
-      // print("last of ${productList.last} ");
-      // // print("title of ${categoryList[0].sId} ");
+      if (orders.isEmpty) {
+        change(orderList, status: RxStatus.empty());
+      } else {
+        // for (var i in orders){
+        orderList.addAll(orders[0].items!);
 
-      change(orderList, status: RxStatus.success());
+        change(orderList, status: RxStatus.success());
       }
     } catch (ex) {
       change(orderList, status: RxStatus.error(ex.toString()));
     }
-
   }
 
+ Future orderStatusUpdate({required String status,required String orderId,required String buyerId}) async {
+    try {
 
-
+     var order =   orderRepo.orderStatus(status: status, orderId: orderId, buyerId: buyerId);
+         print(order);
+    } catch (ex) {
+      change(orderList, status: RxStatus.error(ex.toString()));
+    }
+  }
   //   Future updateBidStatus({required String buyerId,required String productId,required String status}) async {
   //         await bid.updateBidStatus(buyerId:buyerId , productId: productId, status: status) ;
   // }

@@ -79,11 +79,12 @@ class OrderedProduct {
   String? sId;
   int? quantity;
   productModel? productid;
+  userModel? buyer;
   userModel? seller;
   int? bidprice;
 
   OrderedProduct(
-      {this.sId, this.quantity, this.productid, this.seller, this.bidprice});
+      {this.sId, this.quantity, this.productid,this.seller, this.buyer, this.bidprice});
 
   OrderedProduct.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -93,8 +94,11 @@ class OrderedProduct {
     productid = json['productid'] != null
         ? new productModel.fromJson(json['productid'])
         : null;
+    json['buyer'] is String? null:
+    buyer = userModel.fromJson(json['buyer']);
     json['seller'] is String? null:
     seller = userModel.fromJson(json['seller']);
+
     //  seller = json['seller'] != null
     // ? new userModel.fromJson(json['seller'])
     // : null;
@@ -107,6 +111,9 @@ class OrderedProduct {
     data['bidprice'] = this.bidprice;
     if (this.productid != null) {
       data['productid'] = this.productid!.toJson();
+    }
+    if (this.buyer != null) {
+      data['buyer'] = this.buyer!.toJson();
     }
     if (this.seller != null) {
       data['seller'] = this.seller!.toJson();

@@ -3,12 +3,15 @@ import 'package:bidbazar/Views/buyer/cart.dart';
 import 'package:bidbazar/controllers/bidController.dart';
 import 'package:bidbazar/controllers/order_controller.dart';
 import 'package:bidbazar/controllers/wishList_controller.dart';
+import 'package:bidbazar/core/api.dart';
 import 'package:bidbazar/widgets/bidView.dart';
 import 'package:bidbazar/widgets/category.dart';
 import 'package:bidbazar/Views/home.dart';
 import 'package:bidbazar/controllers/auth_controllers.dart';
 import 'package:bidbazar/widgets/orderView.dart';
+import 'package:bidbazar/widgets/orderfilter.dart';
 import 'package:bidbazar/widgets/profile.dart';
+// import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 // import 'package:flutter/cupertino.dart';
 // import 'package:bidbazar/widgets/wishList.dart';
@@ -19,7 +22,7 @@ import 'package:get/get.dart';
 class Buyer extends StatelessWidget {
   Buyer({super.key});
   static const String routeName = '/buyerScreen';
-  BidController bidController=Get.put(BidController());
+  BidController bidController = Get.put(BidController());
 
   List<Widget> screens = [
     Home(),
@@ -96,19 +99,36 @@ class Buyer extends StatelessWidget {
         child: ListView(
           // Important: Remove any padding from the ListView.
           padding: EdgeInsets.zero,
-          
+
           children: [
             const SizedBox(
-              height: 250,
-              width: 200,
-              child: Center(
-                child: CircleAvatar(
-                  backgroundImage: AssetImage(
-                    'assets/profile.jpeg',
-                  ),
-                  radius: 50,
-                ),
-              ),
+              height: 80,
+            ),
+            CircleAvatar(
+              radius: 50,
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: AuthenticateController
+                          .userdata.first.profileimages!.isEmpty
+                      ? Image.network(
+                          "${Api.BASE_URL}/images/${AuthenticateController.userdata.first.profileimages![0]}",
+                          fit: BoxFit.cover,
+                          errorBuilder: (BuildContext context, Object exception,
+                              StackTrace? stackTrace) {
+                            return const Icon(
+                              Icons.person,
+                              size: 48,
+                            );
+                          },
+                        )
+                      : const Icon(
+                          Icons.person,
+                          size: 48,
+                        )),
+            ),
+            // Center(child: Text(AuthenticateController.userdata.first.fullname.toString(), style: Theme.of(context).textTheme.headlineSmall,)),
+            const SizedBox(
+              height: 40,
             ),
             const Divider(
               height: 1,
@@ -116,98 +136,187 @@ class Buyer extends StatelessWidget {
             ),
             ListTile(
               leading: Image.asset(
-                    'assets/favourite.png',
-                    width: 38,
-                    height: 25,
-                    fit: BoxFit.contain,
-                  ),
+                'assets/favourite.png',
+                width: 38,
+                height: 25,
+                fit: BoxFit.contain,
+              ),
               title: const Text('Wish List'),
               // selected: true,
               onTap: () {
-
                 WishListController wishListController =
                     Get.put(WishListController());
-                  
+
                 wishListController.fetchWishListItems();
                 Get.toNamed("wishListScreen");
               },
             ),
             ListTile(
               // leading: Icon(Icons.receipt),
-              leading:  Image.asset(
+              leading: Image.asset(
                 fit: BoxFit.contain,
-                    'assets/bidIcon.png',
-                    width: 35,
-                    height: 35,
-                  ),
+                'assets/bidIcon.png',
+                width: 35,
+                height: 35,
+              ),
               title: const Text('Bid Logs'),
               selected: false,
               onTap: () {
-                Navigator.push(context,CupertinoPageRoute(builder: (context) => BidViewForBuyer(controller: bidController,),));
-                
+                Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => BidViewForBuyer(
+                        controller: bidController,
+                      ),
+                    ));
+
                 // Navigator.push(context,MaterialPageRoute(builder: (context) => BidView(controller: bidController, approvedBid:false ),),);
                 // bidController.dispose();
               },
             ),
-             ListTile(
+            ListTile(
               leading: Image.asset(
-                    'assets/order.png',
-                    width: 38,
-                    height: 25,
-                    fit: BoxFit.contain,
-                  ),
+                'assets/order.png',
+                width: 38,
+                height: 25,
+                fit: BoxFit.contain,
+              ),
               title: const Text('Order Logs'),
               // selected: true,
               onTap: () {
+                OrderController orderController = Get.put(OrderController());
 
-                OrderController orderController =
-                    Get.put(OrderController());
-                  
                 orderController.fetchOrders();
-                Navigator.push(context, CupertinoPageRoute( builder: (context) => OrderView(),));
+                Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => OrderView(),
+                    ));
               },
             ),
-              ListTile(
+            ListTile(
+              leading: Image.asset(
+                'assets/order.png',
+                width: 38,
+                height: 25,
+                fit: BoxFit.contain,
+              ),
+              title: const Text('Order Pending'),
+              // selected: true,
+              onTap: () async{
+                OrderController orderController = Get.put(OrderController());
+
+               await orderController.fetchOrders();
+               await orderController.pendingOrderFilter();
+                Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => OrderFilter(),
+                    ));
+              },
+            ),
+            ListTile(
+              leading: Image.asset(
+                'assets/order.png',
+                width: 38,
+                height: 25,
+                fit: BoxFit.contain,
+              ),
+              title: const Text('Order Delivered'),
+              // selected: true,
+              onTap: () {
+                OrderController orderController = Get.put(OrderController());
+
+                orderController.fetchOrders();
+                 orderController.deliveredOrderFilter();
+                Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => OrderFilter(),
+                    ));
+              },
+            ),
+            ListTile(
+              leading: Image.asset(
+                'assets/order.png',
+                width: 38,
+                height: 25,
+                fit: BoxFit.contain,
+              ),
+              title: const Text('Order Canceled'),
+              // selected: true,
+              onTap: ()async {
+                OrderController orderController = Get.put(OrderController());
+
+               await orderController.fetchOrders();
+               await orderController.deliveredOrderFilter();
+                Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => OrderFilter(),
+                    ));
+              },
+            ),
+            ListTile(
               // leading: Icon(Icons.receipt),
               leading: Image.asset(
                 fit: BoxFit.contain,
-                    'assets/approvedBid.png',
-                    width: 35,
-                    height: 45,
-                  ),
+                'assets/approvedBid.png',
+                width: 35,
+                height: 45,
+              ),
               title: const Text('Approved Bid Log'),
               selected: false,
-              onTap: ()async {
+              onTap: () async {
                 bidController.bidItemsList.clear();
                 await bidController.fetchBidItems();
-                Navigator.push(context,CupertinoPageRoute(builder: (context) => BidView(items:bidController.bidItemsList.isEmpty? []: bidController.bidItemsList.first.items!, approvedBid: true , buyerId: bidController.bidItemsList.isEmpty? "": bidController.bidItemsList.first.buyer! , ),));
+                // ignore: use_build_context_synchronously
+                Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => BidView(
+                        items: bidController.bidItemsList.isEmpty
+                            ? []
+                            : bidController.bidItemsList.first.items!,
+                        approvedBid: true,
+                        buyerId: bidController.bidItemsList.isEmpty
+                            ? ""
+                            : bidController.bidItemsList.first.buyer!,
+                      ),
+                    ));
 
                 // Navigator.push(context,MaterialPageRoute(builder: (context) => BidView(controller: bidController , approvedBid: true,
                 // ),),);
                 // bidController.dispose();
               },
             ),
-           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 2),
-             child: ListTile(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2),
+              child: ListTile(
                 // leading: Icon(Icons.receipt),
-                leading:const Icon(Icons.person, size: 32,color:  Colors.black),
+                leading:
+                    const Icon(Icons.person, size: 32, color: Colors.black),
                 title: const Text('Profile'),
                 selected: false,
                 onTap: () {
-                  Navigator.push(context,CupertinoPageRoute(builder: (context) => Profile(),));
-                  
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => Profile(),
+                      ));
+
                   // Navigator.push(context,MaterialPageRoute(builder: (context) => BidView(controller: bidController, approvedBid:false ),),);
                   // bidController.dispose();
                 },
               ),
-           ),
+            ),
             ListTile(
               leading: const Icon(Icons.exit_to_app_rounded),
               title: const Text('Logout'),
               selected: false,
               onTap: () {
-                
+                controller.clearfields();
+                controller.isLoading.value = false;
                 Get.offAllNamed('loginScreen');
               },
             ),

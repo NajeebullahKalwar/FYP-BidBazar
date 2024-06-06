@@ -64,7 +64,7 @@ class AuthenticateController extends GetxController with StateMixin {
 
   void toggleVisibility() {
     // print("siguptype = " + usertypes.getUserName);
-    isObscure == true ? isObscure.value = false : isObscure.value = true;
+    isObscure.value == true ? isObscure.value = false : isObscure.value = true;
   }
 
   Future<userModel> findUserById(String Id) async {
