@@ -18,9 +18,7 @@ const wishListRoutes = require('./routes/wishList_route');
 const IP = require('ip');
 const emailRoutes = require('./routes/email_routes');
 const orderRoutes = require('./routes/order_routes');
-
-
-
+const complaintRoutes = require('./routes/complaint_routes');
 
 //Set up default mongoose connection
 // var mongoDB = 'mongodb://127.0.0.1/my_database';
@@ -64,6 +62,7 @@ app.use("/api/images", express.static('upload/images'),express.static('upload/pr
 app.use("/api/wishList",wishListRoutes);
 app.use("/api/email",emailRoutes);
 app.use("/api/order",orderRoutes);
+app.use("/api/complaint",complaintRoutes);
 
 
 app.listen(port,hostname,()=>{

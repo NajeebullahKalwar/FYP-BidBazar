@@ -56,10 +56,10 @@ const cartController={
     removeFromCart:async function(req,res){
         try{
             const {user,product}=req.body;
-                      
+                      console.log(product)
             const updatedCart =  await cartModel.findOneAndUpdate(
                 {user:user}, //match condition
-                {$pull:{items:{product:product}} }, //dollar pull is array function ->pull value from array means delete values from array using function pull
+                {$pull:{items:{"product._id":product}} }, //dollar pull is array function ->pull value from array means delete values from array using function pull
                 ).populate("items.product");
 
                 return res.json({success:true,message:"Product removed from cart",data:updatedCart });

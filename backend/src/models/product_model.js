@@ -2,10 +2,6 @@ const mongoose = require('mongoose');
 const uuid = require('uuid');
 const customDate = require('../controllers/date_controller');
 
-
-
-
-
 const productSchema=mongoose.Schema({
     user:{
         type:mongoose.Schema.Types.ObjectId,

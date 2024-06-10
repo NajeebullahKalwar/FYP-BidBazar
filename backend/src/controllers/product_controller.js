@@ -121,6 +121,7 @@ const productController = {
 
         try{
             const getProducts = await productModel.find()
+            // .populate("user");
             // .populate("user");//it uses mongoose local client which fetch all data from db   
                          
             return res.json({success:true,message:"Product Found",data:getProducts}); 

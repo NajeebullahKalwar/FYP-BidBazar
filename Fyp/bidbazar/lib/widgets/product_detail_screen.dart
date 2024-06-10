@@ -85,11 +85,11 @@ class ProductDetailScreen extends GetView<product_controller> {
       bidMenu.addAll([
         DropdownMenuItem(child: const Text("0% Down"), value: product.price!),
         DropdownMenuItem(
-            value: (product.price! - product.price! * 0.05).round(),
-            child: const Text("5% Down")),
+            child: const Text("5% Down"),
+            value: (product.price! - product.price! * 0.05).round()),
         DropdownMenuItem(
-            value: (product.price! - product.price! * 0.1).round(),
-            child: const Text("10% Down")),
+            child: const Text("10% Down"),
+            value: (product.price! - product.price! * 0.1).round()),
         DropdownMenuItem(
             child: const Text("15% Down"),
             value: (product.price! - product.price! * 0.15).round()),
