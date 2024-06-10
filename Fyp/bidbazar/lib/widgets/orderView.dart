@@ -22,6 +22,7 @@ class OrderView extends GetView<OrderController> {
       body: controller.obx(
         (state) => RefreshIndicator(
           onRefresh: () async {
+            orderController.fetchOrders();
             controller.update();
           },
           child: ListView.builder(

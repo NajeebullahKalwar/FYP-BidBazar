@@ -76,6 +76,7 @@ class CustomSearch extends StatelessWidget {
           )
         : Scaffold(
             appBar: AppBar(
+              title: const Text("Search Result"),
               leading: InkWell(
                 onTap: () => Navigator.pop(context),
                 child: const Icon(Icons.arrow_back),

@@ -16,9 +16,9 @@ class OrderController extends GetxController with StateMixin {
   productRepo productrepo = productRepo();
   RxList<Items> orderList = (List<Items>.of([])).obs;
   product_controller productController = Get.put(product_controller());
-  RxString orderStatus="Order Placed".obs;
-  RxList<Items> OrdersFilters=<Items>[].obs;
-  
+  RxString orderStatus = "Order Placed".obs;
+  RxList<Items> OrdersFilters = <Items>[].obs;
+
   @override
   void onClose() {
     // TODO: implement onClose
@@ -28,27 +28,42 @@ class OrderController extends GetxController with StateMixin {
   @override
   void onInit() async {
     // TODO: implement onInit
+    await fetchOrders();
     super.onInit();
   }
-  Future pendingOrderFilter()async{
-    for (var element in orderList) {
-      if(element.status=="Pending"){
-       OrdersFilters.add(element);
-      }
-    }
-  }
-   Future deliveredOrderFilter()async{
 
-     for (var element in orderList) {
-      if(element.status=="Delivered"){
+  Future pendingOrderFilter() async {
+    OrdersFilters.clear();
+    for (var element in orderList) {
+      if (element.status == "Pending") {
         OrdersFilters.add(element);
       }
     }
   }
-   Future canceldOrderFilter()async{
+
+  Future deliveredOrderFilter() async {
+    OrdersFilters.clear();
     for (var element in orderList) {
-      if(element.status=="Canceld"){
-       OrdersFilters.add(element);
+      if (element.status == "Delivered") {
+        OrdersFilters.add(element);
+      }
+    }
+  }
+
+  Future canceldOrderFilter() async {
+    OrdersFilters.clear();
+    for (var element in orderList) {
+      if (element.status == "Canceld") {
+        OrdersFilters.add(element);
+      }
+    }
+  }
+
+    Future OrderPlacedFilter() async {
+    OrdersFilters.clear();
+    for (var element in orderList) {
+      if (element.status == "order placed") {
+        OrdersFilters.add(element);
       }
     }
   }
@@ -61,15 +76,15 @@ class OrderController extends GetxController with StateMixin {
       cartController controller = Get.put(cartController());
       for (var element in controller.cartlist) {
         print("Start working");
-        orderProducts.add(OrderedProduct(
-            productid: productModel(
-                sId: element.product!.sId!, user: element.product!.user!),
-            quantity: element.quantity!,
-            buyer: AuthenticateController.userdata.first,
-            seller: userModel(sId: element.product!.user!),
-            bidprice: element.product!.price!
-            ),
-            );
+        orderProducts.add(
+          OrderedProduct(
+              productid: productModel(
+                  sId: element.product!.sId!, user: element.product!.user!),
+              quantity: element.quantity!,
+              buyer: AuthenticateController.userdata.first,
+              seller: userModel(sId: element.product!.user!),
+              bidprice: element.product!.price!),
+        );
         //product sold added
         productrepo.updateSoldQty(
             productId: element.product!.sId!, soldqty: element.quantity!);
@@ -109,20 +124,16 @@ class OrderController extends GetxController with StateMixin {
     OrdersFilters.clear();
     try {
       change(orderList, status: RxStatus.loading());
-
       List<OrderModel> orders = await orderRepo.fetchOrders(
           Id: AuthenticateController.userdata.first.sId!);
-
       print("working order data");
       print(orders);
       // orderList.assignAll(orders);
-
       if (orders.isEmpty) {
         change(orderList, status: RxStatus.empty());
       } else {
         // for (var i in orders){
         orderList.addAll(orders[0].items!);
-
         change(orderList, status: RxStatus.success());
       }
     } catch (ex) {
@@ -130,11 +141,14 @@ class OrderController extends GetxController with StateMixin {
     }
   }
 
- Future orderStatusUpdate({required String status,required String orderId,required String buyerId}) async {
+  Future orderStatusUpdate(
+      {required String status,
+      required String orderId,
+      required String buyerId}) async {
     try {
-
-     var order =   orderRepo.orderStatus(status: status, orderId: orderId, buyerId: buyerId);
-         print(order);
+      var order = orderRepo.orderStatus(
+          status: status, orderId: orderId, buyerId: buyerId);
+      print(order);
     } catch (ex) {
       change(orderList, status: RxStatus.error(ex.toString()));
     }

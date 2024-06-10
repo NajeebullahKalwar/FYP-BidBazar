@@ -145,7 +145,7 @@ class Home extends StatelessWidget {
           // iconTheme: IconThemeData(color: Colors.white),
           // snap: true,
           // forceMaterialTransparency: false,
-        
+
           iconTheme: IconThemeData(
               color: innerBoxIsScrolled
                   ? const Color.fromARGB(255, 0, 0, 0)
@@ -201,40 +201,42 @@ class Home extends StatelessWidget {
             // viewHintText: ,
             // viewLeading: Text("back"),
             viewTrailing: List.generate(
-                1,
-                (index) => TextButton(
-                    onPressed: () {
-                      if (!search.text.isEmpty) {
-                        var list =
-                            getSearchProducts(); //get strams of search products
+              1,
+              (index) => TextButton(
+                onPressed: () {
+                  if (!search.text.isEmpty) {
+                    var list =
+                        getSearchProducts(); //get strams of search products
 
-                        if (list.isNotEmpty) {
-                          searchProducts.assignAll(list);
+                    if (list.isNotEmpty) {
+                      searchProducts.assignAll(list);
 
-                          Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (context) => CustomSearch(
-                                isScrolledColor: innerBoxIsScrolled,
-                                onlySearch: false,
-                                searchProducts: searchProducts,
-                                userType: controller.usertypes,
-                              ),
-                            ),
-                          );
-                          // Get.toNamed("customSearch", arguments: [
-                          //   {"searchProducts": searchProducts},
-                          //   {"onlySearch": false}
-                          // ]);
-                          // customSearch(
-                          //   onlySearch: false,
-                          //   searchProducts: searchProducts,
-                          // );
-                        }
-                      }
-                      // gridItem(product: searchProducts, index: index)
-                    },
-                    child: const Text("Search"))),
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => CustomSearch(
+                            isScrolledColor: innerBoxIsScrolled,
+                            onlySearch: false,
+                            searchProducts: searchProducts,
+                            userType: controller.usertypes,
+                          ),
+                        ),
+                      );
+                      // Get.toNamed("customSearch", arguments: [
+                      //   {"searchProducts": searchProducts},
+                      //   {"onlySearch": false}
+                      // ]);
+                      // customSearch(
+                      //   onlySearch: false,
+                      //   searchProducts: searchProducts,
+                      // );
+                    }
+                  }
+                  // gridItem(product: searchProducts, index: index)
+                },
+                child: const Text("Search"),
+              ),
+            ),
             searchController: search,
             builder: (context, search) {
               return SizedBox(

@@ -30,6 +30,7 @@ class WishList extends GetView<WishListController> {
     // print("state update");
     return Scaffold(
       appBar: AppBar(
+        title: const Text("WishList"),
         elevation: 0,
         foregroundColor: Colors.black54,
         backgroundColor: Colors.white,

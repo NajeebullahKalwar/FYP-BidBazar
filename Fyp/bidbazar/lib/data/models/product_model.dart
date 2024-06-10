@@ -1,3 +1,5 @@
+import 'package:bidbazar/data/models/user_model.dart';
+
 class productModel {
   String? sId;
   String? user;

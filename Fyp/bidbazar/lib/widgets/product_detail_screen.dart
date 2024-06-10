@@ -15,10 +15,14 @@ import 'package:bidbazar/widgets/updateproduct.dart';
 // import 'package:bidbazar/data/models/wishListModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+// import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // ignore: must_be_immutable
@@ -43,9 +47,15 @@ class ProductDetailScreen extends GetView<product_controller> {
   // product_controller productController =
   // Get.arguments[2] ?? product_controller();
   // int? index = Get.arguments[3];
+  String imageUrl = "";
+  String productName = "";
+  String productSpecs = "";
 
   @override
   Widget build(BuildContext context) {
+    productSpecs = product.specs!;
+    productSpecs = product.specs!;
+    imageUrl = "${Api.BASE_URL}/images/${product.images!.first}";
     // var currentDate=(DateTime.now()).toString().split("-").getRange(0, 3).toList();
     int currentYear = DateTime.now().year;
     int currentMonth = DateTime.now().month;
@@ -64,8 +74,6 @@ class ProductDetailScreen extends GetView<product_controller> {
             currentDay >= productExpireDay + 3
         ? isProductExpire = true
         : null;
-    print("current date " + (DateTime.now()).toString());
-    print(isProductExpire);
     // if(productExpireYear==currentYear && currentMonth ==
     //  productExpireMonth && productExpireDay+3 == currentDay ){
 
@@ -77,11 +85,11 @@ class ProductDetailScreen extends GetView<product_controller> {
       bidMenu.addAll([
         DropdownMenuItem(child: const Text("0% Down"), value: product.price!),
         DropdownMenuItem(
-            child: const Text("5% Down"),
-            value: (product.price! - product.price! * 0.05).round()),
+            value: (product.price! - product.price! * 0.05).round(),
+            child: const Text("5% Down")),
         DropdownMenuItem(
-            child: const Text("10% Down"),
-            value: (product.price! - product.price! * 0.1).round()),
+            value: (product.price! - product.price! * 0.1).round(),
+            child: const Text("10% Down")),
         DropdownMenuItem(
             child: const Text("15% Down"),
             value: (product.price! - product.price! * 0.15).round()),
@@ -119,6 +127,16 @@ class ProductDetailScreen extends GetView<product_controller> {
                       overlayColor: Colors.black,
                       overlayOpacity: 0.5,
                       children: [
+                        SpeedDialChild(
+                          
+                          child: const Icon(
+                            Icons.share,
+                          ),
+                          label: 'Share',
+                          onTap: () async {
+                            await downloadAndShare();
+                          },
+                        ),
                         SpeedDialChild(
                           child: const Icon(
                             Icons.call,
@@ -206,7 +224,7 @@ class ProductDetailScreen extends GetView<product_controller> {
                   height: 5,
                   thickness: 10,
                 ),
-
+                
                 Card(
                   elevation: 2,
                   margin: const EdgeInsets.all(10),
@@ -408,6 +426,7 @@ class ProductDetailScreen extends GetView<product_controller> {
                       const Divider(
                         thickness: 2,
                       ),
+                      
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
@@ -435,6 +454,27 @@ class ProductDetailScreen extends GetView<product_controller> {
                 //     backgroundColor: Color.fromARGB(22, 0, 0, 0),
                 //     child: Icon(Icons.person,color: Colors.black54,)),
                 // )
+                 Card(
+                  child: ListTile(
+                    leading:  CircleAvatar(
+              radius: 25,
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child:CachedNetworkImage(imageUrl: "${Api.BASE_URL}/images/${product.user!}",
+                  errorWidget: (context, url, error) => const Icon(
+                          Icons.person,
+                          size: 28,
+                        ),
+                  )
+                  
+                  
+                     
+                        ),
+                   ),
+                    title: Text(product.user!),
+                    subtitle: Text(product.user!),
+                  )
+                )
               ],
             ),
           ),
@@ -537,7 +577,7 @@ class ProductDetailScreen extends GetView<product_controller> {
                                                             .validate()) {
                                                           await bidController.addBid(
                                                               product.sId!,
-                                                              product.user!,
+                                                              product.user!,//6 june changed here
                                                               int.parse(
                                                                   bidPriceController
                                                                       .text
@@ -795,5 +835,33 @@ class ProductDetailScreen extends GetView<product_controller> {
         // ),
       ),
     );
+  }
+
+  Future<void> downloadAndShare() async {
+    try {
+      // Get the directory to save the downloaded image
+      final tempDir = await getTemporaryDirectory();
+      final tempPath = tempDir.path;
+
+      // Set the image file path
+      final imagePath = '$tempPath/${product.images!.first.split('/').last}';
+
+      // Download the image
+      final response = await Dio().download(imageUrl, imagePath);
+
+      // Check if the download was successful
+      if (response.statusCode == 200) {
+        // Share the image and text
+        await Share.shareFiles(
+          [imagePath],
+          text: "$imageUrl \n$productName\n specs: $productSpecs",
+        );
+      } else {
+        throw Exception('Failed to download image');
+      }
+    } catch (e) {
+      // Handle any errors
+      print('Error downloading and sharing image: $e');
+    }
   }
 }

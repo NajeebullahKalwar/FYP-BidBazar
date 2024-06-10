@@ -17,6 +17,7 @@ class FilterProduct extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        title: const Text("Filter Result"),
         elevation: 0,
         foregroundColor: Colors.black54,
         backgroundColor: Colors.white,
