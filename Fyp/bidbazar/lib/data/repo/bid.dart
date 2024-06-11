@@ -193,6 +193,23 @@ class BidRepo {
        rethrow;
     }
   }
+   Future deletebidForSeller({required String bidId,}) async {
+    try {
+      Response response = await api.sendRequest.delete(
+        "/bid/deletebidForSeller/$bidId/${AuthenticateController.userdata.first.sId}",
+    
+      );
+      ApiResponse apiResponse = ApiResponse.fromResponse(response);
+
+       if (!apiResponse.success) {
+        throw apiResponse.message.toString();
+      }
+
+      
+    } on DioException catch (_) {
+       rethrow;
+    }
+  }
 
 
 }

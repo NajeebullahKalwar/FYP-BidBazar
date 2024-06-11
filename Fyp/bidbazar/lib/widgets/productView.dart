@@ -30,6 +30,9 @@ class productView extends GetView<product_controller> {
     return controller.obx(
       (state) => RefreshIndicator(
         onRefresh: () async {
+          // controller.fetchProducts();
+          imageCache.clear();
+          imageCache.clearLiveImages();
           controller.update();
         },
         child: GridView.builder(

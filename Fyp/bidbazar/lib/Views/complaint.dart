@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../controllers/complainController.dart';
+import '../controllers/complaintController.dart';
 
 class ComplaintScreen extends StatelessWidget {
   final List<DropdownMenuItem> reasons = List<DropdownMenuItem>.of([]);
@@ -95,13 +95,11 @@ class ComplaintScreen extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   if (controller.formKey.currentState!.validate()) {
-                    
                     controller.complaint(reason: selectedReason.value);
                       Get.snackbar('Success', 'Submitting your complaint',
                         snackPosition: SnackPosition.TOP);
                     controller.complaintController.clear();
                     selectedReason.value = "Other";
-
                   }
                 },
                 child: const Text('Submit Complaint'),

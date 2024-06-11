@@ -100,4 +100,12 @@ class BidController extends GetxController with StateMixin {
   }) {
     bid.deletebid(bidId: bidId);
   }
+
+   void deletebidForSeller({
+    required String bidId,
+  }) {
+    bid.deletebidForSeller(bidId: bidId);
+  }
+
+
 }

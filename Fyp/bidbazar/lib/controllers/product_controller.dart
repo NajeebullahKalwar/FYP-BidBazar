@@ -55,6 +55,7 @@ class product_controller extends GetxController with StateMixin {
     super.dispose();
   }
   
+  
 
   Future fetchProducts() async {
     try {

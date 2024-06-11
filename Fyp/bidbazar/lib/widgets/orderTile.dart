@@ -132,6 +132,7 @@ class OrderTile extends StatelessWidget {
                   children: [
                     ElevatedButton(
                       onPressed: () {
+                        print(order.orderedProduct![index]);
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {

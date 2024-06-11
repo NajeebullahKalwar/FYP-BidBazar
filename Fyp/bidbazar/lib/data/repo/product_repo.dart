@@ -52,7 +52,6 @@ class productRepo {
       if (!productResponse.success) {
         throw productResponse.message.toString();
       }
-
       return productModel.fromJson(productResponse.data);
     } catch (ex) {
       rethrow;
@@ -164,7 +163,7 @@ class productRepo {
 
   Future<List<productModel>> fetchProductByCategory(String catId) async {
     try {
-      Response response = await api.sendRequest.get("product/category/$catId");
+      Response response = await api.sendRequest.get("/product/category/$catId");
 
       ApiResponse productResponse = ApiResponse.fromResponse(response);
 

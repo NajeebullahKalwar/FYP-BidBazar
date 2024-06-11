@@ -92,13 +92,14 @@ class Seller extends StatelessWidget {
             ),
             CircleAvatar(
               radius: 50,
+              backgroundColor: Colors.white,
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(100),
                   child: AuthenticateController
-                          .userdata.first.profileimages!.isEmpty
+                          .userdata.first.profileimages!.isNotEmpty
                       ? Image.network(
                           "${Api.BASE_URL}/images/${AuthenticateController.userdata.first.profileimages![0]}",
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fitWidth,
                           errorBuilder: (BuildContext context, Object exception,
                               StackTrace? stackTrace) {
                             return const Icon(
@@ -120,16 +121,22 @@ class Seller extends StatelessWidget {
               thickness: 1,
             ),
             ListTile(
-              leading: const Icon(Icons.favorite),
-              title: const Text('wish list'),
+              leading: Image.asset(
+                'assets/favourite.png',
+                width: 38,
+                height: 25,
+                fit: BoxFit.contain,
+              ),
+              title: const Text('WishList'),
               // selected: true,
-              onTap: () async {
+              onTap: () {
                 WishListController wishListController =
                     Get.put(WishListController());
-                await wishListController.fetchWishListItems();
+                wishListController.fetchWishListItems();
                 Get.toNamed("wishListScreen");
               },
             ),
+
             ListTile(
               leading: Image.asset(
                 'assets/order.png',
@@ -143,10 +150,11 @@ class Seller extends StatelessWidget {
                 // OrderController orderController = Get.put(OrderController());
                 // orderController.fetchOrders();
                 Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => OrderView(),
-                    ));
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => OrderView(),
+                  ),
+                );
               },
             ),
             // ListTile(
@@ -160,7 +168,6 @@ class Seller extends StatelessWidget {
             //   // selected: true,
             //   onTap: () async {
             //     //   OrderController orderController = Get.put(OrderController());
-
             //     //  await orderController.fetchOrders();
             //     //  await orderController.pendingOrderFilter();
             //     // ignore: use_build_context_synchronously
@@ -183,7 +190,6 @@ class Seller extends StatelessWidget {
             //   // selected: true,
             //   onTap: () async {
             //     //   OrderController orderController = Get.put(OrderController());
-
             //     //  await orderController.fetchOrders();
             //     //    orderController.deliveredOrderFilter();
             //     Navigator.push(
@@ -205,7 +211,6 @@ class Seller extends StatelessWidget {
             //   // selected: true,
             //   onTap: () async {
             //     //   OrderController orderController = Get.put(OrderController());
-
             //     //  await orderController.fetchOrders();
             //     //   orderController.canceldOrderFilter();
             //     Navigator.push(
@@ -254,8 +259,11 @@ class Seller extends StatelessWidget {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.receipt),
-              title: const Text('Recent Bids'),
+              leading: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Icon(Icons.receipt, size: 26, color: Colors.black),
+              ),
+              title: const Text('Bid Logs'),
               selected: false,
               onTap: () async {
                 // print("working recent bid :");
@@ -270,6 +278,35 @@ class Seller extends StatelessWidget {
                               ? []
                               : bidController.bidItemsList.first.items!,
                           approvedBid: false,
+                          buyerId: bidController.bidItemsList.isEmpty
+                              ? ""
+                              : bidController.bidItemsList.first.buyer!),
+                    ));
+
+                // Navigator.push(context,MaterialPageRoute(builder: (context) => BidView(controller: bidController, approvedBid: false),),);
+                // bidController.dispose();
+              },
+            ),
+            ListTile(
+              leading: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Icon(Icons.receipt, size: 26, color: Colors.black),
+              ),
+              title: const Text('Approved Bids'),
+              selected: false,
+              onTap: () async {
+                // print("working recent bid :");
+                BidController bd = Get.put(BidController());
+                await bd.fetchBidItems();
+                // ignore: use_build_context_synchronously
+                Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => BidView(
+                          items: bidController.bidItemsList.isEmpty
+                              ? []
+                              : bidController.bidItemsList.first.items!,
+                          approvedBid: true,
                           buyerId: bidController.bidItemsList.isEmpty
                               ? ""
                               : bidController.bidItemsList.first.buyer!),

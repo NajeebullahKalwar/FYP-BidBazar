@@ -11,7 +11,7 @@ var complaintSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    complaintExplanation:{
+    explanation:{
     type:String,
     default:"" 
     },

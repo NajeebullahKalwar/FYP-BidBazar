@@ -143,7 +143,7 @@ class Buyer extends StatelessWidget {
                 height: 25,
                 fit: BoxFit.contain,
               ),
-              title: const Text('Wish List'),
+              title: const Text('WishList'),
               // selected: true,
               onTap: () {
                 WishListController wishListController =
@@ -341,10 +341,15 @@ class Buyer extends StatelessWidget {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.exit_to_app_rounded),
+              leading: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                child: const Icon(Icons.exit_to_app_rounded ,size: 30, color: Colors.black),
+              ),
               title: const Text('Logout'),
               selected: false,
               onTap: () {
+                imageCache.clear();
+                imageCache.clearLiveImages();
                 controller.clearfields();
                 controller.isLoading.value = false;
                 Get.offAllNamed('loginScreen');

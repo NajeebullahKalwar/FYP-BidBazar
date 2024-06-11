@@ -67,13 +67,13 @@ class AuthenticateController extends GetxController with StateMixin {
     isObscure.value == true ? isObscure.value = false : isObscure.value = true;
   }
 
-  Future<userModel> findUserById(String Id) async {
+  Future<userModel> findUserById(String id) async {
     try {
-      var user = await userRepo.findUserById(Id);
+      var user = await userRepo.findUserById(id);
       // var data = jsonDecode(user);
       return user;
     } catch (ex) {
-      throw ex;
+      rethrow;
     }
   }
 

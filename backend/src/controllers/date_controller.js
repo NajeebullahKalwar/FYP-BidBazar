@@ -32,6 +32,17 @@ class CustomDates {
 
         return `${day}/${month}/${year}/${hour}/${minutes}/${second}`;
     }
+
+    // getProductExpireDate() {
+    //     const day = this.date.getDate();
+    //     const month = this.date.getMonth() + 1;
+    //     const year = this.date.getFullYear();
+    //     const hour = this.date.getHours();
+    //     const minutes = this.date.getMinutes();
+    //     const second = this.date.getSeconds();
+
+    //     return `${day}/${month}/${year}/${hour}/${minutes}/${second}`;
+    // }
 }
 
 const customDate = new CustomDates();

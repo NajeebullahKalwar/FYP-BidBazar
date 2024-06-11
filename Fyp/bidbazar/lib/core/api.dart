@@ -16,7 +16,7 @@ const Map<String, dynamic> form = {'content-Type': 'multipart/form-data'};
 
 class Api {
   final Dio dio = Dio();
-  static const  String BASE_URL = "http://192.168.0.164:4000/api";
+  static const  String BASE_URL = "http://192.168.43.172:4000/api";
   
   Api() {
     dio.options.baseUrl = BASE_URL;

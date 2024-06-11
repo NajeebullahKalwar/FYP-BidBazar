@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:bidbazar/controllers/auth_controllers.dart';
@@ -10,6 +11,7 @@ import 'package:bidbazar/controllers/product_controller.dart';
 import 'package:bidbazar/controllers/wishList_controller.dart';
 import 'package:bidbazar/core/api.dart';
 import 'package:bidbazar/data/models/product_model.dart';
+import 'package:bidbazar/data/models/user_model.dart';
 import 'package:bidbazar/widgets/customTextFormField.dart';
 import 'package:bidbazar/widgets/updateproduct.dart';
 // import 'package:bidbazar/data/models/wishListModel.dart';
@@ -50,6 +52,7 @@ class ProductDetailScreen extends GetView<product_controller> {
   String imageUrl = "";
   String productName = "";
   String productSpecs = "";
+  userModel? user;
 
   @override
   Widget build(BuildContext context) {
@@ -69,33 +72,52 @@ class ProductDetailScreen extends GetView<product_controller> {
     int productExpireMonth = int.parse(date[1]);
     int productExpireYear = int.parse(date[2]);
 
-    currentYear >= productExpireYear &&
-            currentMonth >= productExpireMonth &&
-            currentDay >= productExpireDay + 3
-        ? isProductExpire = true
-        : null;
+    bool isProductExpired(int currentYear, int currentMonth, int currentDay,
+        int productExpireYear, int productExpireMonth, int productExpireDay) {
+      DateTime currentDate = DateTime(currentYear, currentMonth, currentDay);
+      DateTime productExpireDate =
+          DateTime(productExpireYear, productExpireMonth, productExpireDay);
+
+      return currentDate.isAfter(productExpireDate) ||
+          currentDate.isAtSameMomentAs(productExpireDate);
+    }
+
+    isProductExpire = isProductExpired(
+        currentYear,
+        currentMonth,
+        currentDay,
+        productExpireYear,
+        productExpireMonth,
+        productExpireDay + 3);// add 3 plus day for product expiration
+
+    // currentYear >= productExpireYear &&
+    //         currentMonth >= productExpireMonth &&
+    //         currentDay >=
+    //             productExpireDay +
+    //                 3 //product expire plus 3 days of created date
+    //     ? isProductExpire = true
+    //     : null;
     // if(productExpireYear==currentYear && currentMonth ==
     //  productExpireMonth && productExpireDay+3 == currentDay ){
-
     // }
     // bidController.text= product.price.toString();
 
     if (bidMenu.isEmpty) {
       bidPrice.value = product.price!;
       bidMenu.addAll([
-        DropdownMenuItem(child: const Text("0% Down"), value: product.price!),
+        DropdownMenuItem(value: product.price!, child: const Text("0% Down")),
         DropdownMenuItem(
-            child: const Text("5% Down"),
-            value: (product.price! - product.price! * 0.05).round()),
+            value: (product.price! - product.price! * 0.05).round(),
+            child: const Text("5% Down")),
         DropdownMenuItem(
-            child: const Text("10% Down"),
-            value: (product.price! - product.price! * 0.1).round()),
+            value: (product.price! - product.price! * 0.1).round(),
+            child: const Text("10% Down")),
         DropdownMenuItem(
-            child: const Text("15% Down"),
-            value: (product.price! - product.price! * 0.15).round()),
+            value: (product.price! - product.price! * 0.15).round(),
+            child: const Text("15% Down")),
         DropdownMenuItem(
-            child: const Text("20% Down"),
-            value: (product.price! - product.price! * 0.2).round())
+            value: (product.price! - product.price! * 0.2).round(),
+            child: const Text("20% Down"))
       ]);
     }
 
@@ -128,7 +150,6 @@ class ProductDetailScreen extends GetView<product_controller> {
                       overlayOpacity: 0.5,
                       children: [
                         SpeedDialChild(
-                          
                           child: const Icon(
                             Icons.share,
                           ),
@@ -224,7 +245,7 @@ class ProductDetailScreen extends GetView<product_controller> {
                   height: 5,
                   thickness: 10,
                 ),
-                
+
                 Card(
                   elevation: 2,
                   margin: const EdgeInsets.all(10),
@@ -426,7 +447,6 @@ class ProductDetailScreen extends GetView<product_controller> {
                       const Divider(
                         thickness: 2,
                       ),
-                      
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
@@ -454,27 +474,44 @@ class ProductDetailScreen extends GetView<product_controller> {
                 //     backgroundColor: Color.fromARGB(22, 0, 0, 0),
                 //     child: Icon(Icons.person,color: Colors.black54,)),
                 // )
-                 Card(
-                  child: ListTile(
-                    leading:  CircleAvatar(
-              radius: 25,
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child:CachedNetworkImage(imageUrl: "${Api.BASE_URL}/images/${product.user!}",
-                  errorWidget: (context, url, error) => const Icon(
-                          Icons.person,
-                          size: 28,
+                FutureBuilder(
+                  future: AuthenticateController().findUserById(product.user!),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    } else if (snapshot.hasData) {
+                      return Card(
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            radius: 25,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: CachedNetworkImage(
+                                imageUrl:
+                                    "${Api.BASE_URL}/images/${snapshot.data!.profileimages!.first}",
+                                errorWidget: (context, url, error) =>
+                                    const Icon(
+                                  Icons.person,
+                                  size: 28,
+                                ),
+                              ),
+                            ),
+                          ),
+                          title: Text(snapshot.data!.fullname!),
+                          subtitle: Text(snapshot.data!.email!),
                         ),
-                  )
-                  
-                  
-                     
-                        ),
-                   ),
-                    title: Text(product.user!),
-                    subtitle: Text(product.user!),
-                  )
-                )
+                      );
+                    } else {
+                      return const Center(
+                        child: Text('No data found'),
+                      );
+                    }
+                  },
+                ),
               ],
             ),
           ),
@@ -575,81 +612,68 @@ class ProductDetailScreen extends GetView<product_controller> {
                                                         if (bidFormKey
                                                             .currentState!
                                                             .validate()) {
-                                                          await bidController.addBid(
-                                                              product.sId!,
-                                                              product.user!,//6 june changed here
-                                                              int.parse(
-                                                                  bidPriceController
-                                                                      .text
-                                                                      .toString()));
+                                                          await bidController.addBid(product.sId!,product.user!, int.parse(bidPriceController.text.toString()));
 
-                                                          if (int.parse(
-                                                                  bidPriceController
-                                                                      .text) >=
-                                                              product
-                                                                  .saleonprice!) {
-                                                            print(
-                                                                "price is less then ${bidPriceController.text} >= ${product.saleonprice}");
-                                                            await bidController.updateBidStatus(
-                                                                buyerId:
-                                                                    AuthenticateController
-                                                                        .userdata
-                                                                        .first
-                                                                        .sId!,
-                                                                productId:
-                                                                    product
-                                                                        .sId!,
-                                                                status:
-                                                                    "bid approved and closed");
-                                                            productModel newProduct = productModel(
-                                                                price: int.parse(
-                                                                    bidPriceController
-                                                                        .text),
-                                                                category: product
-                                                                    .category,
-                                                                images: product
-                                                                    .images,
-                                                                name: product
-                                                                    .name,
-                                                                qty:
-                                                                    product.qty,
-                                                                sId:
-                                                                    product.sId,
-                                                                saleonprice: product
-                                                                    .saleonprice,
-                                                                soldqty: product
-                                                                    .soldqty,
-                                                                specs: product
-                                                                    .specs,
-                                                                user: product
-                                                                    .user,
-                                                                wishlist: product
-                                                                    .wishlist);
-                                                            // p=product;
-                                                            // p.price=;
-
-                                                            cartControlle
-                                                                .addToCart(
-                                                                    newProduct,
-                                                                    1);
-                                                            cartControlle
-                                                                .carStateSuccess();
-
-                                                            // bidController.bidItemsList.add(BidModel(buyer:AuthenticateController.userdata.first.id , items: [Items(bidprice: int.parse(bidPriceController.text) , product: product, quantity: 1 , status: "bid approved and closed")]));
-                                                            //  await bidController.fetchBidItems();
-                                                            // bidController.update();
-
-                                                            // bidController.bidItemsList.refresh();
-                                                            Get.snackbar("Bid",
-                                                                "Bid Successfully approved");
-
-                                                            Navigator.pop(
-                                                                context);
-                                                          }
-
-                                                          Navigator.pop(
-                                                              context);
-
+                                                          // if (int.parse(
+                                                          //         bidPriceController
+                                                          //             .text) >=
+                                                          //     product
+                                                          //         .saleonprice!) {
+                                                          //   print(
+                                                          //       "price is less then ${bidPriceController.text} >= ${product.saleonprice}");
+                                                          //   await bidController.updateBidStatus(
+                                                          //       buyerId:
+                                                          //           AuthenticateController
+                                                          //               .userdata
+                                                          //               .first
+                                                          //               .sId!,
+                                                          //       productId:
+                                                          //           product
+                                                          //               .sId!,
+                                                          //       status:
+                                                          //           "bid approved and closed");
+                                                          //   productModel newProduct = productModel(
+                                                          //       price: int.parse(
+                                                          //           bidPriceController
+                                                          //               .text),
+                                                          //       category: product
+                                                          //           .category,
+                                                          //       images: product
+                                                          //           .images,
+                                                          //       name: product
+                                                          //           .name,
+                                                          //       qty:
+                                                          //           product.qty,
+                                                          //       sId:
+                                                          //           product.sId,
+                                                          //       saleonprice: product
+                                                          //           .saleonprice,
+                                                          //       soldqty: product
+                                                          //           .soldqty,
+                                                          //       specs: product
+                                                          //           .specs,
+                                                          //       user: product
+                                                          //           .user,
+                                                          //       wishlist: product
+                                                          //           .wishlist);
+                                                          //   // p=product;
+                                                          //   // p.price=;
+                                                          //   cartControlle
+                                                          //       .addToCart(
+                                                          //           newProduct,
+                                                          //           1);
+                                                          //   cartControlle
+                                                          //       .carStateSuccess();
+                                                          //   // bidController.bidItemsList.add(BidModel(buyer:AuthenticateController.userdata.first.id , items: [Items(bidprice: int.parse(bidPriceController.text) , product: product, quantity: 1 , status: "bid approved and closed")]));
+                                                          //   //  await bidController.fetchBidItems();
+                                                          //   // bidController.update();
+                                                          //   // bidController.bidItemsList.refresh();
+                                                          //   Get.snackbar("Bid",
+                                                          //       "Bid Successfully approved");
+                                                          //   Navigator.pop(
+                                                          //       context);
+                                                          // }
+                                                          Navigator.pop(context);
                                                           //  bidPriceController.clear();
 
                                                           // Navigator.pop(context);
@@ -839,17 +863,16 @@ class ProductDetailScreen extends GetView<product_controller> {
 
   Future<void> downloadAndShare() async {
     try {
-      // Get the directory to save the downloaded image
       final tempDir = await getTemporaryDirectory();
       final tempPath = tempDir.path;
 
-      // Set the image file path
+      // image file path set
       final imagePath = '$tempPath/${product.images!.first.split('/').last}';
 
-      // Download the image
+      // Download image
       final response = await Dio().download(imageUrl, imagePath);
 
-      // Check if the download was successful
+      // Check if download was successful
       if (response.statusCode == 200) {
         // Share the image and text
         await Share.shareFiles(

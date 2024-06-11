@@ -127,7 +127,7 @@ class BidView extends GetView<BidController> {
                                Row(                  children: [
                                 const SizedBox(width: 5),
                               
-          
+                                approvedBid?SizedBox.shrink() :
                                 ElevatedButton.icon(
                                   style:  ElevatedButton.styleFrom(
                                     backgroundColor: Colors.orangeAccent[400]
@@ -141,9 +141,10 @@ class BidView extends GetView<BidController> {
                                   controller.bidItemsList.first.items![index].status=status;
                                   controller.update();
                                       controller.bidItemsList.refresh();
+                                      Get.snackbar("Bid", "bid successful Accept");
                                 }, icon: const Icon(CupertinoIcons.checkmark_alt_circle), label: const Text("accept"),),
                                 const SizedBox(width: 5),
-                                
+                                approvedBid?SizedBox.shrink() :
                                 Expanded(
                   
                                   child: ElevatedButton.icon(
@@ -157,10 +158,32 @@ class BidView extends GetView<BidController> {
                                       controller.bidItemsList.first.items![index].status=status;
                                       controller.update();
                                       controller.bidItemsList.refresh();
+                                      Get.snackbar("Cancel", "bid  Cancel");
                                   }, icon: const Icon(Icons.cancel_outlined), label: const Text("cancel"),),
                                 ),
                                 const SizedBox(width: 5),
-            
+                                approvedBid?
+                                 Expanded(
+                                   child: ElevatedButton.icon(
+                                    style:  ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.orangeAccent[400]
+                                    ),
+                                    onPressed: () {
+                                     
+                                 
+                                         controller.deletebidForSeller(bidId:bidList[index].sId!);
+                                        bidList.removeAt(index);
+                                        
+                                        // BidController().bidItemsList.removeAt(index);
+                                        // bidList.refresh();
+                                        controller.fetchBidItems();
+                                        controller.update();
+                                    // controller.updateBidStatus(buyerId: controller.biditems.value.buyer! ,productId: controller.biditems.value.items![index].product!.sId!,status: 'bid approved and closed');
+                                    // status='bid approved and closed';
+                                                                 }, icon: const Icon(CupertinoIcons.delete), label: const Text("remove"),),
+                                 ):const SizedBox.shrink(),
+                                const SizedBox(width: 15),
+
                                ],
                                ):
         

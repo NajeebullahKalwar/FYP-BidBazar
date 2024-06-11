@@ -287,6 +287,8 @@ class Home extends StatelessWidget {
                         title: Text(searchProducts[index].name!),
                         trailing: const Icon(Icons.arrow_forward),
                         onTap: () {
+                          
+
                           Get.toNamed(
                             "productDetailScreen",
                             arguments: [

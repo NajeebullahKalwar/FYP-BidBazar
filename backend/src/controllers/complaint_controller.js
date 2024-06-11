@@ -5,14 +5,13 @@ const complaintModel = require("../models/complaint_model");
 const complaintController = {
 
     createComplaint: async function (req, res) {
-
         try {
             const {buyerid,reason,complaintExplanation} = req.body;//data send    
             const newComplaint = new complaintModel(
                 {
                     buyer:buyerid,
                     reason:reason,
-                    complaintExplanation:complaintExplanation
+                    explanation:complaintExplanation
                 }
             );
 
@@ -26,7 +25,6 @@ const complaintController = {
 
     
     getAllcomplaint:async function(req,res){
-
         try{
             const complaints = await complaintModel.find().populate("buyer");           
             return res.json({success:true,message:"complaints Found",data:complaints}); 

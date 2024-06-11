@@ -155,7 +155,7 @@ class userverification extends GetView<AuthenticateController> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(100),
             child: CachedNetworkImage(
-              fit: BoxFit.cover,
+              fit: BoxFit.contain,
               errorWidget: (context, url, error) {
                 return const Icon(
                   Icons.person, // Or any other icon

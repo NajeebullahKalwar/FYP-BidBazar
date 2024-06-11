@@ -145,6 +145,20 @@ const productController = {
         }
     },
 
+    // getAllProductsByCategory:async function(req,res){// for category
+    //     try{
+    //         const {categoryId} =   req.Body;
+            
+    //         // const  products=await productModel.findById(id);
+    //         const  products=await productModel.find({category:id});
+            
+    //         return res.json({success:true,message:"",data:products}); 
+    
+    //     }catch(e){
+    //      return res.json({success:false,message:`Product not found!  ${e}`});
+    
+    //     }
+    // },
     
     renewProduct:async function(req,res){// for category
         try{
